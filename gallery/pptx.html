@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .image-container {
+      width: 100vw; /* Set the width to 100% of the viewport width */
+      height: 100vh; /* Set the height to 100% of the viewport height */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #image {
+      max-width: 100%; /* Set the maximum width to 100% of the container */
+      max-height: 100%; /* Set the maximum height to 100% of the container */
+      width: auto; /* Allow the width to adjust based on the height and aspect ratio */
+      height: auto; /* Allow the height to adjust based on the width and aspect ratio */
+      object-fit: contain; /* The image will be scaled to fit inside the container */
+      object-position: center; /* Center the image within the container */
+    }
+  </style>
+  <script>
+    window.addEventListener('resize', function() {
+      var image = document.getElementById('image');
+      var container = document.getElementById('image-container');
+      image.style.width = container.offsetWidth + 'px';
+      image.style.height = container.offsetHeight + 'px';
+    });
+
+    // Initialize the current image index
+    let currentImageIndex = 1;
+    const totalNumberOfImages = 3;
+    // Function to update the image source
+    function updateImage() {
+      const imgElement = document.getElementById('image');
+      imgElement.src = `${String(currentImageIndex).padStart(3, '0')}.jpg`;
+    }
+
+    // Event listener for keyboard events
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'ArrowRight') {
+        // Advance to the next image
+        currentImageIndex = (currentImageIndex % totalNumberOfImages) + 1;
+        if (currentImageIndex === 1) {
+            history.back();
+        }
+        updateImage();
+      } else if (event.key === 'ArrowLeft') {
+        // Go back to the previous image
+        currentImageIndex = (currentImageIndex - 2 + totalNumberOfImages) % totalNumberOfImages + 1;
+        if (currentImageIndex === totalNumberOfImages) {
+            history.back();
+        }
+        updateImage();
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        // Go back to the previous page
+        history.back();
+      }
+    });
+
+    document.addEventListener('click', function(event) {
+      const screenWidth = window.innerWidth;
+      const clickX = event.clientX;
+      if (clickX < screenWidth / 2) {
+        currentImageIndex = (currentImageIndex - 2 + totalNumberOfImages) % totalNumberOfImages + 1;
+        if (currentImageIndex === totalNumberOfImages) {
+            history.back();
+        }
+        updateImage();
+      } else {
+        currentImageIndex = (currentImageIndex % totalNumberOfImages) + 1;
+        if (currentImageIndex === 1) {
+            history.back();
+        }
+        updateImage();
+      }
+    });
+
+  </script>
+</head>
+<body>
+  <div class="image-container">
+    <img id="image" src="001.jpg" alt="Image">
+  </div>
+</body>
+</html>
