@@ -1,39 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Horizontal Image Links Example</title>
+<style>
+    .header-image {
+        width: 100%;
+        display: block;
     }
-    .image-container {
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+    .image-buttons {
+        display: flex;
+        justify-content: no-space-around;
+        list-style: none;
+        padding: 0;
     }
-    #image {
-      max-width: 100%;
-      max-height: 100%;
-      width: auto;
-      height: auto;
-      object-fit: contain;
-      object-position: center;
+    .image-buttons li {
+        margin: 0;
     }
-  </style>
+    .image-buttons a {
+        display: block;
+    }
+    .image-buttons img {
+        width: 100%;
+        height: auto;
+    }
+</style>
 </head>
 <body>
-  <div class="image-container">
-    <img id="image" src="jpg/niblick.jpg" alt="Image">
-    <img id="image" src="jpg/legend.jpg" alt="Image">
-  </div>
+    <img src="jpg/niblick.jpg" class="header-image" alt="Full Width Image">
+    <ul class="image-buttons">
+        <li><a href="about.html"><img src="jpg/legend_1.jpg" alt="Image 1"></a></li>
+        <li><a href="gallery/pptx.html"><img src="jpg/legend_2.jpg" target="_blank" alt="Image 2"></a></li>
+        <li><a href="hire.html"><img src="jpg/legend_3.jpg" alt="Image 3"></a></li>
+        <li><a href="location.html"><img src="jpg/legend_4.jpg" alt="Image 4"></a></li>
+        <li><a href="contact.html"><img src="jpg/legend_5.jpg" alt="Image 5"></a></li>
+    </ul>
 </body>
 </html>

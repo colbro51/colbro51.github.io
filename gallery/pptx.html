@@ -51,20 +51,20 @@
         // Advance to the next image
         currentImageIndex = (currentImageIndex % totalNumberOfImages) + 1;
         if (currentImageIndex === 1) {
-            history.back();
+            window.open('','_self').close();
         }
         updateImage();
       } else if (event.key === 'ArrowLeft') {
         // Go back to the previous image
         currentImageIndex = (currentImageIndex - 2 + totalNumberOfImages) % totalNumberOfImages + 1;
         if (currentImageIndex === totalNumberOfImages) {
-            history.back();
+            window.open('','_self').close();
         }
         updateImage();
       } else if (event.key === 'Escape') {
         event.preventDefault();
         // Go back to the previous page
-        history.back();
+        window.open('','_self').close();
       }
     });
 
@@ -74,13 +74,13 @@
       if (clickX < screenWidth / 2) {
         currentImageIndex = (currentImageIndex - 2 + totalNumberOfImages) % totalNumberOfImages + 1;
         if (currentImageIndex === totalNumberOfImages) {
-            history.back();
+            window.open('','_self').close();
         }
         updateImage();
       } else {
         currentImageIndex = (currentImageIndex % totalNumberOfImages) + 1;
         if (currentImageIndex === 1) {
-            history.back();
+            window.open('','_self').close();
         }
         updateImage();
       }
