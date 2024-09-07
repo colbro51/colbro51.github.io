@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Months Grid with Iframes</title>
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .month-button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+        .visible {
+            display: block;
+        }
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid" id="monthGrid"></div>
+
+    <div id="monthDivs"></div>
+
+    <script>
+        // Function to get the months starting from the current month
+        function getMonthsFromCurrent() {
+            const now = new Date();
+            const currentMonth = now.getMonth(); // 0-11
+            const months = [
+                'january', 'february', 'march', 'april',
+                'may', 'june', 'july', 'august',
+                'september', 'october', 'november', 'december'
+            ];
+            return [...months.slice(currentMonth), ...months.slice(0, currentMonth)];
+        }
+
+        const months = getMonthsFromCurrent();
+        const monthGrid = document.getElementById('monthGrid');
+        const monthDivs = document.getElementById('monthDivs');
+
+        // Create buttons and corresponding divs with iframes
+        months.forEach((month, index) => {
+            // Create button
+            const button = document.createElement('button');
+            button.innerText = month.charAt(0).toUpperCase() + month.slice(1); // Capitalize first letter
+            button.className = 'month-button';
+            button.onclick = () => showDiv(index);
+            monthGrid.appendChild(button);
+
+            // Create hidden div with iframe
+            const div = document.createElement('div');
+            div.className = 'hidden';
+            const iframe = document.createElement('iframe');
+            iframe.src = `calendar/${month}.html`; // Load local HTML file from the calendar subdirectory
+            div.appendChild(iframe);
+            monthDivs.appendChild(div);
+        });
+
+        function showDiv(index) {
+            const divs = monthDivs.children;
+            for (let i = 0; i < divs.length; i++) {
+                if (i === index) {
+                    divs[i].classList.toggle('hidden');
+                    divs[i].classList.toggle('visible');
+                } else {
+                    divs[i].classList.add('hidden');
+                    divs[i].classList.remove('visible');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
