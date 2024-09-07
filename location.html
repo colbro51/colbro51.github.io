@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>TawaSCD</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: white;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 3px;
+        }
+        h2 {
+            color: #3366ff;
+        }
+        h3 {
+            cursor: pointer;
+            text-decoration: underline;
+            color: blue;
+        }
+        h3.selected {
+            color: purple;
+        }
+        .hidden {
+            display: none;
+        }
+        .visible {
+            display: block;
+        }
+        th, td {
+            padding-top: 2px;
+            padding-bottom: 2px;
+            padding-left: 10px;
+            padding-right: 30px;
+        }
+        .image {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Hall Location and Parking</h2>
+    <div id="content">
+        <h3 class="title" onclick="toggleDiv('div1', this)">How to get there</h3>
+        <div id="div1" class="visible">
+            <p>From Porirua follow Titahi Bay Road for about 3 kilometers. Turn left onto Te Pene Avenue and continue for approximately 1 kilometers. Between the shops and the Fire Station turn right into Niblick Lane. Niblick Hall will be on your left.</p>
+
+            <p>To get to the community centre parking area, from Porirua follow Titahi Bay Road for about 3 kilometers and continue along the Main Road to Whitehouse Road on your left. Parking area in 200 metres. Niblick Hall is about 70 metres from the parking area.</p>
+
+        </div>
+
+        <h3 class="title" onclick="toggleDiv('div2', this)">Route from Porirua to Niblick Hall via Niblick Lane</h3>
+        <div id="div2" class="hidden">
+            <img src="jpg/porirua2niblick.jpg" alt="Map Image" class="image">
+
+        </div>
+
+        <h3 class="title" onclick="toggleDiv('div3', this)">Route from Porirua to nearby Whitehouse Road Carpark</h3>
+        <div id="div3" class="hidden">
+            <img src="jpg/porirua2carpark.jpg" alt="Map Image" class="image">
+
+        </div>
+
+        <h3 class="title" onclick="toggleDiv('div4', this)">Overhead view of Niblick Hall and Carpark</h3>
+        <div id="div4" class="hidden">
+            <img src="jpg/overview.jpg" alt="Map Image" class="image">
+
+        </div>
+
+        </br>
+    </div>
+    <script>
+        function toggleDiv(divId, title) {
+            const divs = document.querySelectorAll('.title + div');
+            divs.forEach(div => {
+                if (div.id === divId) {
+                    div.classList.toggle('visible');
+                    div.classList.toggle('hidden');
+                } else {
+                    div.classList.remove('visible');
+                    div.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+  </div>
+</body>
+</html>

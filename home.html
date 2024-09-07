@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Niblick Hall</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: white;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 3px;
+        }
+        h2 {
+            color: #3366ff;
+        }
+        h3 {
+            cursor: pointer;
+            text-decoration: underline;
+            color: blue;
+        }
+        h3.selected {
+            color: purple;
+        }
+        .hidden {
+            display: none;
+        }
+        .visible {
+            display: block;
+        }
+        th, td {
+            padding-top: 2px;
+            padding-bottom: 2px;
+            padding-left: 10px;
+            padding-right: 30px;
+        }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Welcome to the Niblick Hall Website</h2>
+    <div id="content">
+        <h3 class="title" onclick="toggleDiv('div1', this)">About</h3>
+        <div id="div1" class="visible">
+            <p>Use of the hall is administered by the Niblick Hall Management Committee Incorporated Society as a charity with the aim of providing a public space.</p>
+
+        </div>
+
+        <h3 class="title" onclick="toggleDiv('div2', this)">History</h3>
+        <div id="div2" class="hidden">
+            <p>In 1959 a meeting was held by representatives of the Titahi Bay Caledonian Society Inc., Titahi Bay Nursery Play Centre and Titahi Bay Little Theatre Inc. to consider the feasibility and achievability of erecting a jointly owned Hall. Representatives of the Girl Guides and Jaycees had also been invited but did not attend. The Makara Council was in favour of such a project and had agreed to assist with the provision of suitable land.</p>
+
+            <p>In 1960 the Titahi Bay Combined Building Committee Inc. was set up with a building fund target of &pound;2000.</p>
+
+            <p>Over the last few years, hall use was shared between the Girl Guides and Porirua Little Theatre but now the renamed Porirua Little Theatre is the only remaining society from the original group.</p>
+
+            <p>The Management Committee has a Deed of Reserve Lease with the Porirua City Council for the hall to be used as a public recreational facility.</p>
+
+        </div>
+
+        <h3 class="title" onclick="toggleDiv('div3', this)">Committee</h3>
+        <div id="div3" class="hidden">
+            <p></p><table>
+<tr><th> Position </th><th> Member </th></tr>
+<tr><td> President </td><td> Rob Ormsby </td></tr>
+<tr><td> Secretary </td><td> Theresa Savory </td></tr>
+<tr><td> Treasurer </td><td> ??? </td></tr>
+<tr><td> Website </td><td> Colin Brown </td></tr>
+<tr><td> Members </td><td> Anna Lowe </td></tr>
+<tr><td> </td><td> Cheryl </td></tr>
+<tr><td> </td><td> Eryn </td></tr>
+<tr><td> </td><td> Felicity </td></tr>
+<tr><td> </td><td> Karl </td></tr>
+<tr><td> </td><td> Russell </td></tr>
+</table><p></p>
+
+        </div>
+
+        <h3 class="title" onclick="toggleDiv('div4', this)">Constitution</h3>
+        <div id="div4" class="hidden">
+            <p><a href="pdf/Niblick Hall Rules.pdf" target="_blank"><big>Niblick Hall Rules</big></a><br></p>
+
+        </div>
+
+        </br>
+    </div>
+    <script>
+        function toggleDiv(divId, title) {
+            const divs = document.querySelectorAll('.title + div');
+            divs.forEach(div => {
+                if (div.id === divId) {
+                    div.classList.toggle('visible');
+                    div.classList.toggle('hidden');
+                } else {
+                    div.classList.remove('visible');
+                    div.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+  </div>
+</body>
+</html>
