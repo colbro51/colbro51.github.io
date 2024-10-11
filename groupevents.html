@@ -1,0 +1,130 @@
+<html>
+    <head>
+        <title>Porirua U3A</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .container {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                align-items: center;
+            }
+            
+            .image {
+                max-width: 100%;
+                border-radius: 5px;
+            }
+            
+            .textbox {
+                width: calc(100% - 10px);
+                min-height: 10em;
+                resize: none;
+                margin: 0 5px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                padding: 5px;
+                font-size: 16px;
+                background-color: #f8f8f8;
+                box-sizing: border-box;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                overflow: auto;
+                
+            }
+
+            .buttons {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .button {
+                flex: 1;
+                margin: 3px;
+                padding: 3px;
+                background-color: #c8f0ff;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 18px;
+                text-align: center;
+                line-height: 1.2;
+                width: 120px;
+            }
+            
+        </style>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('Button1').addEventListener('click', function1);
+                document.getElementById('Button2').addEventListener('click', function2);
+                document.getElementById('Button3').addEventListener('click', function3);
+                document.getElementById('Button4').addEventListener('click', function4);
+                document.getElementById('Button5').addEventListener('click', function5);
+                function function1() {
+                    window.location.href = "index.html";
+                }
+                function function2() {
+                    window.location.href = "groupevents.html";
+                }
+                function function3() {
+                    window.location.href = "newsletters.html";
+                }
+                function function4() {
+                    window.location.href = "meetings.html";
+                }
+                function function5() {
+                    window.location.href = "contacts.html";
+                }
+            });
+            
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <img class="image" src="jpg/PoriruaSheds.jpg" alt="Image">
+            <div class="buttons">
+                <button class="button" id="Button1">Home</button>
+                <button class="button" id="Button2">Group<br>Events</button>
+                <button class="button" id="Button3">News<br>letters</button>
+                <button class="button" id="Button4">Meetings</button>
+                <button class="button" id="Button5">Contacts</button>
+            </div>
+            <div class="textbox" readonly>
+                <h1><span style="color: #3366ff;"><b>Special Interest Groups</b></span></h1>
+
+<a href="pdf/U3A Mana Interest Groups - Google Docs.pdf"><big>2024 Interest Groups</big></a><br>
+<br>
+
+<a href="calendar.html"><h2><span style="color: #3366ff;"><b><big>Calendar</big></b></span></h2></a>
+
+<h1><span style="color: #3366ff;"><b>Upcoming Events</b></span></h1>
+
+<a href="events/Flyer for U3A Holocaust Centre Trip.pdf"><big>Holocaust Centre Trip</big></a><br>
+<br>
+            </div>
+        </div>
+<!-- Default Statcounter code for Porirua U3A Website
+https://poriruau3a.nz -->
+<script type="text/javascript">
+var sc_project=13022925; 
+var sc_invisible=1; 
+var sc_security="4501792e"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="Web Analytics
+Made Easy - Statcounter" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13022925/0/4501792e/1/"
+alt="Web Analytics Made Easy - Statcounter"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+    </body>
+</html>

@@ -1,52 +1,125 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Niblick Hall</title>
-    <style>
-        .container {
-            position: relative;
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        .image {
-            width: 100%;
-            height: auto;
-        }
-        .clickable-area {
-            position: absolute;
-            border: 2px solid transparent;
-        }
-        .area1 { top: 0; left: 0; width: 33.33%; height: 50%; }
-        .area3 { top: 0; left: 66.66%; width: 33.33%; height: 50%; }
-        .area4 { top: 50%; left: 0; width: 33.33%; height: 50%; }
-        .area5 { top: 50%; left: 33.33%; width: 33.33%; height: 50%; }
-        .area6 { top: 50%; left: 66.66%; width: 33.33%; height: 50%; }
-        iframe {
-            border: none;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <img src="jpg/niblick.jpg" alt="Niblick Hall Image" class="image">
-        <a href="index.html" class="clickable-area area1"></a>
-        <a href="map.html" class="clickable-area area3"></a>
-        <a href="gallery.html" class="clickable-area area4"></a>
-        <a href="hire.html" class="clickable-area area5"></a>
-        <a href="contact.html" class="clickable-area area6"></a>
-    </div>
-    <div class="container">
-<iframe src="home.html" width="100%" height="800" title="Niblick Hall"></iframe>
-    </div>
-<!-- Default Statcounter code for Niblick Hall Website
-https://niblickhall.github.io -->
+<html>
+    <head>
+        <title>Porirua U3A</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .container {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                align-items: center;
+            }
+            
+            .image {
+                max-width: 100%;
+                border-radius: 5px;
+            }
+            
+            .textbox {
+                width: calc(100% - 10px);
+                min-height: 10em;
+                resize: none;
+                margin: 0 5px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                padding: 5px;
+                font-size: 16px;
+                background-color: #f8f8f8;
+                box-sizing: border-box;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                overflow: auto;
+                
+            }
+
+            .buttons {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .button {
+                flex: 1;
+                margin: 3px;
+                padding: 3px;
+                background-color: #c8f0ff;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 18px;
+                text-align: center;
+                line-height: 1.2;
+                width: 120px;
+            }
+            
+        </style>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('Button1').addEventListener('click', function1);
+                document.getElementById('Button2').addEventListener('click', function2);
+                document.getElementById('Button3').addEventListener('click', function3);
+                document.getElementById('Button4').addEventListener('click', function4);
+                document.getElementById('Button5').addEventListener('click', function5);
+                function function1() {
+                    window.location.href = "index.html";
+                }
+                function function2() {
+                    window.location.href = "groupevents.html";
+                }
+                function function3() {
+                    window.location.href = "newsletters.html";
+                }
+                function function4() {
+                    window.location.href = "meetings.html";
+                }
+                function function5() {
+                    window.location.href = "contacts.html";
+                }
+            });
+            
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <img class="image" src="jpg/PoriruaManaDay.jpg" alt="Image">
+            <div class="buttons">
+                <button class="button" id="Button1">Home</button>
+                <button class="button" id="Button2">Group<br>Events</button>
+                <button class="button" id="Button3">News<br>letters</button>
+                <button class="button" id="Button4">Meetings</button>
+                <button class="button" id="Button5">Contacts</button>
+            </div>
+            <div class="textbox" readonly>
+                <h1><span style="color: #3366ff;"><b>Welcome To Porirua U3A (Inc)</b></span></h1>
+
+<p>Our group is part of an international organisation founded in France in 1973 and started in New Zealand in 1985 with the aim of providing a learning for life structure specifically for those in the older age group who wish to continue to learn and have fun socially. Porirua U3A (formerly Mana U3A) was established in 1991. We confer no degrees but learn and join interest groups for the fun of it. Our current membership of some 140 comes from Tawa to Kapiti.</p>
+
+<p>Our annual programme includes four quarterly meetings which normally feature a guest speaker. In addition, members variously participate in interest groups. These groups generally meet in the friendly atmosphere of private homes with individual members actively involved in organising or leading groups. We also have occasional day trips or visits which are of interest to members.</p>
+
+<p>A current annual membership costs $15 pa. There are no course fees as such but the agreed costs of any groups are shared by the course participants.</p>
+
+<p>If you are interested in joining Porirua U3A and want further information please contact our  President: Bill Gebbie on 027 677 0180.</p>
+
+<p>The application form can be completed and returned online to our Treasurer Gill Knox (Keith.gillknox@xtra.co.nz) or it can be printed from our Membership Form (under Contacts), completed and mailed to:</p>
+
+Porirua U3A (Inc)<br>
+9 Ernest Street<br>
+Ranui<br>
+Porirua 5024<br>
+            </div>
+        </div>
+<!-- Default Statcounter code for Porirua U3A Website
+https://poriruau3a.nz -->
 <script type="text/javascript">
-var sc_project=13028702; 
+var sc_project=13022925; 
 var sc_invisible=1; 
-var sc_security="18357868"; 
+var sc_security="4501792e"; 
 </script>
 <script type="text/javascript"
 src="https://www.statcounter.com/counter/counter.js"
@@ -54,9 +127,9 @@ async></script>
 <noscript><div class="statcounter"><a title="Web Analytics
 Made Easy - Statcounter" href="https://statcounter.com/"
 target="_blank"><img class="statcounter"
-src="https://c.statcounter.com/13028702/0/18357868/1/"
+src="https://c.statcounter.com/13022925/0/4501792e/1/"
 alt="Web Analytics Made Easy - Statcounter"
 referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 <!-- End of Statcounter Code -->
-</body>
+    </body>
 </html>
