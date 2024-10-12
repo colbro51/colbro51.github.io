@@ -104,13 +104,17 @@
 <a href="calendar.html"><h2><span style="color: #3366ff;"><b><big>Calendar</big></b></span></h2></a>
 
 <h1><span style="color: #3366ff;"><b>Upcoming Events</b></span></h1>
-<!-- boundary -->
-<big>There are no current events to display</big><br><br><!-- boundary -->
 
-
+<iframe id="link-iframe" src="links.html" width="100%" frameborder="0" onload="resizeIframe(this)"></iframe>
 
             </div>
         </div>
+<script>
+  function resizeIframe(iframe) {
+    iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+  }
+</script>
+
 <!-- Default Statcounter code for Porirua U3A Website
 https://poriruau3a.nz -->
 <script type="text/javascript">
