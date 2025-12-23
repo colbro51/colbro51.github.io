@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1976d2">
+
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+  }
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F&B Summer Camp</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: sans-serif;
+        background: #f5f5f5;
+        text-align: center;
+    }
+
+    .screen {
+        display: none;
+        padding: 10px;
+    }
+
+    .active {
+        display: block;
+    }
+
+    h1 {
+        margin: 10px 0 15px 0;
+        font-size: 30px;
+    }
+
+    .btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #1976d2;
+        color: white;
+        text-decoration: none;
+        font-size: 22px;
+        border-radius: 10px;
+        padding: 18px;
+        margin: 10px 0;
+        min-height: 70px;
+        white-space: pre-line;
+    }
+
+    /* NEW: Smaller buttons for main screen only */
+    .mainbtn {
+        min-height: 55px;
+        padding: 14px;
+    }
+
+    .subbtn {
+        font-size: 22px;
+        padding: 22px;
+        min-height: 90px;
+    }
+
+    .btn:active {
+        background: #0d47a1;
+    }
+</style>
+
+<script>
+    const BASE0 = "https://www.google.com/maps/dir/?api=1&travelmode=walking&destination=";
+    const BASE = "https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=";
+
+    //=========================================== EDIT CHANGES HERE ====================================
+    const year_name = "2025";
+
+    const camp_url = BASE + "Hanmer+Springs+TOP+10+Holiday+Park";
+
+    // Monday
+    const mon_easy_name = "Hanmer Springs Environs\nEASY";
+    const mon_easy_url  = BASE0 + "-42.527129, 172.831639";
+
+    const mon_med_name  = "Mt Isobel to Jacks Pass\nMEDIUM";
+    const mon_med_url   = BASE + "-42.488176, 172.826614";
+
+    const mon_fit_name  = "Mt Isobel Dog Stream Waterfall\nFIT";
+    const mon_fit_url   = BASE + "-42.488176, 172.826614";
+
+    // Tuesday
+    const tue_easy_name = "Option Dog Stream Circuit\nEASY";
+    const tue_easy_url  = BASE0 + "-42.527129, 172.831639";
+
+    const tue_med_name  = "Mt Dumblane\nMEDIUM";
+    const tue_med_url   = BASE + "-42.488176, 172.826614";
+
+    const tue_fit_name  = "Mt Dumblane and Tops\nFIT";
+    const tue_fit_url   = BASE + "-42.488176, 172.826614";
+
+    // Wednesday
+    const wed_easy_name = "Workin Bee at Boyle";
+    const wed_easy_url  = BASE + "St+James+Walkway+Car+Park";
+
+    const wed_med_name  = "St James Walkway Car Park";
+    const wed_med_url   = BASE + "St+James+Walkway+Car+Park";
+
+    const wed_fit_name  = "Cannibal Gorge";
+    const wed_fit_url   = BASE + "-42.37368053104093,172.37790006192594";
+
+    // Thursday
+    const thu_easy_name = "Option A\nEASY";
+    const thu_easy_url  = BASE + "Option+A";
+
+    const thu_med_name  = "Option B\nMEDIUM";
+    const thu_med_url   = BASE + "Option+B";
+
+    const thu_fit_name  = "Option C\nFIT";
+    const thu_fit_url   = BASE + "Option+C";
+
+    // Friday
+    const fri_easy_name = "Option A\nEASY";
+    const fri_easy_url  = BASE + "Option+A";
+
+    const fri_med_name  = "Option B\nMEDIUM";
+    const fri_med_url   = BASE + "Option+B";
+
+    const fri_fit_name  = "Option C\nFIT";
+    const fri_fit_url   = BASE + "Option+C";
+    //=========================================== END OF EDIT CHANGES =================================
+
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function go(url) {
+        location.href = url;
+    }
+
+    window.onload = () => {
+        document.getElementById("title").innerText =
+            "F&B WRTG Camp " + year_name;
+
+        mon_easy.innerText = mon_easy_name;
+        mon_med.innerText  = mon_med_name;
+        mon_fit.innerText  = mon_fit_name;
+
+        tue_easy.innerText = tue_easy_name;
+        tue_med.innerText  = tue_med_name;
+        tue_fit.innerText  = tue_fit_name;
+
+        wed_easy.innerText = wed_easy_name;
+        wed_med.innerText  = wed_med_name;
+        wed_fit.innerText  = wed_fit_name;
+
+        thu_easy.innerText = thu_easy_name;
+        thu_med.innerText  = thu_med_name;
+        thu_fit.innerText  = thu_fit_name;
+
+        fri_easy.innerText = fri_easy_name;
+        fri_med.innerText  = fri_med_name;
+        fri_fit.innerText  = fri_fit_name;
+    };
+</script>
+</head>
+
+<body>
+
+<!-- MAIN SCREEN -->
+<div id="main" class="screen active">
+    <h1 id="title"></h1>
+
+    <div class="btn mainbtn" onclick="go(camp_url)">Camp Location</div>
+
+    <div class="btn mainbtn" onclick="showScreen('mon')">Monday</div>
+    <div class="btn mainbtn" onclick="showScreen('tue')">Tuesday</div>
+    <div class="btn mainbtn" onclick="showScreen('wed')">Wednesday</div>
+    <div class="btn mainbtn" onclick="showScreen('thu')">Thursday</div>
+    <div class="btn mainbtn" onclick="showScreen('fri')">Friday</div>
+</div>
+
+<!-- MONDAY SCREEN -->
+<div id="mon" class="screen">
+    <h1>Monday</h1>
+    <div class="btn subbtn" id="mon_easy" onclick="go(mon_easy_url)"></div>
+    <div class="btn subbtn" id="mon_med"  onclick="go(mon_med_url)"></div>
+    <div class="btn subbtn" id="mon_fit"  onclick="go(mon_fit_url)"></div>
+</div>
+
+<!-- TUESDAY SCREEN -->
+<div id="tue" class="screen">
+    <h1>Tuesday</h1>
+    <div class="btn subbtn" id="tue_easy" onclick="go(tue_easy_url)"></div>
+    <div class="btn subbtn" id="tue_med"  onclick="go(tue_med_url)"></div>
+    <div class="btn subbtn" id="tue_fit"  onclick="go(tue_fit_url)"></div>
+</div>
+
+<!-- WEDNESDAY SCREEN -->
+<div id="wed" class="screen">
+    <h1>Wednesday</h1>
+    <div class="btn subbtn" id="wed_easy" onclick="go(wed_easy_url)"></div>
+    <div class="btn subbtn" id="wed_med"  onclick="go(wed_med_url)"></div>
+    <div class="btn subbtn" id="wed_fit"  onclick="go(wed_fit_url)"></div>
+</div>
+
+<!-- THURSDAY SCREEN -->
+<div id="thu" class="screen">
+    <h1>Thursday</h1>
+    <div class="btn subbtn" id="thu_easy" onclick="go(thu_easy_url)"></div>
+    <div class="btn subbtn" id="thu_med"  onclick="go(thu_med_url)"></div>
+    <div class="btn subbtn" id="thu_fit"  onclick="go(thu_fit_url)"></div>
+</div>
+
+<!-- FRIDAY SCREEN -->
+<div id="fri" class="screen">
+    <h1>Friday</h1>
+    <div class="btn subbtn" id="fri_easy" onclick="go(fri_easy_url)"></div>
+    <div class="btn subbtn" id="fri_med"  onclick="go(fri_med_url)"></div>
+    <div class="btn subbtn" id="fri_fit"  onclick="go(fri_fit_url)"></div>
+</div>
+
+</body>
+</html>
