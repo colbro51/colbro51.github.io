@@ -65,6 +65,14 @@
     .btn:active {
         background: #0d47a1;
     }
+
+    .backbtn {
+	background: #555;
+	font-size: 20px;
+	padding: 14px;
+	margin-top: 20px;
+    }
+
 </style>
 
 <script>
@@ -107,29 +115,34 @@
     const wed_fit_url   = BASE + "-42.37368053104093,172.37790006192594";
 
     // Thursday
-    const thu_easy_name = "Option A\nEASY";
-    const thu_easy_url  = BASE + "Option+A";
+    const thu_easy_name = "Cannibal Gorge Track\nSluice Box\nLewis Pass Alpine walk\nEASY";
+    const thu_easy_url  = BASE + "-42.37368053104093,172.37790006192594";
 
-    const thu_med_name  = "Option B\nMEDIUM";
-    const thu_med_url   = BASE + "Option+B";
+    const thu_med_name  = "St James Walkway\ntowards Gorge Hut\nMEDIUM";
+    const thu_med_url   = BASE + "-42.37368053104093,172.37790006192594";
 
-    const thu_fit_name  = "Option C\nFIT";
-    const thu_fit_url   = BASE + "Option+C";
+    const thu_fit_name  = "Lewis Tops\nFIT";
+    const thu_fit_url   = BASE + "-42.37368053104093,172.37790006192594";
 
     // Friday
-    const fri_easy_name = "Option A\nEASY";
-    const fri_easy_url  = BASE + "Option+A";
+    const fri_easy_name = "St James Homestead\nPeters Track\nEASY";
+    const fri_easy_url  = BASE + "-42.37368053104093,172.37790006192594";
 
-    const fri_med_name  = "Option B\nMEDIUM";
-    const fri_med_url   = BASE + "Option+B";
+    const fri_med_name  = "Ghost Spur Track to Rocky\nLookout and Kam Point\nMEDIUM";
+    const fri_med_url   = BASE + "-42.37368053104093,172.37790006192594";
 
-    const fri_fit_name  = "Option C\nFIT";
-    const fri_fit_url   = BASE + "Option+C";
+    const fri_fit_name  = "Ghost Spur Track and Ghost\nLink to Ghost Rock\nFIT";
+    const fri_fit_url   = BASE + "-42.37368053104093,172.37790006192594";
     //=========================================== END OF EDIT CHANGES =================================
 
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+    }
+
+
+    function goBack() {
+        showScreen('main');
     }
 
     function go(url) {
@@ -184,6 +197,7 @@
     <div class="btn subbtn" id="mon_easy" onclick="go(mon_easy_url)"></div>
     <div class="btn subbtn" id="mon_med"  onclick="go(mon_med_url)"></div>
     <div class="btn subbtn" id="mon_fit"  onclick="go(mon_fit_url)"></div>
+    <div class="btn backbtn" onclick="goBack()">⬅ Go Back</div>
 </div>
 
 <!-- TUESDAY SCREEN -->
@@ -192,6 +206,7 @@
     <div class="btn subbtn" id="tue_easy" onclick="go(tue_easy_url)"></div>
     <div class="btn subbtn" id="tue_med"  onclick="go(tue_med_url)"></div>
     <div class="btn subbtn" id="tue_fit"  onclick="go(tue_fit_url)"></div>
+    <div class="btn backbtn" onclick="goBack()">⬅ Go Back</div>
 </div>
 
 <!-- WEDNESDAY SCREEN -->
@@ -200,6 +215,7 @@
     <div class="btn subbtn" id="wed_easy" onclick="go(wed_easy_url)"></div>
     <div class="btn subbtn" id="wed_med"  onclick="go(wed_med_url)"></div>
     <div class="btn subbtn" id="wed_fit"  onclick="go(wed_fit_url)"></div>
+    <div class="btn backbtn" onclick="goBack()">⬅ Go Back</div>
 </div>
 
 <!-- THURSDAY SCREEN -->
@@ -208,6 +224,7 @@
     <div class="btn subbtn" id="thu_easy" onclick="go(thu_easy_url)"></div>
     <div class="btn subbtn" id="thu_med"  onclick="go(thu_med_url)"></div>
     <div class="btn subbtn" id="thu_fit"  onclick="go(thu_fit_url)"></div>
+    <div class="btn backbtn" onclick="goBack()">⬅ Go Back</div>
 </div>
 
 <!-- FRIDAY SCREEN -->
@@ -216,6 +233,7 @@
     <div class="btn subbtn" id="fri_easy" onclick="go(fri_easy_url)"></div>
     <div class="btn subbtn" id="fri_med"  onclick="go(fri_med_url)"></div>
     <div class="btn subbtn" id="fri_fit"  onclick="go(fri_fit_url)"></div>
+    <div class="btn backbtn" onclick="goBack()">⬅ Go Back</div>
 </div>
 
 </body>
