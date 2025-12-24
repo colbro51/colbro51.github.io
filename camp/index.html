@@ -66,16 +66,19 @@
         background: #0d47a1;
     }
 
-    .backbtn {
-        background: #1976d2;
-        color: white;
-        font-size: 20px;
-        padding: 14px;
-        margin-top: 20px;
-        border-radius: 10px;
+    .backonly {
         display: flex;
         justify-content: center;
         align-items: center;
+        background: #808080;
+        color: white;
+        font-size: 20px;
+        line-height: 1.2;
+        padding: 14px;
+        margin-top: 20px;
+        border-radius: 10px;
+        min-height: 55px;
+        white-space: nowrap;
     }
 
 </style>
@@ -202,7 +205,9 @@
     <div class="btn subbtn" id="mon_easy" onclick="go(mon_easy_url)"></div>
     <div class="btn subbtn" id="mon_med"  onclick="go(mon_med_url)"></div>
     <div class="btn subbtn" id="mon_fit"  onclick="go(mon_fit_url)"></div>
-    <div class="btn backbtn" onclick="goBack()">⬅ Go Back</div>
+    <div class="backonly" onclick="goBack()">
+        ⬅ Go Back
+    </div>
 </div>
 
 <!-- TUESDAY SCREEN -->
@@ -211,7 +216,9 @@
     <div class="btn subbtn" id="tue_easy" onclick="go(tue_easy_url)"></div>
     <div class="btn subbtn" id="tue_med"  onclick="go(tue_med_url)"></div>
     <div class="btn subbtn" id="tue_fit"  onclick="go(tue_fit_url)"></div>
-    <div class="btn backbtn" onclick="goBack()">⬅ Go Back</div>
+    <div class="backonly" onclick="goBack()">
+        ⬅ Go Back
+    </div>
 </div>
 
 <!-- WEDNESDAY SCREEN -->
@@ -220,7 +227,9 @@
     <div class="btn subbtn" id="wed_easy" onclick="go(wed_easy_url)"></div>
     <div class="btn subbtn" id="wed_med"  onclick="go(wed_med_url)"></div>
     <div class="btn subbtn" id="wed_fit"  onclick="go(wed_fit_url)"></div>
-    <div class="btn backbtn" onclick="goBack()">⬅ Go Back</div>
+    <div class="backonly" onclick="goBack()">
+        ⬅ Go Back
+    </div>
 </div>
 
 <!-- THURSDAY SCREEN -->
@@ -229,7 +238,9 @@
     <div class="btn subbtn" id="thu_easy" onclick="go(thu_easy_url)"></div>
     <div class="btn subbtn" id="thu_med"  onclick="go(thu_med_url)"></div>
     <div class="btn subbtn" id="thu_fit"  onclick="go(thu_fit_url)"></div>
-    <div class="btn backbtn" onclick="goBack()">⬅ Go Back</div>
+    <div class="backonly" onclick="goBack()">
+        ⬅ Go Back
+    </div>
 </div>
 
 <!-- FRIDAY SCREEN -->
@@ -238,7 +249,9 @@
     <div class="btn subbtn" id="fri_easy" onclick="go(fri_easy_url)"></div>
     <div class="btn subbtn" id="fri_med"  onclick="go(fri_med_url)"></div>
     <div class="btn subbtn" id="fri_fit"  onclick="go(fri_fit_url)"></div>
-    <div class="btn backbtn" onclick="goBack()">⬅ Go Back</div>
+    <div class="backonly" onclick="goBack()">
+        ⬅ Go Back
+    </div>
 </div>
 
 </body>
