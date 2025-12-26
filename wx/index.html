@@ -15,14 +15,15 @@
   <title>Weather Nowcast</title>
 
   <style>
-    body {
+    html, body {
       margin: 0;
-      font-family: sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      background: #ffffff;
+      padding: 0;
+      height: 100%;
+    }
+    iframe {
+      border: 0;
+      width: 100%;
+      height: 100%;
     }
   </style>
 
@@ -36,17 +37,11 @@
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("service-worker.js");
     }
-
-    // Redirect after a short delay
-    window.addEventListener("load", () => {
-      setTimeout(() => {
-        window.location.href = TARGET_URL;
-      }, REDIRECT_DELAY_MS);
-    });
   </script>
 </head>
 
 <body>
-  <p>Loading…</p>
+  <iframe src="https://otaki.synology.me/weather/nowcast/wellington/"
+          style="border:0; width:100vw; height:100vh;"></iframe>
 </body>
 </html>
