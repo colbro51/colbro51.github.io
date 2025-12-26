@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest2.json?v=4">
+
+  <!-- iOS support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <title>Weather Nowcast</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #ffffff;
+    }
+  </style>
+
+  <script>
+    // --- CONSTANTS SECTION ---
+    const TARGET_URL = "https://otaki.synology.me/weather/nowcast/wellington/";
+    const REDIRECT_DELAY_MS = 600;   // Enough time for Chrome to parse manifest + SW
+    // --------------------------
+
+    // Register service worker early
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+
+    // Redirect after a short delay
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        window.location.href = TARGET_URL;
+      }, REDIRECT_DELAY_MS);
+    });
+  </script>
+</head>
+
+<body>
+  <p>Loading…</p>
+</body>
+</html>
