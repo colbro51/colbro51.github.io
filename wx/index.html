@@ -19,11 +19,26 @@
       margin: 0;
       padding: 0;
       height: 100%;
+      overflow: hidden;
     }
-    iframe {
+
+    .frameViewport {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      background: #000;
+    }
+
+    .frameViewport iframe {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 142.8vw;   /* 1 / 0.7 = 142.8% */
+      height: 142.8vh;
+      transform: translate(-50%, -50%) scale(0.7);
+      transform-origin: center center;
       border: 0;
-      width: 100%;
-      height: 100%;
     }
   </style>
 
@@ -41,7 +56,8 @@
 </head>
 
 <body>
-  <iframe src="https://otaki.synology.me/weather/nowcast/wellington/"
-          style="border:0; width:100vw; height:100vh;"></iframe>
+  <div class="frameViewport">
+    <iframe src="https://otaki.synology.me/weather/nowcast/wellington/"></iframe>
+  </div>
 </body>
 </html>
