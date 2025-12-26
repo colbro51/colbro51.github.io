@@ -26,6 +26,7 @@
       overflow: hidden;
       position: relative;
       background: #000;
+      touch-action: none; /* required for pinch + drag */
     }
 
     #radar {
@@ -33,22 +34,22 @@
       top: 50%;
       left: 50%;
       transform-origin: center center;
-      border: 0;
       user-select: none;
       touch-action: none;
+      border: 0;
     }
   </style>
 
   <script>
   window.onload = () => {
 
-    // --- CONSTANTS ---
-    let scale = 0.5;
-    let offsetX = 0;
-    let offsetY = 0;
-    const MIN_SCALE = 0.3;
-    const MAX_SCALE = 2.0;
-    // ------------------
+    // --- CONSTANTS SECTION ---
+    let scale = 2;          // 200% zoom (zoomed IN)
+    let offsetX = 0;        // pan X
+    let offsetY = 0;        // pan Y
+    const MIN_SCALE = 0.5;
+    const MAX_SCALE = 4.0;
+    // --------------------------
 
     const radar = document.getElementById("radar");
     const viewport = document.getElementById("viewport");
@@ -58,7 +59,7 @@
         `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px)) scale(${scale})`;
     }
 
-    // Initial transform
+    // Initial transform (zoomed + centered)
     applyTransform();
 
     // --- DRAG TO PAN ---
@@ -113,7 +114,7 @@
 
         if (lastDist !== 0) {
           const delta = dist - lastDist;
-          scale += delta * 0.002;
+          scale += delta * 0.004;  // pinch sensitivity
           scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
           applyTransform();
         }
@@ -127,7 +128,7 @@
 
     // --- MOUSE WHEEL ZOOM ---
     viewport.addEventListener("wheel", e => {
-      scale += (e.deltaY > 0 ? -0.05 : 0.05);
+      scale += (e.deltaY > 0 ? -0.1 : 0.1);
       scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
       applyTransform();
     });
