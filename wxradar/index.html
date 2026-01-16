@@ -4,14 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- PWA -->
   <link rel="manifest" href="manifest2.json?v=5">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
 
-  <title>Weather Nowcast</title>
+  <title>Weather Radar Nowcast</title>
 
   <style>
     html, body {
@@ -28,18 +27,76 @@
     #radar {
       width: 100%;
       height: 100%;
-      object-fit: contain; /* or 'cover' if you prefer */
+      object-fit: contain;
       display: block;
       border: 0;
     }
   </style>
 
   <script>
+    const rand = Math.floor(Math.random() * 1_000_000);
+    document.getElementById("radar").src = `${nearest.url}?rand=${rand}`;
+
+    const RADARS = {
+      auckland:  { lat: -36.8485, lon: 174.7633,
+                   url: "https://otaki.synology.me/weather/radarimages/Auckland-300K/nowcast.gif" },
+      wellington:{ lat: -41.2865, lon: 174.7762,
+                   url: "https://otaki.synology.me/weather/radarimages/Wellington-300K/nowcast.gif" },
+      christchurch:{ lat: -43.5321, lon: 172.6362,
+                     url: "https://otaki.synology.me/weather/radarimages/Christchurch-300K/nowcast.gif" }
+    };
+
+    function distanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a =
+        Math.sin(dLat/2)**2 +
+        Math.cos(lat1 * Math.PI/180) *
+        Math.cos(lat2 * Math.PI/180) *
+        Math.sin(dLon/2)**2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    function selectNearestRadar() {
+      if (!navigator.geolocation) return;
+
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          const { latitude, longitude } = pos.coords;
+
+          let nearest = null;
+          let nearestDist = Infinity;
+
+          for (const key in RADARS) {
+            const r = RADARS[key];
+            const d = distanceKm(latitude, longitude, r.lat, r.lon);
+            if (d < nearestDist) {
+              nearestDist = d;
+              nearest = r;
+            }
+          }
+
+          if (nearest) {
+            const rand = Math.floor(Math.random() * 1_000_000);
+            document.getElementById("radar").src = `${nearest.url}?rand=${rand}`;
+          }
+        },
+      err => {
+          console.warn("Location unavailable:", err);
+          const rand = Math.floor(Math.random() * 1_000_000);
+          document.getElementById("radar").src =
+            `https://otaki.synology.me/weather/radarimages/Wellington-300K/nowcast.gif?rand=${rand}`;
+        },
+        { enableHighAccuracy: false }
+      );
+    }
+
     window.onload = () => {
-      // Register service worker only
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("service-worker.js");
       }
+      selectNearestRadar();
     };
   </script>
 </head>
