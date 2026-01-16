@@ -165,6 +165,13 @@ function goBack() {
 }
 
 function go(url) {
+    const useCamp = document.getElementById("startFromCamp").checked;
+
+    if (!useCamp) {
+        // Replace origin=Camp with origin=Current+Location
+        url = url.replace(/origin=[^&]+/, "origin=Current+Location");
+    }
+
     location.href = url;
 }
 
@@ -200,6 +207,11 @@ window.onload = () => {
 <!-- MAIN SCREEN -->
 <div id="main" class="screen active">
     <h1 id="title"></h1>
+
+    <label style="font-size:18px; display:block; margin-bottom:10px;">
+      <input type="checkbox" id="startFromCamp" checked>
+      Start from camp
+    </label>
 
     <div class="btn mainbtn" onclick="go(camp_url)">Camp Location</div>
 
