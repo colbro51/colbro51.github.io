@@ -1,6 +1,6 @@
 {
-  "name": "Wellington Nowcast",
-  "short_name": "Nowcast",
+  "name": "Weather Radar",
+  "short_name": "WxRadar",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
