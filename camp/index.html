@@ -89,107 +89,109 @@
 </style>
 
 <script>
-    function mapsUrl(mode, origin, destination) {
-      return `https://www.google.com/maps/dir/?api=1`
-         + `&travelmode=${mode}`
-         + `&origin=${origin}`
-         + `&destination=${destination}`;
-    }
-    //=========================================== EDIT CHANGES HERE ====================================
-    const year_name = "2025";
+function mapsUrl(mode, origin, destination) {
+  return `https://www.google.com/maps/dir/?api=1`
+       + `&travelmode=${mode}`
+       + `&origin=${origin}`
+       + `&destination=${destination}`;
+}
 
-    const camp_url = "Hanmer+Springs+TOP+10+Holiday+Park";
+//=========================================== EDIT CHANGES HERE ====================================
+const year_name = "2025";
 
-    // Monday
-    const mon_easy_name = "Hanmer Springs Environs\nEASY";
-    const mon_easy_url  = mapsUrl("walking", camp_origin, "-42.527129,172.831639");
+// Define origin and base URLs
+const camp_origin = "Hanmer+Springs+TOP+10+Holiday+Park";
+const camp_url = mapsUrl("driving", camp_origin, camp_origin); // or whatever you want
 
-    const mon_med_name  = "Mt Isobel to Jacks Pass\nMEDIUM";
-    const mon_med_url   = mapsUrl("driving", camp_origin, "-42.488176,172.826614");
+// Monday
+const mon_easy_name = "Hanmer Springs Environs\nEASY";
+const mon_easy_url  = mapsUrl("walking", camp_origin, "-42.527129,172.831639");
 
+const mon_med_name  = "Mt Isobel to Jacks Pass\nMEDIUM";
+const mon_med_url   = mapsUrl("driving", camp_origin, "-42.488176,172.826614");
 
-    const mon_fit_name  = "Mt Isobel Dog Stream Waterfall\nFIT";
-    const mon_fit_url   = mapsUrl("driving", camp_origin, "-42.488176,172.826614");
+const mon_fit_name  = "Mt Isobel Dog Stream Waterfall\nFIT";
+const mon_fit_url   = mapsUrl("driving", camp_origin, "-42.488176,172.826614");
 
-    // Tuesday
-    const tue_easy_name = "Option Dog Stream Circuit\nEASY";
-    const tue_easy_url  = mapsUrl("walking", camp_origin, "-42.527129,172.831639");
+// Tuesday
+const tue_easy_name = "Option Dog Stream Circuit\nEASY";
+const tue_easy_url  = mapsUrl("walking", camp_origin, "-42.527129,172.831639");
 
-    const tue_med_name  = "Mt Dumblane\nMEDIUM";
-    const tue_med_url   = mapsUrl("driving", camp_origin, "-42.488176,172.826614");
+const tue_med_name  = "Mt Dumblane\nMEDIUM";
+const tue_med_url   = mapsUrl("driving", camp_origin, "-42.488176,172.826614");
 
-    const tue_fit_name  = "Mt Dumblane and Tops\nFIT";
-    const tue_fit_url   = mapsUrl("driving", camp_origin, "-42.488176,172.826614");
+const tue_fit_name  = "Mt Dumblane and Tops\nFIT";
+const tue_fit_url   = mapsUrl("driving", camp_origin, "-42.488176,172.826614");
 
-    // Wednesday
-    const wed_easy_name = "Workin Bee at Boyle";
-    const wed_easy_url  = mapsUrl("driving", camp_origin, "St+James+Walkway+Car+Park");
+// Wednesday
+const wed_easy_name = "Workin Bee at Boyle";
+const wed_easy_url  = mapsUrl("driving", camp_origin, "St+James+Walkway+Car+Park");
 
-    const wed_med_name  = "St James Walkway Car Park";
-    const wed_med_url   = mapsUrl("driving", camp_origin, "St+James+Walkway+Car+Park");
+const wed_med_name  = "St James Walkway Car Park";
+const wed_med_url   = mapsUrl("driving", camp_origin, "St+James+Walkway+Car+Park");
 
-    const wed_fit_name  = "Cannibal Gorge";
-    const wed_fit_url   = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
+const wed_fit_name  = "Cannibal Gorge";
+const wed_fit_url   = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
 
-    // Thursday
-    const thu_easy_name = "Cannibal Gorge Track\nSluice Box\nLewis Pass Alpine walk\nEASY";
-    const thu_easy_url  = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
+// Thursday
+const thu_easy_name = "Cannibal Gorge Track\nSluice Box\nLewis Pass Alpine walk\nEASY";
+const thu_easy_url  = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
 
-    const thu_med_name  = "St James Walkway\ntowards Gorge Hut\nMEDIUM";
-    const thu_med_url   = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
+const thu_med_name  = "St James Walkway\ntowards Gorge Hut\nMEDIUM";
+const thu_med_url   = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
 
-    const thu_fit_name  = "Lewis Tops\nFIT";
-    const thu_fit_url   = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
+const thu_fit_name  = "Lewis Tops\nFIT";
+const thu_fit_url   = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
 
-    // Friday
-    const fri_easy_name = "St James Homestead\nPeters Track\nEASY";
-    const fri_easy_url  = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
+// Friday
+const fri_easy_name = "St James Homestead\nPeters Track\nEASY";
+const fri_easy_url  = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
 
-    const fri_med_name  = "Ghost Spur Track to Rocky\nLookout and Kam Point\nMEDIUM";
-    const fri_med_url   = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
+const fri_med_name  = "Ghost Spur Track to Rocky\nLookout and Kam Point\nMEDIUM";
+const fri_med_url   = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
 
-    const fri_fit_name  = "Ghost Spur Track and Ghost\nLink to Ghost Rock\nFIT";
-    const fri_fit_url   = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
+const fri_fit_name  = "Ghost Spur Track and Ghost\nLink to Ghost Rock\nFIT";
+const fri_fit_url   = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
 
-    //=========================================== END OF EDIT CHANGES =================================
+//=========================================== END OF EDIT CHANGES =================================
 
-    function showScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    }
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
 
-    function goBack() {
-        showScreen('main');
-    }
+function goBack() {
+    showScreen('main');
+}
 
-    function go(url) {
-        location.href = url;
-    }
+function go(url) {
+    location.href = url;
+}
 
-    window.onload = () => {
-        document.getElementById("title").innerText =
-            "F&B WRTG Camp " + year_name;
+window.onload = () => {
+    document.getElementById("title").innerText =
+        "F&B WRTG Camp " + year_name;
 
-        mon_easy.innerText = mon_easy_name;
-        mon_med.innerText  = mon_med_name;
-        mon_fit.innerText  = mon_fit_name;
+    mon_easy.innerText = mon_easy_name;
+    mon_med.innerText  = mon_med_name;
+    mon_fit.innerText  = mon_fit_name;
 
-        tue_easy.innerText = tue_easy_name;
-        tue_med.innerText  = tue_med_name;
-        tue_fit.innerText  = tue_fit_name;
+    tue_easy.innerText = tue_easy_name;
+    tue_med.innerText  = tue_med_name;
+    tue_fit.innerText  = tue_fit_name;
 
-        wed_easy.innerText = wed_easy_name;
-        wed_med.innerText  = wed_med_name;
-        wed_fit.innerText  = wed_fit_name;
+    wed_easy.innerText = wed_easy_name;
+    wed_med.innerText  = wed_med_name;
+    wed_fit.innerText  = wed_fit_name;
 
-        thu_easy.innerText = thu_easy_name;
-        thu_med.innerText  = thu_med_name;
-        thu_fit.innerText  = thu_fit_name;
+    thu_easy.innerText = thu_easy_name;
+    thu_med.innerText  = thu_med_name;
+    thu_fit.innerText  = thu_fit_name;
 
-        fri_easy.innerText = fri_easy_name;
-        fri_med.innerText  = fri_med_name;
-        fri_fit.innerText  = fri_fit_name;
-    };
+    fri_easy.innerText = fri_easy_name;
+    fri_med.innerText  = fri_med_name;
+    fri_fit.innerText  = fri_fit_name;
+};
 </script>
 </head>
 
