@@ -55,7 +55,6 @@
         white-space: pre-line;
     }
 
-    /* NEW: Smaller buttons for main screen only */
     .mainbtn {
         min-height: 55px;
         padding: 14px;
@@ -86,6 +85,45 @@
         white-space: nowrap;
     }
 
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.55);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 20px;
+        width: 85%;
+        max-width: 350px;
+        border-radius: 12px;
+        text-align: left;
+        font-size: 18px;
+        line-height: 1.4;
+    }
+
+    .modal-content h2 {
+        margin-top: 0;
+        font-size: 22px;
+    }
+
+    .modal-btn {
+        width: 100%;
+        margin-top: 15px;
+        padding: 12px;
+        background: #1976d2;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+    }
 </style>
 
 <script>
@@ -95,66 +133,12 @@ function mapsUrl(mode, origin, destination) {
        + `&origin=${origin}`
        + `&destination=${destination}`;
 }
+</script>
 
-//=========================================== EDIT CHANGES HERE ====================================
-const year_name = "2025";
+<!-- Load all camp-specific data -->
+<script src="camp-data.js"></script>
 
-// Define origin and base URLs
-const camp_origin = "Hanmer+Springs+TOP+10+Holiday+Park";
-const camp_url = mapsUrl("driving", "Current+Location", camp_origin); // or whatever you want
-
-// Monday
-const mon_easy_name = "Hanmer Springs Environs\nEASY";
-const mon_easy_url  = mapsUrl("walking", camp_origin, "-42.527129,172.831639");
-
-const mon_med_name  = "Mt Isobel to Jacks Pass\nMEDIUM";
-const mon_med_url   = mapsUrl("driving", camp_origin, "-42.488176,172.826614");
-
-const mon_fit_name  = "Mt Isobel Dog Stream Waterfall\nFIT";
-const mon_fit_url   = mapsUrl("driving", camp_origin, "-42.488176,172.826614");
-
-// Tuesday
-const tue_easy_name = "Option Dog Stream Circuit\nEASY";
-const tue_easy_url  = mapsUrl("walking", camp_origin, "-42.527129,172.831639");
-
-const tue_med_name  = "Mt Dumblane\nMEDIUM";
-const tue_med_url   = mapsUrl("driving", camp_origin, "-42.488176,172.826614");
-
-const tue_fit_name  = "Mt Dumblane and Tops\nFIT";
-const tue_fit_url   = mapsUrl("driving", camp_origin, "-42.488176,172.826614");
-
-// Wednesday
-const wed_easy_name = "Workin Bee at Boyle";
-const wed_easy_url  = mapsUrl("driving", camp_origin, "St+James+Walkway+Car+Park");
-
-const wed_med_name  = "St James Walkway Car Park";
-const wed_med_url   = mapsUrl("driving", camp_origin, "St+James+Walkway+Car+Park");
-
-const wed_fit_name  = "Cannibal Gorge";
-const wed_fit_url   = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
-
-// Thursday
-const thu_easy_name = "Cannibal Gorge Track\nSluice Box\nLewis Pass Alpine walk\nEASY";
-const thu_easy_url  = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
-
-const thu_med_name  = "St James Walkway\ntowards Gorge Hut\nMEDIUM";
-const thu_med_url   = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
-
-const thu_fit_name  = "Lewis Tops\nFIT";
-const thu_fit_url   = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
-
-// Friday
-const fri_easy_name = "St James Homestead\nPeters Track\nEASY";
-const fri_easy_url  = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
-
-const fri_med_name  = "Ghost Spur Track to Rocky\nLookout and Kam Point\nMEDIUM";
-const fri_med_url   = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
-
-const fri_fit_name  = "Ghost Spur Track and Ghost\nLink to Ghost Rock\nFIT";
-const fri_fit_url   = mapsUrl("driving", camp_origin, "-42.37368053104093,172.37790006192594");
-
-//=========================================== END OF EDIT CHANGES =================================
-
+<script>
 function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
@@ -164,15 +148,41 @@ function goBack() {
     showScreen('main');
 }
 
+function openInMapsWithDetection(url) {
+    // Open Maps in a new tab/window (required for OS handoff)
+    const win = window.open(url, "_blank");
+
+    // Start a timer to detect failure
+    const start = Date.now();
+
+    setTimeout(() => {
+        // If the PWA is still visible after ~1 second,
+        // the OS probably did NOT hand off to the native app.
+        if (document.visibilityState === "visible") {
+            showMapsFailurePopup();
+        }
+    }, 1200);
+}
+
+function showMapsFailurePopup() {
+    alert(
+        "It looks like your device did not open the Google Maps app.\n\n" +
+        "This can happen if:\n" +
+        "• The Maps app is not installed\n" +
+        "• Your device is set to open links in the browser\n" +
+        "• iOS kept the link inside the PWA\n\n" +
+        "You can still continue, but navigation may be limited."
+    );
+}
+
 function go(url) {
     const useCamp = document.getElementById("startFromCamp").checked;
 
     if (!useCamp) {
-        // Replace origin=Camp with origin=Current+Location
         url = url.replace(/origin=[^&]+/, "origin=Current+Location");
     }
 
-    location.href = url;
+    openInMapsWithDetection(url);
 }
 
 window.onload = () => {
@@ -228,9 +238,7 @@ window.onload = () => {
     <div class="btn subbtn" id="mon_easy" onclick="go(mon_easy_url)"></div>
     <div class="btn subbtn" id="mon_med"  onclick="go(mon_med_url)"></div>
     <div class="btn subbtn" id="mon_fit"  onclick="go(mon_fit_url)"></div>
-    <div class="backonly" onclick="goBack()">
-        ⬅ Go Back
-    </div>
+    <div class="backonly" onclick="goBack()">⬅ Go Back</div>
 </div>
 
 <!-- TUESDAY SCREEN -->
@@ -239,9 +247,7 @@ window.onload = () => {
     <div class="btn subbtn" id="tue_easy" onclick="go(tue_easy_url)"></div>
     <div class="btn subbtn" id="tue_med"  onclick="go(tue_med_url)"></div>
     <div class="btn subbtn" id="tue_fit"  onclick="go(tue_fit_url)"></div>
-    <div class="backonly" onclick="goBack()">
-        ⬅ Go Back
-    </div>
+    <div class="backonly" onclick="goBack()">⬅ Go Back</div>
 </div>
 
 <!-- WEDNESDAY SCREEN -->
@@ -250,9 +256,7 @@ window.onload = () => {
     <div class="btn subbtn" id="wed_easy" onclick="go(wed_easy_url)"></div>
     <div class="btn subbtn" id="wed_med"  onclick="go(wed_med_url)"></div>
     <div class="btn subbtn" id="wed_fit"  onclick="go(wed_fit_url)"></div>
-    <div class="backonly" onclick="goBack()">
-        ⬅ Go Back
-    </div>
+    <div class="backonly" onclick="goBack()">⬅ Go Back</div>
 </div>
 
 <!-- THURSDAY SCREEN -->
@@ -261,9 +265,7 @@ window.onload = () => {
     <div class="btn subbtn" id="thu_easy" onclick="go(thu_easy_url)"></div>
     <div class="btn subbtn" id="thu_med"  onclick="go(thu_med_url)"></div>
     <div class="btn subbtn" id="thu_fit"  onclick="go(thu_fit_url)"></div>
-    <div class="backonly" onclick="goBack()">
-        ⬅ Go Back
-    </div>
+    <div class="backonly" onclick="goBack()">⬅ Go Back</div>
 </div>
 
 <!-- FRIDAY SCREEN -->
@@ -272,9 +274,24 @@ window.onload = () => {
     <div class="btn subbtn" id="fri_easy" onclick="go(fri_easy_url)"></div>
     <div class="btn subbtn" id="fri_med"  onclick="go(fri_med_url)"></div>
     <div class="btn subbtn" id="fri_fit"  onclick="go(fri_fit_url)"></div>
-    <div class="backonly" onclick="goBack()">
-        ⬅ Go Back
-    </div>
+    <div class="backonly" onclick="goBack()">⬅ Go Back</div>
+</div>
+
+<div id="mapsFailModal" class="modal">
+  <div class="modal-content">
+    <h2>Google Maps Didn’t Open</h2>
+    <p>
+      Your device didn’t switch to the Google Maps app.<br><br>
+      This can happen if:
+      <ul>
+        <li>The Maps app isn’t installed</li>
+        <li>Your device opens links in the browser</li>
+        <li>iOS kept the link inside the PWA</li>
+      </ul>
+      You can still continue, but navigation may be limited.
+    </p>
+    <button class="modal-btn" onclick="closeMapsFailModal()">OK</button>
+  </div>
 </div>
 
 </body>
