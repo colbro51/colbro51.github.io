@@ -41,13 +41,17 @@
         navigator.serviceWorker.register("service-worker.js");
       }
     };
+
+    function ts() {
+      return Date.now();
+    }
   </script>
 </head>
 
 <body>
   <div id="viewport">
     <img id="radar"
-         src="https://otaki.synology.me/weather/radarimages/Christchurch-300K/nowcast.gif">
+         src="https://otaki.synology.me/weather/radarimages/Christchurch-300K/nowcast.gif?ts=`${ts()}`">
   </div>
 </body>
 </html>
