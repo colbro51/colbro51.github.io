@@ -53,6 +53,12 @@ export function go(url) {
   }
 
   const finalUrl = appState.buildURL(origin, destination);
+
+  if (appState.os === "windows") {
+    window.open(finalUrl, "_blank");
+    return;
+  }
+
   openInMapsWithDetection(finalUrl);
 }
 

@@ -11,6 +11,7 @@ export function detectOS() {
     if (p.includes("ios")) return "ios";
   }
 
+  if (navigator.userAgent.includes("Windows")) return "windows";
   if (/iPhone|iPod/.test(ua)) return "ios";
 
   const isIPad = /iPad/.test(ua) ||
@@ -52,6 +53,7 @@ export async function locationAvailable() {
 // STATE MACHINE
 // ------------------------------------------------------------
 export function determineState(os, useGoogle) {
+  if (os === "windows") return 4;
   if (os === "android" && useGoogle) return 1;
   if ((os === "ios" || os === "ipad") && useGoogle) return 2;
   if ((os === "ios" || os === "ipad") && !useGoogle) return 3;
@@ -73,6 +75,9 @@ export function buildMapURL(state, origin, destination) {
     case 3:
       return `maps://?saddr=${encodeURIComponent(origin)}&daddr=${encodeURIComponent(destination)}`;
 
+    case 4: // Windows PC → always browser Google Maps
+      return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
+
     default:
       return null;
   }
@@ -84,8 +89,19 @@ export function buildMapURL(state, origin, destination) {
 // ------------------------------------------------------------
 export async function appLaunch() {
   const os = detectOS();
-  const loc = await locationAvailable();
 
+  // Windows: skip location check entirely
+  if (os === "windows") {
+    return {
+      os,
+      state: 4,
+      buildURL: (origin, destination) =>
+        buildMapURL(4, origin, destination)
+    };
+  }
+
+  // Mobile platforms: normal location check
+  const loc = await locationAvailable();
   if (!loc.ok) {
     return { error: "location", os, reason: loc.reason };
   }
