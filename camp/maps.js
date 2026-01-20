@@ -1,4 +1,3 @@
-import { appLaunch } from "./logic.js";
 
 let appState = null;
 

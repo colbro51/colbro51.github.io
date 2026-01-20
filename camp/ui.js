@@ -1,4 +1,4 @@
-import { initMaps, go, closeMapsFailModal } from "./maps.js";
+// maps.js is already loaded globally
 
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));

@@ -28,14 +28,20 @@
 <link id="css_main" rel="stylesheet" href="">
 
 <script id="js_data" src=""></script>
+<script id="js_maps" type="module" src=""></script>
 <script id="js_ui" type="module" src=""></script>
+<script id="js_logic" src=""></script>
+<script id="js_maps" src=""></script>
 
 <script>
   // Inject versioned URLs
   document.getElementById("manifest_link").href = "manifest.json?v=" + APP_VERSION;
   document.getElementById("css_main").href      = "style.css?v=" + APP_VERSION;
   document.getElementById("js_data").src        = "camp-data.js?v=" + APP_VERSION;
+  document.getElementById("js_maps").src        = "maps.js?v=" + APP_VERSION;
   document.getElementById("js_ui").src          = "ui.js?v=" + APP_VERSION;
+  document.getElementById("js_logic").src       = "logic.js?v=" + APP_VERSION;
+  document.getElementById("js_maps").src        = "maps.js?v=" + APP_VERSION;
 
   document.getElementById("icon_192").href      = "icon-192.png?v=" + APP_VERSION;
   document.getElementById("icon_512").href      = "icon-512.png?v=" + APP_VERSION;
