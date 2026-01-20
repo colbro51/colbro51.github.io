@@ -81,3 +81,8 @@ window.onload = () => {
   document.getElementById("fri_med").addEventListener("click", () => go(fri_med_url));
   document.getElementById("fri_fit").addEventListener("click", () => go(fri_fit_url));
 };
+
+// ⭐ expose functions for inline onclick handlers
+window.go = go;
+window.showScreen = showScreen;
+window.goBack = goBack;

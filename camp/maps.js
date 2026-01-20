@@ -77,3 +77,5 @@ export function closeMapsFailModal() {
 export function showLocationErrorModal(os, reason) {
   alert("Location services are unavailable. Please enable them.");
 }
+
+window.closeMapsFailModal = closeMapsFailModal;
