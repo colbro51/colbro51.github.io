@@ -1,25 +1,20 @@
-console.log("MAPS.JS LOADED");
-
 import { appLaunch } from "./logic.js";
 
 let appState = null;
 
 export async function initMaps() {
   appState = await appLaunch();
-  console.log("appLaunch() returned:", appState);
 
   if (appState.error === "location") {
-    console.warn("Location error:", appState.reason);
     alert("Location services unavailable. Please enable them.");
     return;
   }
 
-  console.log("Maps initialized. OS:", appState.os, "State:", appState.state);
+  console.log("OS:", appState.os);
+  console.log("Routing state:", appState.state);
 }
 
 export function openInMapsWithDetection(url) {
-  console.log("Opening URL:", url);
-
   window.open(url, "_blank");
 
   setTimeout(() => {
@@ -29,25 +24,16 @@ export function openInMapsWithDetection(url) {
   }, 1200);
 }
 
-export function go(url) {
-  console.log("go() called with:", url);
-
-  if (!appState) {
-    console.error("go() called before appState is ready");
-    return;
-  }
-
-  console.log("appState:", appState);
+export function go(mode, origin, destination) {
+  if (!appState) return;
 
   const useCamp = document.getElementById("startFromCamp").checked;
 
-  const params = new URLSearchParams(url.split("?")[1]);
-  let origin = params.get("origin");
-  let destination = params.get("destination");
+  if (!useCamp) {
+    origin = "Current Location";
+  }
 
-  if (!useCamp) origin = "Current Location";
-
-  const finalUrl = appState.buildURL(origin, destination);
+  const finalUrl = appState.buildURL(origin, destination, mode);
 
   if (appState.os === "windows") {
     window.open(finalUrl, "_blank");

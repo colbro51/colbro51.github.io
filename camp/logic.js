@@ -1,8 +1,4 @@
-console.log("LOGIC.JS LOADED");
-
 export function detectOS() {
-  console.log("detectOS() UA:", navigator.userAgent);
-
   const ua = navigator.userAgent || "";
   const uaData = navigator.userAgentData;
 
@@ -54,20 +50,19 @@ export function determineState(os, useGoogle) {
   return 0;
 }
 
-export function buildMapURL(state, origin, destination) {
-  console.log("buildMapURL() state:", state, "origin:", origin, "dest:", destination);
+export function buildMapURL(state, origin, destination, mode) {
   switch (state) {
     case 1:
-      return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
+      return `https://www.google.com/maps/dir/?api=1&travelmode=${mode}&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
 
     case 2:
-      return `comgooglemaps://?saddr=${encodeURIComponent(origin)}&daddr=${encodeURIComponent(destination)}`;
+      return `comgooglemaps://?directionsmode=${mode}&saddr=${encodeURIComponent(origin)}&daddr=${encodeURIComponent(destination)}`;
 
     case 3:
-      return `maps://?saddr=${encodeURIComponent(origin)}&daddr=${encodeURIComponent(destination)}`;
+      return `maps://?dirflg=${mode[0]}&saddr=${encodeURIComponent(origin)}&daddr=${encodeURIComponent(destination)}`;
 
     case 4:
-      return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
+      return `https://www.google.com/maps/dir/?api=1&travelmode=${mode}&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
 
     default:
       return null;
@@ -76,20 +71,17 @@ export function buildMapURL(state, origin, destination) {
 
 export async function appLaunch() {
   const os = detectOS();
-  console.log("appLaunch() starting… OS detected:", os);
 
   if (os === "windows") {
-    console.log("Windows detected — skipping location check");
     return {
       os,
       state: 4,
-      buildURL: (origin, destination) =>
-        buildMapURL(4, origin, destination)
+      buildURL: (origin, destination, mode) =>
+        buildMapURL(4, origin, destination, mode)
     };
   }
 
   const loc = await locationAvailable();
-  console.log("Location check result:", loc);
   if (!loc.ok) {
     return { error: "location", os, reason: loc.reason };
   }
@@ -100,7 +92,7 @@ export async function appLaunch() {
   return {
     os,
     state,
-    buildURL: (origin, destination) =>
-      buildMapURL(state, origin, destination)
+    buildURL: (origin, destination, mode) =>
+      buildMapURL(state, origin, destination, mode)
   };
 }

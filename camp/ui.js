@@ -1,12 +1,4 @@
-console.log("UI.JS LOADED");
-
 import { initMaps, go, closeMapsFailModal } from "./maps.js";
-
-function dbg(msg) {
-  console.log(msg);
-  const box = document.getElementById("debug");
-  if (box) box.textContent += msg + "\n";
-}
 
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
@@ -18,17 +10,7 @@ function goBack() {
 }
 
 window.onload = () => {
-  console.log("WINDOW ONLOAD FIRED");
-
-  try {
-    initMaps().then(() => {
-      console.log("initMaps() completed");
-    });
-  } catch (e) {
-    console.error("initMaps() threw:", e);
-  }
-
-  console.log("Setting up UI labels and buttons…");
+  initMaps();
 
   document.getElementById("title").innerText =
     "F&B WRTG Camp " + year_name;
@@ -53,7 +35,8 @@ window.onload = () => {
   fri_med.innerText  = fri_med_name;
   fri_fit.innerText  = fri_fit_name;
 
-  document.getElementById("btn_camp").onclick = () => go(camp_url);
+  document.getElementById("btn_camp").onclick = () =>
+    go("driving", camp_origin, camp_origin);
 
   document.getElementById("btn_mon").onclick = () => showScreen("mon");
   document.getElementById("btn_tue").onclick = () => showScreen("tue");
@@ -67,27 +50,25 @@ window.onload = () => {
   document.getElementById("back_thu").onclick = goBack;
   document.getElementById("back_fri").onclick = goBack;
 
-  mon_easy.onclick = () => go(mon_easy_url);
-  mon_med.onclick  = () => go(mon_med_url);
-  mon_fit.onclick  = () => go(mon_fit_url);
+  mon_easy.onclick = () => go(mon_easy_mode, camp_origin, mon_easy_dest);
+  mon_med.onclick  = () => go(mon_med_mode,  camp_origin, mon_med_dest);
+  mon_fit.onclick  = () => go(mon_fit_mode,  camp_origin, mon_fit_dest);
 
-  tue_easy.onclick = () => go(tue_easy_url);
-  tue_med.onclick  = () => go(tue_med_url);
-  tue_fit.onclick  = () => go(tue_fit_url);
+  tue_easy.onclick = () => go(tue_easy_mode, camp_origin, tue_easy_dest);
+  tue_med.onclick  = () => go(tue_med_mode,  camp_origin, tue_med_dest);
+  tue_fit.onclick  = () => go(tue_fit_mode,  camp_origin, tue_fit_dest);
 
-  wed_easy.onclick = () => go(wed_easy_url);
-  wed_med.onclick  = () => go(wed_med_url);
-  wed_fit.onclick  = () => go(wed_fit_url);
+  wed_easy.onclick = () => go(wed_easy_mode, camp_origin, wed_easy_dest);
+  wed_med.onclick  = () => go(wed_med_mode,  camp_origin, wed_med_dest);
+  wed_fit.onclick  = () => go(wed_fit_mode,  camp_origin, wed_fit_dest);
 
-  thu_easy.onclick = () => go(thu_easy_url);
-  thu_med.onclick  = () => go(thu_med_url);
-  thu_fit.onclick  = () => go(thu_fit_url);
+  thu_easy.onclick = () => go(thu_easy_mode, camp_origin, thu_easy_dest);
+  thu_med.onclick  = () => go(thu_med_mode,  camp_origin, thu_med_dest);
+  thu_fit.onclick  = () => go(thu_fit_mode,  camp_origin, thu_fit_dest);
 
-  fri_easy.onclick = () => go(fri_easy_url);
-  fri_med.onclick  = () => go(fri_med_url);
-  fri_fit.onclick  = () => go(fri_fit_url);
+  fri_easy.onclick = () => go(fri_easy_mode, camp_origin, fri_easy_dest);
+  fri_med.onclick  = () => go(fri_med_mode,  camp_origin, fri_med_dest);
+  fri_fit.onclick  = () => go(fri_fit_mode,  camp_origin, fri_fit_dest);
 
   document.getElementById("modal_ok").onclick = closeMapsFailModal;
 };
-
-console.log("UI.JS FINISHED EXECUTING");

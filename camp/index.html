@@ -1,27 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="manifest" href="manifest.json">
+
+<script>
+  // Global version stamp for all assets
+  const APP_VERSION = Date.now();
+</script>
+
+<link id="manifest_link" rel="manifest" href="">
 <meta name="theme-color" content="#1976d2">
-<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+
+<link id="icon_192" rel="apple-touch-icon" sizes="192x192" href="">
+<link id="icon_512" rel="apple-touch-icon" sizes="512x512" href="">
 
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
 <script>
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
+    navigator.serviceWorker.register("service-worker.js?v=" + APP_VERSION);
   }
 </script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>F&B Summer Camp</title>
 
-<link rel="stylesheet" href="style.css">
+<link id="css_main" rel="stylesheet" href="">
 
-<script src="camp-data.js"></script>
-<script type="module" src="ui.js"></script>
+<script id="js_data" src=""></script>
+<script id="js_ui" type="module" src=""></script>
+
+<script>
+  // Inject versioned URLs
+  document.getElementById("manifest_link").href = "manifest.json?v=" + APP_VERSION;
+  document.getElementById("css_main").href      = "style.css?v=" + APP_VERSION;
+  document.getElementById("js_data").src        = "camp-data.js?v=" + APP_VERSION;
+  document.getElementById("js_ui").src          = "ui.js?v=" + APP_VERSION;
+
+  document.getElementById("icon_192").href      = "icon-192.png?v=" + APP_VERSION;
+  document.getElementById("icon_512").href      = "icon-512.png?v=" + APP_VERSION;
+</script>
+
 </head>
 
 <body>
@@ -106,13 +125,6 @@
     <button class="modal-btn" id="modal_ok">OK</button>
   </div>
 </div>
-
-<div id="debug" style="
-  position:fixed; bottom:0; left:0; width:100%;
-  background:#000; color:#0f0; font-size:12px;
-  padding:4px; opacity:0.8; z-index:99999;
-  white-space:pre-wrap; max-height:40vh; overflow:auto;
-"></div>
 
 </body>
 </html>

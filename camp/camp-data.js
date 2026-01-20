@@ -1,8 +1,6 @@
 //=========================================== CAMP CONFIGURATION ====================================
 
 const year_name = "2025";
-
-// Base origin
 const camp_origin = "Hanmer+Springs+TOP+10+Holiday+Park";
 
 // Monday
