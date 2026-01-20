@@ -2,6 +2,8 @@
 let appState = null;
 
 export async function initMaps() {
+  console.log("MAPS: initMaps() starting");
+
   appState = await appLaunch();
 
   if (appState.error === "location") {
@@ -24,6 +26,8 @@ export function openInMapsWithDetection(url) {
 }
 
 export function go(mode, origin, destination) {
+  console.log("GO CALLED:", { mode, origin, destination, appState });
+
   if (!appState) return;
 
   const useCamp = document.getElementById("startFromCamp").checked;

@@ -131,6 +131,25 @@
     <button class="modal-btn" id="modal_ok">OK</button>
   </div>
 </div>
+<script>
+  document.addEventListener("click", e => {
+    console.log("GLOBAL CLICK:", e.target.id, e.target.className);
+  });
+
+  // Visual overlay to confirm clicks reach the DOM
+  const diag = document.createElement("div");
+  diag.style.position = "fixed";
+  diag.style.bottom = "0";
+  diag.style.left = "0";
+  diag.style.right = "0";
+  diag.style.background = "rgba(0,0,0,0.7)";
+  diag.style.color = "white";
+  diag.style.padding = "5px";
+  diag.style.fontSize = "12px";
+  diag.style.zIndex = "999999";
+  diag.innerText = "Diagnostics active";
+  document.body.appendChild(diag);
+</script>
 
 </body>
 </html>

@@ -1,6 +1,7 @@
 // maps.js is already loaded globally
 
 function showScreen(id) {
+  console.log("showScreen called with:", id);
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
@@ -12,6 +13,10 @@ function goBack() {
 window.addEventListener("DOMContentLoaded", () => {
   console.log("UI: DOMContentLoaded fired");
 
+  console.log("UI: DOMContentLoaded fired");
+  console.log("UI: btn_mon element =", document.getElementById("btn_mon"));
+  console.log("UI: mon_easy element =", document.getElementById("mon_easy"));
+
   initMaps();
 
   document.getElementById("title").innerText =
@@ -21,6 +26,13 @@ window.addEventListener("DOMContentLoaded", () => {
   mon_easy.innerText = mon_easy_name;
   mon_med.innerText  = mon_med_name;
   mon_fit.innerText  = mon_fit_name;
+
+  document.getElementById("btn_mon").addEventListener("click", () => {
+    console.log("DIAG: btn_mon CLICKED");
+  });
+  mon_easy.addEventListener("click", () => {
+    console.log("DIAG: mon_easy CLICKED");
+  });
 
   tue_easy.innerText = tue_easy_name;
   tue_med.innerText  = tue_med_name;
@@ -79,6 +91,9 @@ window.addEventListener("DOMContentLoaded", () => {
   fri_easy.onclick = () => go(fri_easy_mode, camp_origin, fri_easy_dest);
   fri_med.onclick  = () => go(fri_med_mode,  camp_origin, fri_med_dest);
   fri_fit.onclick  = () => go(fri_fit_mode,  camp_origin, fri_fit_dest);
+
+  console.log("UI: btn_mon onclick =", document.getElementById("btn_mon").onclick);
+  console.log("UI: mon_easy onclick =", mon_easy.onclick);
 
   document.getElementById("modal_ok").onclick = closeMapsFailModal;
 
