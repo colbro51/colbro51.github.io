@@ -1,21 +1,20 @@
-import { initMaps, go } from "./maps.js";
+import { initMaps, go, closeMapsFailModal } from "./maps.js";
 
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
 
 function goBack() {
-  showScreen('main');
+  showScreen("main");
 }
 
 window.onload = () => {
   initMaps();
 
   document.getElementById("title").innerText =
-      "F&B WRTG Camp " + year_name;
+    "F&B WRTG Camp " + year_name;
 
-  // Fill labels
   mon_easy.innerText = mon_easy_name;
   mon_med.innerText  = mon_med_name;
   mon_fit.innerText  = mon_fit_name;
@@ -36,53 +35,39 @@ window.onload = () => {
   fri_med.innerText  = fri_med_name;
   fri_fit.innerText  = fri_fit_name;
 
-  // Wire up buttons
-  document.querySelector("[onclick='go(camp_url)']")
-    ?.addEventListener("click", () => go(camp_url));
+  document.getElementById("btn_camp").onclick = () => go(camp_url);
 
-  document.querySelector("[onclick=\"showScreen('mon')\"]")
-    ?.addEventListener("click", () => showScreen('mon'));
+  document.getElementById("btn_mon").onclick = () => showScreen("mon");
+  document.getElementById("btn_tue").onclick = () => showScreen("tue");
+  document.getElementById("btn_wed").onclick = () => showScreen("wed");
+  document.getElementById("btn_thu").onclick = () => showScreen("thu");
+  document.getElementById("btn_fri").onclick = () => showScreen("fri");
 
-  // Repeat for tue, wed, thu, fri
-  document.querySelector("[onclick=\"showScreen('tue')\"]")
-    ?.addEventListener("click", () => showScreen('tue'));
+  document.getElementById("back_mon").onclick = goBack;
+  document.getElementById("back_tue").onclick = goBack;
+  document.getElementById("back_wed").onclick = goBack;
+  document.getElementById("back_thu").onclick = goBack;
+  document.getElementById("back_fri").onclick = goBack;
 
-  document.querySelector("[onclick=\"showScreen('wed')\"]")
-    ?.addEventListener("click", () => showScreen('wed'));
+  mon_easy.onclick = () => go(mon_easy_url);
+  mon_med.onclick  = () => go(mon_med_url);
+  mon_fit.onclick  = () => go(mon_fit_url);
 
-  document.querySelector("[onclick=\"showScreen('thu')\"]")
-    ?.addEventListener("click", () => showScreen('thu'));
+  tue_easy.onclick = () => go(tue_easy_url);
+  tue_med.onclick  = () => go(tue_med_url);
+  tue_fit.onclick  = () => go(tue_fit_url);
 
-  document.querySelector("[onclick=\"showScreen('fri')\"]")
-    ?.addEventListener("click", () => showScreen('fri'));
+  wed_easy.onclick = () => go(wed_easy_url);
+  wed_med.onclick  = () => go(wed_med_url);
+  wed_fit.onclick  = () => go(wed_fit_url);
 
-  // Wire up back buttons
-  document.querySelectorAll(".backonly")
-    .forEach(btn => btn.addEventListener("click", goBack));
+  thu_easy.onclick = () => go(thu_easy_url);
+  thu_med.onclick  = () => go(thu_med_url);
+  thu_fit.onclick  = () => go(thu_fit_url);
 
-  // Wire up all route buttons
-  document.getElementById("mon_easy").addEventListener("click", () => go(mon_easy_url));
-  document.getElementById("mon_med").addEventListener("click", () => go(mon_med_url));
-  document.getElementById("mon_fit").addEventListener("click", () => go(mon_fit_url));
+  fri_easy.onclick = () => go(fri_easy_url);
+  fri_med.onclick  = () => go(fri_med_url);
+  fri_fit.onclick  = () => go(fri_fit_url);
 
-  document.getElementById("tue_easy").addEventListener("click", () => go(tue_easy_url));
-  document.getElementById("tue_med").addEventListener("click", () => go(tue_med_url));
-  document.getElementById("tue_fit").addEventListener("click", () => go(tue_fit_url));
-
-  document.getElementById("wed_easy").addEventListener("click", () => go(wed_easy_url));
-  document.getElementById("wed_med").addEventListener("click", () => go(wed_med_url));
-  document.getElementById("wed_fit").addEventListener("click", () => go(wed_fit_url));
-
-  document.getElementById("thu_easy").addEventListener("click", () => go(thu_easy_url));
-  document.getElementById("thu_med").addEventListener("click", () => go(thu_med_url));
-  document.getElementById("thu_fit").addEventListener("click", () => go(thu_fit_url));
-
-  document.getElementById("fri_easy").addEventListener("click", () => go(fri_easy_url));
-  document.getElementById("fri_med").addEventListener("click", () => go(fri_med_url));
-  document.getElementById("fri_fit").addEventListener("click", () => go(fri_fit_url));
+  document.getElementById("modal_ok").onclick = closeMapsFailModal;
 };
-
-// ⭐ expose functions for inline onclick handlers
-window.go = go;
-window.showScreen = showScreen;
-window.goBack = goBack;

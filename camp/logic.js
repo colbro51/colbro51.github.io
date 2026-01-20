@@ -1,6 +1,3 @@
-// ------------------------------------------------------------
-// OS DETECTION
-// ------------------------------------------------------------
 export function detectOS() {
   const ua = navigator.userAgent || "";
   const uaData = navigator.userAgentData;
@@ -9,9 +6,10 @@ export function detectOS() {
     const p = uaData.platform.toLowerCase();
     if (p.includes("android")) return "android";
     if (p.includes("ios")) return "ios";
+    if (p.includes("windows")) return "windows";
   }
 
-  if (navigator.userAgent.includes("Windows")) return "windows";
+  if (/Windows NT/.test(ua)) return "windows";
   if (/iPhone|iPod/.test(ua)) return "ios";
 
   const isIPad = /iPad/.test(ua) ||
@@ -23,10 +21,6 @@ export function detectOS() {
   return "other";
 }
 
-
-// ------------------------------------------------------------
-// LOCATION CHECK
-// ------------------------------------------------------------
 export async function locationAvailable() {
   try {
     const perm = await navigator.permissions.query({ name: "geolocation" });
@@ -48,10 +42,6 @@ export async function locationAvailable() {
   }
 }
 
-
-// ------------------------------------------------------------
-// STATE MACHINE
-// ------------------------------------------------------------
 export function determineState(os, useGoogle) {
   if (os === "windows") return 4;
   if (os === "android" && useGoogle) return 1;
@@ -60,10 +50,6 @@ export function determineState(os, useGoogle) {
   return 0;
 }
 
-
-// ------------------------------------------------------------
-// URL BUILDER
-// ------------------------------------------------------------
 export function buildMapURL(state, origin, destination) {
   switch (state) {
     case 1:
@@ -75,7 +61,7 @@ export function buildMapURL(state, origin, destination) {
     case 3:
       return `maps://?saddr=${encodeURIComponent(origin)}&daddr=${encodeURIComponent(destination)}`;
 
-    case 4: // Windows PC → always browser Google Maps
+    case 4:
       return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
 
     default:
@@ -83,14 +69,9 @@ export function buildMapURL(state, origin, destination) {
   }
 }
 
-
-// ------------------------------------------------------------
-// MAIN ENTRY
-// ------------------------------------------------------------
 export async function appLaunch() {
   const os = detectOS();
 
-  // Windows: skip location check entirely
   if (os === "windows") {
     return {
       os,
@@ -100,7 +81,6 @@ export async function appLaunch() {
     };
   }
 
-  // Mobile platforms: normal location check
   const loc = await locationAvailable();
   if (!loc.ok) {
     return { error: "location", os, reason: loc.reason };

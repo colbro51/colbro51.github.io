@@ -2,15 +2,11 @@ import { appLaunch } from "./logic.js";
 
 let appState = null;
 
-
-// ------------------------------------------------------------
-// INITIALIZE MAP LOGIC
-// ------------------------------------------------------------
 export async function initMaps() {
   appState = await appLaunch();
 
   if (appState.error === "location") {
-    showLocationErrorModal(appState.os, appState.reason);
+    alert("Location services unavailable. Please enable them.");
     return;
   }
 
@@ -18,10 +14,6 @@ export async function initMaps() {
   console.log("Routing state:", appState.state);
 }
 
-
-// ------------------------------------------------------------
-// OPEN MAPS WITH FAILURE DETECTION
-// ------------------------------------------------------------
 export function openInMapsWithDetection(url) {
   window.open(url, "_blank");
 
@@ -32,15 +24,8 @@ export function openInMapsWithDetection(url) {
   }, 1200);
 }
 
-
-// ------------------------------------------------------------
-// GO() — MAIN ENTRY FOR ALL CAMP BUTTONS
-// ------------------------------------------------------------
 export function go(url) {
-  if (!appState) {
-    console.warn("App not initialized yet");
-    return;
-  }
+  if (!appState) return;
 
   const useCamp = document.getElementById("startFromCamp").checked;
 
@@ -48,9 +33,7 @@ export function go(url) {
   let origin = params.get("origin");
   let destination = params.get("destination");
 
-  if (!useCamp) {
-    origin = "Current Location";
-  }
+  if (!useCamp) origin = "Current Location";
 
   const finalUrl = appState.buildURL(origin, destination);
 
@@ -62,10 +45,6 @@ export function go(url) {
   openInMapsWithDetection(finalUrl);
 }
 
-
-// ------------------------------------------------------------
-// MODALS
-// ------------------------------------------------------------
 export function showMapsFailurePopup() {
   document.getElementById("mapsFailModal").style.display = "flex";
 }
@@ -73,9 +52,3 @@ export function showMapsFailurePopup() {
 export function closeMapsFailModal() {
   document.getElementById("mapsFailModal").style.display = "none";
 }
-
-export function showLocationErrorModal(os, reason) {
-  alert("Location services are unavailable. Please enable them.");
-}
-
-window.closeMapsFailModal = closeMapsFailModal;
