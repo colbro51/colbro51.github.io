@@ -1,20 +1,25 @@
+console.log("MAPS.JS LOADED");
+
 import { appLaunch } from "./logic.js";
 
 let appState = null;
 
 export async function initMaps() {
   appState = await appLaunch();
+  console.log("appLaunch() returned:", appState);
 
   if (appState.error === "location") {
+    console.warn("Location error:", appState.reason);
     alert("Location services unavailable. Please enable them.");
     return;
   }
 
-  console.log("OS:", appState.os);
-  console.log("Routing state:", appState.state);
+  console.log("Maps initialized. OS:", appState.os, "State:", appState.state);
 }
 
 export function openInMapsWithDetection(url) {
+  console.log("Opening URL:", url);
+
   window.open(url, "_blank");
 
   setTimeout(() => {
@@ -25,7 +30,14 @@ export function openInMapsWithDetection(url) {
 }
 
 export function go(url) {
-  if (!appState) return;
+  console.log("go() called with:", url);
+
+  if (!appState) {
+    console.error("go() called before appState is ready");
+    return;
+  }
+
+  console.log("appState:", appState);
 
   const useCamp = document.getElementById("startFromCamp").checked;
 

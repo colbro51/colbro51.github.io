@@ -1,4 +1,8 @@
+console.log("LOGIC.JS LOADED");
+
 export function detectOS() {
+  console.log("detectOS() UA:", navigator.userAgent);
+
   const ua = navigator.userAgent || "";
   const uaData = navigator.userAgentData;
 
@@ -51,6 +55,7 @@ export function determineState(os, useGoogle) {
 }
 
 export function buildMapURL(state, origin, destination) {
+  console.log("buildMapURL() state:", state, "origin:", origin, "dest:", destination);
   switch (state) {
     case 1:
       return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
@@ -71,8 +76,10 @@ export function buildMapURL(state, origin, destination) {
 
 export async function appLaunch() {
   const os = detectOS();
+  console.log("appLaunch() starting… OS detected:", os);
 
   if (os === "windows") {
+    console.log("Windows detected — skipping location check");
     return {
       os,
       state: 4,
@@ -82,6 +89,7 @@ export async function appLaunch() {
   }
 
   const loc = await locationAvailable();
+  console.log("Location check result:", loc);
   if (!loc.ok) {
     return { error: "location", os, reason: loc.reason };
   }

@@ -1,4 +1,12 @@
+console.log("UI.JS LOADED");
+
 import { initMaps, go, closeMapsFailModal } from "./maps.js";
+
+function dbg(msg) {
+  console.log(msg);
+  const box = document.getElementById("debug");
+  if (box) box.textContent += msg + "\n";
+}
 
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
@@ -10,7 +18,17 @@ function goBack() {
 }
 
 window.onload = () => {
-  initMaps();
+  console.log("WINDOW ONLOAD FIRED");
+
+  try {
+    initMaps().then(() => {
+      console.log("initMaps() completed");
+    });
+  } catch (e) {
+    console.error("initMaps() threw:", e);
+  }
+
+  console.log("Setting up UI labels and buttons…");
 
   document.getElementById("title").innerText =
     "F&B WRTG Camp " + year_name;
@@ -71,3 +89,5 @@ window.onload = () => {
 
   document.getElementById("modal_ok").onclick = closeMapsFailModal;
 };
+
+console.log("UI.JS FINISHED EXECUTING");
