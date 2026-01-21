@@ -3,7 +3,7 @@
 <head>
 
 <script>
-  // Global version stamp for all assets
+  // Global version stamp for cache-busting of non-module assets
   const APP_VERSION = Date.now();
 </script>
 
@@ -22,27 +22,21 @@
 <!-- Stylesheet -->
 <link id="css_main" rel="stylesheet" href="">
 
-<!-- ES Modules -->
-<script id="js_data" type="module" src=""></script>
-<script id="js_logic" type="module" src=""></script>
-<script id="js_maps" type="module" src=""></script>
-<script id="js_ui" type="module" src=""></script>
+<!-- ES Modules (STATIC — required for correct execution) -->
+<script type="module" src="camp-data.js"></script>
+<script type="module" src="logic.js"></script>
+<script type="module" src="maps.js"></script>
+<script type="module" src="ui.js"></script>
 
 <script>
-  // Register service worker
+  // Register service worker with versioning
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("service-worker.js?v=" + APP_VERSION);
   }
 
-  // Inject versioned URLs
+  // Inject versioned URLs for non-module assets
   document.getElementById("manifest_link").href = "manifest.json?v=" + APP_VERSION;
   document.getElementById("css_main").href      = "style.css?v=" + APP_VERSION;
-
-  document.getElementById("js_data").src        = "camp-data.js?v=" + APP_VERSION;
-  document.getElementById("js_logic").src       = "logic.js?v=" + APP_VERSION;
-  document.getElementById("js_maps").src        = "maps.js?v=" + APP_VERSION;
-  document.getElementById("js_ui").src          = "ui.js?v=" + APP_VERSION;
-
   document.getElementById("icon_192").href      = "icon-192.png?v=" + APP_VERSION;
   document.getElementById("icon_512").href      = "icon-512.png?v=" + APP_VERSION;
 </script>
