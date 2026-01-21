@@ -54,4 +54,5 @@ export function showMapsFailurePopup() {
 
 export function closeMapsFailModal() {
   document.getElementById("mapsFailModal").style.display = "none";
+  showScreen("main");   // reset UI so user can pick Apple Maps
 }

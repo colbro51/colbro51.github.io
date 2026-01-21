@@ -101,7 +101,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Main screen buttons
   document.getElementById("btn_camp").onclick = () =>
-    go("driving", camp_origin, camp_origin);
+    go("driving", "Current Location", camp_origin);
 
   document.getElementById("btn_mon").onclick = () => showScreen("mon");
   document.getElementById("btn_tue").onclick = () => showScreen("tue");
