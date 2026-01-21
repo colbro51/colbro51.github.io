@@ -1,4 +1,6 @@
 
+import { appLaunch } from "./logic.js";
+
 let appState = null;
 
 export async function initMaps() {

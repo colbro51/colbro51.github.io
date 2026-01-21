@@ -69,3 +69,23 @@ const fri_fit_mode  = "driving";
 const fri_fit_dest  = "-42.37368053104093,172.37790006192594";
 
 //=========================================== END CONFIG ============================================
+
+export {
+  year_name,
+  camp_origin,
+  mon_easy_name, mon_easy_mode, mon_easy_dest,
+  mon_med_name,  mon_med_mode,  mon_med_dest,
+  mon_fit_name,  mon_fit_mode,  mon_fit_dest,
+  tue_easy_name, tue_easy_mode, tue_easy_dest,
+  tue_med_name,  tue_med_mode,  tue_med_dest,
+  tue_fit_name,  tue_fit_mode,  tue_fit_dest,
+  wed_easy_name, wed_easy_mode, wed_easy_dest,
+  wed_med_name,  wed_med_mode,  wed_med_dest,
+  wed_fit_name,  wed_fit_mode,  wed_fit_dest,
+  thu_easy_name, thu_easy_mode, thu_easy_dest,
+  thu_med_name,  thu_med_mode,  thu_med_dest,
+  thu_fit_name,  thu_fit_mode,  thu_fit_dest,
+  fri_easy_name, fri_easy_mode, fri_easy_dest,
+  fri_med_name,  fri_med_mode,  fri_med_dest,
+  fri_fit_name,  fri_fit_mode,  fri_fit_dest
+};
