@@ -119,8 +119,8 @@ h1 {
 }
 
 /* Hide the Google Maps toggle unless JS reveals it */
-label[for="useGoogleMaps"],
-label[for="useGoogleMaps"] *,
+#useGoogleMapsLabel,
+#useGoogleMapsLabel *,
 #useGoogleMaps {
     display: none !important;
 }
