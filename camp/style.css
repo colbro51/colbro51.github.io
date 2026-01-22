@@ -117,3 +117,10 @@ h1 {
     align-items: center;
     gap: 6px;
 }
+
+/* Hide the Google Maps toggle unless JS reveals it */
+label[for="useGoogleMaps"],
+label[for="useGoogleMaps"] *,
+#useGoogleMaps {
+    display: none !important;
+}
