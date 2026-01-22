@@ -64,9 +64,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   initMaps();
 
-  const os = detectOS();
-
-  if (os === "ios" || os === "ipad") {
+  if (appState.os === "ios" || appState.os === "ipad") {
       const checkbox = document.getElementById("useGoogleMaps");
       const label = checkbox.closest("label");
       if (label) label.style.display = "flex";
