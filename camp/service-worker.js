@@ -1,17 +1,14 @@
-const CACHE_NAME = "camp-cache-v1";
-const FILES_TO_CACHE = [
-  "/",
-  "/index.html",
-  "/manifest.json",
-  "/icon-192.png",
-  "/icon-512.png"
-];
-
+// Always activate immediately
 self.addEventListener("install", event => {
   self.skipWaiting();
 });
 
+// Take control of all pages immediately
+self.addEventListener("activate", event => {
+  event.waitUntil(self.clients.claim());
+});
+
+// Always fetch fresh files (no caching)
 self.addEventListener("fetch", event => {
-  // Always go to network during development
   event.respondWith(fetch(event.request));
 });
