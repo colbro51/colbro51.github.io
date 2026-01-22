@@ -72,6 +72,7 @@ export function buildMapURL(state, origin, destination, mode) {
 export async function appLaunch() {
   const os = detectOS();
 
+  // Windows stays the same
   if (os === "windows") {
     return {
       os,
@@ -81,11 +82,9 @@ export async function appLaunch() {
     };
   }
 
-  const loc = await locationAvailable();
-  if (!loc.ok) {
-    return { error: "location", os, reason: loc.reason };
-  }
-
+  // OPTION B:
+  // Skip locationAvailable() entirely.
+  // Let Google Maps / Apple Maps handle GPS availability.
   const useGoogle = document.getElementById("useGoogleMaps").checked;
   const state = determineState(os, useGoogle);
 
