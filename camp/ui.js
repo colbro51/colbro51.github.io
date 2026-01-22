@@ -49,9 +49,9 @@ import {
 } from "./camp-data.js";
 
 import { initMaps, go, closeMapsFailModal } from "./maps.js";
+import { detectOS } from "./logic.js";
 
 function showScreen(id) {
-  console.log("showScreen called with:", id);
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
@@ -62,11 +62,15 @@ function goBack() {
 
 window.addEventListener("DOMContentLoaded", () => {
 
-  console.log("UI: DOMContentLoaded fired");
-  console.log("UI: btn_mon element =", document.getElementById("btn_mon"));
-  console.log("UI: mon_easy element =", document.getElementById("mon_easy"));
-
   initMaps();
+
+  const os = detectOS();
+
+  if (os === "ios" || os === "ipad") {
+      const checkbox = document.getElementById("useGoogleMaps");
+      const label = checkbox.closest("label");
+      if (label) label.style.display = "flex";
+  }
 
   document.getElementById("title").innerText =
     "F&B WRTG Camp " + year_name;
@@ -75,13 +79,6 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("mon_easy").innerText = mon_easy_name;
   document.getElementById("mon_med").innerText  = mon_med_name;
   document.getElementById("mon_fit").innerText  = mon_fit_name;
-
-  document.getElementById("btn_mon").addEventListener("click", () => {
-    console.log("DIAG: btn_mon CLICKED");
-  });
-  document.getElementById("mon_easy").addEventListener("click", () => {
-    console.log("DIAG: mon_easy CLICKED");
-  });
 
   document.getElementById("tue_easy").innerText = tue_easy_name;
   document.getElementById("tue_med").innerText  = tue_med_name;
@@ -156,11 +153,5 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("fri_fit").onclick = () =>
     go(fri_fit_mode, camp_origin, fri_fit_dest);
 
-  console.log("UI: btn_mon onclick =", document.getElementById("btn_mon").onclick);
-  console.log("UI: mon_easy onclick =", document.getElementById("mon_easy").onclick);
-
-
-  document.getElementById("modal_ok").onclick = closeMapsFailModal;
-
-  console.log("UI: wiring complete");
+   document.getElementById("modal_ok").onclick = closeMapsFailModal;
 });
