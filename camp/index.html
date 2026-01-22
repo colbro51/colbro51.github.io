@@ -54,7 +54,7 @@
       Start from camp
     </label>
 
-    <label id="useGoogleMaps">
+    <label id="useGoogleMapsLabel">
       <input type="checkbox" id="useGoogleMaps" checked>
       Use Google Maps
     </label>
@@ -131,6 +131,10 @@
 </div>
 
 <script>
+  // Global click diagnostics
+  document.addEventListener("click", e => {
+    console.log("GLOBAL CLICK:", e.target.id, e.target.className);
+  });
 
   // Visual overlay to confirm clicks reach the DOM
   const diag = document.createElement("div");

@@ -118,9 +118,7 @@ h1 {
     gap: 6px;
 }
 
-/* Hide the Google Maps toggle unless JS reveals it */
 #useGoogleMapsLabel,
-#useGoogleMapsLabel *,
-#useGoogleMaps {
+#useGoogleMapsLabel * {
     display: none !important;
 }
