@@ -1,3 +1,5 @@
+import { detectOS } from "./logic.js";
+
 import {
   year_name,
   camp_origin,
@@ -68,7 +70,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
   initMaps();
 
-  if (appState.os === "ios" || appState.os === "ipad") {
+  const os = detectOS();
+  if (os === "ios" || os === "ipad") {
       const label = document.getElementById("useGoogleMapsLabel");
       if (label) label.style.display = "flex";
   }
