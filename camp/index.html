@@ -3,7 +3,6 @@
 <head>
 
 <script>
-  // Global version stamp for cache-busting of non-module assets
   const APP_VERSION = Date.now();
 </script>
 
@@ -14,27 +13,21 @@
 
 <title>F&B Summer Camp</title>
 
-<!-- Manifest + Icons -->
 <link id="manifest_link" rel="manifest" href="">
 <link id="icon_192" rel="apple-touch-icon" sizes="192x192" href="">
 <link id="icon_512" rel="apple-touch-icon" sizes="512x512" href="">
-
-<!-- Stylesheet -->
 <link id="css_main" rel="stylesheet" href="">
 
-<!-- ES Modules (STATIC — required for correct execution) -->
 <script type="module" src="camp-data.js"></script>
 <script type="module" src="logic.js"></script>
 <script type="module" src="maps.js"></script>
 <script type="module" src="ui.js"></script>
 
 <script>
-  // Register service worker with versioning
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("service-worker.js?v=" + APP_VERSION);
   }
 
-  // Inject versioned URLs for non-module assets
   document.getElementById("manifest_link").href = "manifest.json?v=" + APP_VERSION;
   document.getElementById("css_main").href      = "style.css?v=" + APP_VERSION;
   document.getElementById("icon_192").href      = "icon-192.png?v=" + APP_VERSION;
@@ -67,6 +60,7 @@
   <div class="btn mainbtn" id="btn_wed">Wednesday</div>
   <div class="btn mainbtn" id="btn_thu">Thursday</div>
   <div class="btn mainbtn" id="btn_fri">Friday</div>
+  <div class="btn mainbtn" id="btn_more">More</div>
 </div>
 
 <!-- Day Screens -->
@@ -110,6 +104,24 @@
   <div class="backonly" id="back_fri">⬅ Go Back</div>
 </div>
 
+<!-- More Screen -->
+<div id="more" class="screen">
+  <h1>More</h1>
+
+  <div class="btn subbtn" id="more_1"></div>
+  <div class="btn subbtn" id="more_2"></div>
+  <div class="btn subbtn" id="more_3"></div>
+  <div class="btn subbtn" id="more_4"></div>
+  <div class="btn subbtn" id="more_5"></div>
+  <div class="btn subbtn" id="more_6"></div>
+  <div class="btn subbtn" id="more_7"></div>
+  <div class="btn subbtn" id="more_8"></div>
+  <div class="btn subbtn" id="more_9"></div>
+  <div class="btn subbtn" id="more_10"></div>
+
+  <div class="backonly" id="back_more">⬅ Go Back</div>
+</div>
+
 <!-- Maps Failure Modal -->
 <div id="mapsFailModal" class="modal">
   <div class="modal-content">
@@ -129,13 +141,6 @@
     <button class="modal-btn" id="modal_ok">OK</button>
   </div>
 </div>
-
-<script>
-  // Global click diagnostics
-  document.addEventListener("click", e => {
-    console.log("GLOBAL CLICK:", e.target.id, e.target.className);
-  });
-</script>
 
 </body>
 </html>

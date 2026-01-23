@@ -68,7 +68,49 @@ const fri_fit_name  = "Ghost Spur Track and Ghost\nLink to Ghost Rock\nFIT";
 const fri_fit_mode  = "driving";
 const fri_fit_dest  = "-42.37368053104093,172.37790006192594";
 
-//=========================================== END CONFIG ============================================
+//=========================================== MORE ITEMS ============================================
+
+const more_1_name = "";
+const more_1_mode = "";
+const more_1_dest = "";
+
+const more_2_name = "";
+const more_2_mode = "";
+const more_2_dest = "";
+
+const more_3_name = "";
+const more_3_mode = "";
+const more_3_dest = "";
+
+const more_4_name = "";
+const more_4_mode = "";
+const more_4_dest = "";
+
+const more_5_name = "";
+const more_5_mode = "";
+const more_5_dest = "";
+
+const more_6_name = "";
+const more_6_mode = "";
+const more_6_dest = "";
+
+const more_7_name = "";
+const more_7_mode = "";
+const more_7_dest = "";
+
+const more_8_name = "";
+const more_8_mode = "";
+const more_8_dest = "";
+
+const more_9_name = "";
+const more_9_mode = "";
+const more_9_dest = "";
+
+const more_10_name = "";
+const more_10_mode = "";
+const more_10_dest = "";
+
+//=========================================== EXPORTS ============================================
 
 export {
   year_name,
@@ -87,5 +129,15 @@ export {
   thu_fit_name,  thu_fit_mode,  thu_fit_dest,
   fri_easy_name, fri_easy_mode, fri_easy_dest,
   fri_med_name,  fri_med_mode,  fri_med_dest,
-  fri_fit_name,  fri_fit_mode,  fri_fit_dest
+  fri_fit_name,  fri_fit_mode,  fri_fit_dest,
+  more_1_name, more_1_mode, more_1_dest,
+  more_2_name, more_2_mode, more_2_dest,
+  more_3_name, more_3_mode, more_3_dest,
+  more_4_name, more_4_mode, more_4_dest,
+  more_5_name, more_5_mode, more_5_dest,
+  more_6_name, more_6_mode, more_6_dest,
+  more_7_name, more_7_mode, more_7_dest,
+  more_8_name, more_8_mode, more_8_dest,
+  more_9_name, more_9_mode, more_9_dest,
+  more_10_name, more_10_mode, more_10_dest
 };

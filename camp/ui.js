@@ -1,59 +1,37 @@
-import { detectOS } from "./logic.js";
-
 import {
   year_name,
   camp_origin,
-  mon_easy_name,
-  mon_med_name,
-  mon_fit_name,
-  tue_easy_name,
-  tue_med_name,
-  tue_fit_name,
-  wed_easy_name,
-  wed_med_name,
-  wed_fit_name,
-  thu_easy_name,
-  thu_med_name,
-  thu_fit_name,
-  fri_easy_name,
-  fri_med_name,
-  fri_fit_name,
-  mon_easy_mode,
-  mon_med_mode,
-  mon_fit_mode,
-  tue_easy_mode,
-  tue_med_mode,
-  tue_fit_mode,
-  wed_easy_mode,
-  wed_med_mode,
-  wed_fit_mode,
-  thu_easy_mode,
-  thu_med_mode,
-  thu_fit_mode,
-  fri_easy_mode,
-  fri_med_mode,
-  fri_fit_mode,
-  mon_easy_dest,
-  mon_med_dest,
-  mon_fit_dest,
-  tue_easy_dest,
-  tue_med_dest,
-  tue_fit_dest,
-  wed_easy_dest,
-  wed_med_dest,
-  wed_fit_dest,
-  thu_easy_dest,
-  thu_med_dest,
-  thu_fit_dest,
-  fri_easy_dest,
-  fri_med_dest,
-  fri_fit_dest
+  mon_easy_name, mon_med_name, mon_fit_name,
+  tue_easy_name, tue_med_name, tue_fit_name,
+  wed_easy_name, wed_med_name, wed_fit_name,
+  thu_easy_name, thu_med_name, thu_fit_name,
+  fri_easy_name, fri_med_name, fri_fit_name,
+  mon_easy_mode, mon_med_mode, mon_fit_mode,
+  tue_easy_mode, tue_med_mode, tue_fit_mode,
+  wed_easy_mode, wed_med_mode, wed_fit_mode,
+  thu_easy_mode, thu_med_mode, thu_fit_mode,
+  fri_easy_mode, fri_med_mode, fri_fit_mode,
+  mon_easy_dest, mon_med_dest, mon_fit_dest,
+  tue_easy_dest, tue_med_dest, tue_fit_dest,
+  wed_easy_dest, wed_med_dest, wed_fit_dest,
+  thu_easy_dest, thu_med_dest, thu_fit_dest,
+  fri_easy_dest, fri_med_dest, fri_fit_dest,
+  more_1_name, more_1_mode, more_1_dest,
+  more_2_name, more_2_mode, more_2_dest,
+  more_3_name, more_3_mode, more_3_dest,
+  more_4_name, more_4_mode, more_4_dest,
+  more_5_name, more_5_mode, more_5_dest,
+  more_6_name, more_6_mode, more_6_dest,
+  more_7_name, more_7_mode, more_7_dest,
+  more_8_name, more_8_mode, more_8_dest,
+  more_9_name, more_9_mode, more_9_dest,
+  more_10_name, more_10_mode, more_10_dest
 } from "./camp-data.js";
 
 import { initMaps, go, closeMapsFailModal } from "./maps.js";
+import { detectOS } from "./logic.js";
 
 function showScreen(id) {
-  console.log("showScreen called with:", id);
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
@@ -64,32 +42,22 @@ function goBack() {
 
 window.addEventListener("DOMContentLoaded", () => {
 
-  console.log("UI: DOMContentLoaded fired");
-  console.log("UI: btn_mon element =", document.getElementById("btn_mon"));
-  console.log("UI: mon_easy element =", document.getElementById("mon_easy"));
-
   initMaps();
 
+  // Reveal Google Maps toggle only on iOS/iPad
   const os = detectOS();
   if (os === "ios" || os === "ipad") {
-      const label = document.getElementById("useGoogleMapsLabel");
-      if (label) label.style.display = "flex";
+    const label = document.getElementById("useGoogleMapsLabel");
+    if (label) label.style.display = "flex";
   }
 
   document.getElementById("title").innerText =
     "F&B WRTG Camp " + year_name;
 
-  // Fill labels
+  // Fill labels for days
   document.getElementById("mon_easy").innerText = mon_easy_name;
   document.getElementById("mon_med").innerText  = mon_med_name;
   document.getElementById("mon_fit").innerText  = mon_fit_name;
-
-  document.getElementById("btn_mon").addEventListener("click", () => {
-    console.log("DIAG: btn_mon CLICKED");
-  });
-  document.getElementById("mon_easy").addEventListener("click", () => {
-    console.log("DIAG: mon_easy CLICKED");
-  });
 
   document.getElementById("tue_easy").innerText = tue_easy_name;
   document.getElementById("tue_med").innerText  = tue_med_name;
@@ -116,6 +84,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btn_wed").onclick = () => showScreen("wed");
   document.getElementById("btn_thu").onclick = () => showScreen("thu");
   document.getElementById("btn_fri").onclick = () => showScreen("fri");
+  document.getElementById("btn_more").onclick = () => showScreen("more");
 
   // Back buttons
   document.getElementById("back_mon").onclick = goBack;
@@ -123,6 +92,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("back_wed").onclick = goBack;
   document.getElementById("back_thu").onclick = goBack;
   document.getElementById("back_fri").onclick = goBack;
+  document.getElementById("back_more").onclick = goBack;
 
   // Monday
   document.getElementById("mon_easy").onclick = () =>
@@ -164,11 +134,33 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("fri_fit").onclick = () =>
     go(fri_fit_mode, camp_origin, fri_fit_dest);
 
-  console.log("UI: btn_mon onclick =", document.getElementById("btn_mon").onclick);
-  console.log("UI: mon_easy onclick =", document.getElementById("mon_easy").onclick);
+  // MORE ITEMS (auto-hide blanks)
+  const moreItems = [
+    [more_1_name, more_1_mode, more_1_dest],
+    [more_2_name, more_2_mode, more_2_dest],
+    [more_3_name, more_3_mode, more_3_dest],
+    [more_4_name, more_4_mode, more_4_dest],
+    [more_5_name, more_5_mode, more_5_dest],
+    [more_6_name, more_6_mode, more_6_dest],
+    [more_7_name, more_7_mode, more_7_dest],
+    [more_8_name, more_8_mode, more_8_dest],
+    [more_9_name, more_9_mode, more_9_dest],
+    [more_10_name, more_10_mode, more_10_dest]
+  ];
 
+  moreItems.forEach((item, index) => {
+    const [name, mode, dest] = item;
+    const id = `more_${index + 1}`;
+    const el = document.getElementById(id);
+
+    if (!name || name.trim() === "") {
+      el.style.display = "none";
+      return;
+    }
+
+    el.innerText = name;
+    el.onclick = () => go(mode, camp_origin, dest);
+  });
 
   document.getElementById("modal_ok").onclick = closeMapsFailModal;
-
-  console.log("UI: wiring complete");
 });
