@@ -45,6 +45,11 @@ h1 {
     min-height: 55px;
 }
 
+.morebtn {
+    min-height: 45px;   /* match mainbtn */
+    padding: 10px;      /* match mainbtn */
+}
+
 .btn:active {
     background: #0d47a1;
 }
