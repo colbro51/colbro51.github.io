@@ -70,13 +70,13 @@ const fri_fit_dest  = "-42.37368053104093,172.37790006192594";
 
 //=========================================== MORE ITEMS ============================================
 
-const more_1_name = "";
-const more_1_mode = "";
-const more_1_dest = "";
+const more_1_name = "Ghost 2";
+const more_1_mode = "driving";
+const more_1_dest = "-42.37368053104093,172.37790006192594";
 
-const more_2_name = "";
-const more_2_mode = "";
-const more_2_dest = "";
+const more_2_name = "St James";
+const more_2_mode = "driving";
+const more_2_dest = "St+James+Walkway+Car+Park";
 
 const more_3_name = "";
 const more_3_mode = "";
