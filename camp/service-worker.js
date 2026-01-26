@@ -61,7 +61,7 @@ self.addEventListener("fetch", event => {
   // For navigations: serve index.html from cache (SPA-style)
   if (req.mode === "navigate") {
     event.respondWith(
-      caches.match("/index.html").then(cached => {
+      caches.match("/camp/index.html").then(cached => {
         if (cached) return cached;
         return fetch(req);
       })
