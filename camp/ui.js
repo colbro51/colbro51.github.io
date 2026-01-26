@@ -40,6 +40,15 @@ function goBack() {
   showScreen("main");
 }
 
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.addEventListener("message", event => {
+    if (event.data && event.data.type === "NEW_VERSION_READY") {
+      // Hard reload to pick up new HTML + new ?v= assets
+      window.location.reload();
+    }
+  });
+}
+
 window.addEventListener("DOMContentLoaded", () => {
 
   initMaps();
