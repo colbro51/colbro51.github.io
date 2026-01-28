@@ -1,33 +1,24 @@
 // service-worker.js
 
-const CACHE_NAME = "fb-summercamp-shell-v1";
+const CACHE_NAME = "fb-summercamp-static-v1";
 
-const APP_SHELL = [
-  "/camp/",
-  "/camp/index.html",
+// Only cache truly static assets (no HTML, no JS)
+const STATIC_ASSETS = [
   "/camp/style.css",
-  "/camp/ui.js",
-  "/camp/maps.js",
-  "/camp/logic.js",
-  "/camp/camp-data.js",
   "/camp/manifest.json",
   "/camp/icon-192.png",
   "/camp/icon-512.png"
 ];
 
-// Install: cache the app shell (force fresh copies)
+// Install: cache static shell assets
 self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache =>
-      cache.addAll(
-        APP_SHELL.map(url => new Request(url, { cache: "reload" }))
-      )
-    )
+    caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS))
   );
   self.skipWaiting();
 });
 
-// Activate: take control and clean old caches
+// Activate: clean old caches
 self.addEventListener("activate", event => {
   event.waitUntil(
     (async () => {
@@ -37,42 +28,40 @@ self.addEventListener("activate", event => {
           .filter(name => name !== CACHE_NAME)
           .map(name => caches.delete(name))
       );
-
       await self.clients.claim();
-
-      // Notify clients that a new version is active
-      const clients = await self.clients.matchAll({ type: "window" });
-      for (const client of clients) {
-        client.postMessage({ type: "NEW_VERSION_READY" });
-      }
     })()
   );
 });
 
-// Fetch: offline-first for same-origin GET, with ignoreSearch for ?v=...
+// Fetch: network-first for HTML/JS, cache-first for static assets and images
 self.addEventListener("fetch", event => {
   const req = event.request;
+  const url = new URL(req.url);
 
-  // Only handle same-origin GET requests
-  if (req.method !== "GET" || new URL(req.url).origin !== self.location.origin) {
+  // Only handle same-origin GET
+  if (req.method !== "GET" || url.origin !== self.location.origin) {
     return;
   }
 
-  // For navigations: serve index.html from cache (SPA-style)
-  if (req.mode === "navigate") {
-    event.respondWith(
-      caches.match("/camp/index.html").then(cached => {
-        if (cached) return cached;
-        return fetch(req);
-      })
-    );
+  // Always fetch fresh HTML (including /camp/ and /camp/index.html)
+  if (req.mode === "navigate" ||
+      url.pathname === "/camp/" ||
+      url.pathname === "/camp/index.html") {
+    event.respondWith(fetch(req));
     return;
   }
 
-  // For other same-origin GETs: cache-first, ignoring ?v=...
+  // Always fetch fresh JS
+  if (url.pathname.endsWith(".js")) {
+    event.respondWith(fetch(req));
+    return;
+  }
+
+  // Cache-first for static assets and images (e.g. docs/*.png)
   event.respondWith(
-    caches.match(req, { ignoreSearch: true }).then(cached => {
+    caches.match(req).then(cached => {
       if (cached) return cached;
+
       return fetch(req).then(response => {
         const clone = response.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(req, clone));
