@@ -34,30 +34,40 @@ import { showScreen, showDocs } from "./screens.js";
 // ------------------------------------------------------------
 // Gesture model
 // ------------------------------------------------------------
-function attachGesture(el, onSingle, onLong) {
-  let timer = null;
-  const LONG = 500;
+function attachRouteGestures(btn, routeId) {
+  const ua = navigator.userAgent.toLowerCase();
+  const isMobile = ua.includes("android") || /iphone|ipad|ipod/.test(ua);
 
-  el.addEventListener("touchstart", () => {
-    timer = setTimeout(() => {
-      timer = null;
-      onLong();
-    }, LONG);
-  });
+  if (isMobile) {
+    // --- MOBILE: tap + long-press ---
+    let pressTimer;
 
-  el.addEventListener("touchend", () => {
-    if (timer) {
-      clearTimeout(timer);
-      onSingle();
-    }
-  });
+    btn.addEventListener("touchstart", () => {
+      pressTimer = setTimeout(() => {
+        launchMaps(routeId);   // long-press
+        pressTimer = null;
+      }, 500);
+    });
 
-  el.addEventListener("touchmove", () => {
-    if (timer) {
-      clearTimeout(timer);
-      timer = null;
-    }
-  });
+    btn.addEventListener("touchend", () => {
+      if (pressTimer) {
+        clearTimeout(pressTimer);
+        showDocs(routeId);     // tap
+      }
+    });
+
+  } else {
+    // --- DESKTOP: left-click + right-click ---
+    btn.addEventListener("click", e => {
+      e.preventDefault();
+      showDocs(routeId);
+    });
+
+    btn.addEventListener("contextmenu", e => {
+      e.preventDefault();
+      launchMaps(routeId);
+    });
+  }
 }
 
 // ------------------------------------------------------------
