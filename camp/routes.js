@@ -86,6 +86,26 @@ function wireRouteButton(id, mode, dest) {
 // ------------------------------------------------------------
 window.addEventListener("DOMContentLoaded", () => {
 
+  document.getElementById("mon_easy").innerText = mon_easy_name;
+  document.getElementById("mon_med").innerText  = mon_med_name;
+  document.getElementById("mon_fit").innerText  = mon_fit_name;
+
+  document.getElementById("tue_easy").innerText = tue_easy_name;
+  document.getElementById("tue_med").innerText  = tue_med_name;
+  document.getElementById("tue_fit").innerText  = tue_fit_name;
+
+  document.getElementById("wed_easy").innerText = wed_easy_name;
+  document.getElementById("wed_med").innerText  = wed_med_name;
+  document.getElementById("wed_fit").innerText  = wed_fit_name;
+
+  document.getElementById("thu_easy").innerText = thu_easy_name;
+  document.getElementById("thu_med").innerText  = thu_med_name;
+  document.getElementById("thu_fit").innerText  = thu_fit_name;
+
+  document.getElementById("fri_easy").innerText = fri_easy_name;
+  document.getElementById("fri_med").innerText  = fri_med_name;
+  document.getElementById("fri_fit").innerText  = fri_fit_name;
+
   // Camp button
   attachGesture(
     document.getElementById("btn_camp"),
