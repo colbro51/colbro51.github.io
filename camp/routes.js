@@ -14,36 +14,22 @@ import {
   thu_easy_mode, thu_med_mode, thu_fit_mode,
   fri_easy_mode, fri_med_mode, fri_fit_mode,
 
-  mon_easy_origin, mon_easy_dest,
-  mon_med_origin,  mon_med_dest,
-  mon_fit_origin,  mon_fit_dest,
+  mon_easy_dest, mon_med_dest, mon_fit_dest,
+  tue_easy_dest, tue_med_dest, tue_fit_dest,
+  wed_easy_dest, wed_med_dest, wed_fit_dest,
+  thu_easy_dest, thu_med_dest, thu_fit_dest,
+  fri_easy_dest, fri_med_dest, fri_fit_dest,
 
-  tue_easy_origin, tue_easy_dest,
-  tue_med_origin,  tue_med_dest,
-  tue_fit_origin,  tue_fit_dest,
-
-  wed_easy_origin, wed_easy_dest,
-  wed_med_origin,  wed_med_dest,
-  wed_fit_origin,  wed_fit_dest,
-
-  thu_easy_origin, thu_easy_dest,
-  thu_med_origin,  thu_med_dest,
-  thu_fit_origin,  thu_fit_dest,
-
-  fri_easy_origin, fri_easy_dest,
-  fri_med_origin,  fri_med_dest,
-  fri_fit_origin,  fri_fit_dest,
-
-  more_1_name, more_1_mode, more_1_origin, more_1_dest,
-  more_2_name, more_2_mode, more_2_origin, more_2_dest,
-  more_3_name, more_3_mode, more_3_origin, more_3_dest,
-  more_4_name, more_4_mode, more_4_origin, more_4_dest,
-  more_5_name, more_5_mode, more_5_origin, more_5_dest,
-  more_6_name, more_6_mode, more_6_origin, more_6_dest,
-  more_7_name, more_7_mode, more_7_origin, more_7_dest,
-  more_8_name, more_8_mode, more_8_origin, more_8_dest,
-  more_9_name, more_9_mode, more_9_origin, more_9_dest,
-  more_10_name, more_10_mode, more_10_origin, more_10_dest
+  more_1_name, more_1_mode, more_1_dest,
+  more_2_name, more_2_mode, more_2_dest,
+  more_3_name, more_3_mode, more_3_dest,
+  more_4_name, more_4_mode, more_4_dest,
+  more_5_name, more_5_mode, more_5_dest,
+  more_6_name, more_6_mode, more_6_dest,
+  more_7_name, more_7_mode, more_7_dest,
+  more_8_name, more_8_mode, more_8_dest,
+  more_9_name, more_9_mode, more_9_dest,
+  more_10_name, more_10_mode, more_10_dest
 } from "./camp-data.js";
 
 import { go } from "./maps.js";
@@ -145,29 +131,29 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btn_more").onclick = () => showScreen("more");
 
   // Monday
-  wireRouteButton("mon_easy", mon_easy_mode, mon_easy_origin, mon_easy_dest);
-  wireRouteButton("mon_med",  mon_med_mode,  mon_med_origin,  mon_med_dest);
-  wireRouteButton("mon_fit",  mon_fit_mode,  mon_fit_origin,  mon_fit_dest);
+  wireRouteButton("mon_easy", mon_easy_mode, camp_location, mon_easy_dest);
+  wireRouteButton("mon_med",  mon_med_mode,  camp_location, mon_med_dest);
+  wireRouteButton("mon_fit",  mon_fit_mode,  camp_location, mon_fit_dest);
 
   // Tuesday
-  wireRouteButton("tue_easy", tue_easy_mode, tue_easy_origin, tue_easy_dest);
-  wireRouteButton("tue_med",  tue_med_mode,  tue_med_origin,  tue_med_dest);
-  wireRouteButton("tue_fit",  tue_fit_mode,  tue_fit_origin,  tue_fit_dest);
+  wireRouteButton("tue_easy", tue_easy_mode, camp_location, tue_easy_dest);
+  wireRouteButton("tue_med",  tue_med_mode,  camp_location, tue_med_dest);
+  wireRouteButton("tue_fit",  tue_fit_mode,  camp_location, tue_fit_dest);
 
   // Wednesday
-  wireRouteButton("wed_easy", wed_easy_mode, wed_easy_origin, wed_easy_dest);
-  wireRouteButton("wed_med",  wed_med_mode,  wed_med_origin,  wed_med_dest);
-  wireRouteButton("wed_fit",  wed_fit_mode,  wed_fit_origin,  wed_fit_dest);
+  wireRouteButton("wed_easy", wed_easy_mode, camp_location, wed_easy_dest);
+  wireRouteButton("wed_med",  wed_med_mode,  camp_location, wed_med_dest);
+  wireRouteButton("wed_fit",  wed_fit_mode,  camp_location, wed_fit_dest);
 
   // Thursday
-  wireRouteButton("thu_easy", thu_easy_mode, thu_easy_origin, thu_easy_dest);
-  wireRouteButton("thu_med",  thu_med_mode,  thu_med_origin,  thu_med_dest);
-  wireRouteButton("thu_fit",  thu_fit_mode,  thu_fit_origin,  thu_fit_dest);
+  wireRouteButton("thu_easy", thu_easy_mode, camp_location, thu_easy_dest);
+  wireRouteButton("thu_med",  thu_med_mode,  camp_location, thu_med_dest);
+  wireRouteButton("thu_fit",  thu_fit_mode,  camp_location, thu_fit_dest);
 
   // Friday
-  wireRouteButton("fri_easy", fri_easy_mode, fri_easy_origin, fri_easy_dest);
-  wireRouteButton("fri_med",  fri_med_mode,  fri_med_origin,  fri_med_dest);
-  wireRouteButton("fri_fit",  fri_fit_mode,  fri_fit_origin,  fri_fit_dest);
+  wireRouteButton("fri_easy", fri_easy_mode, camp_location, fri_easy_dest);
+  wireRouteButton("fri_med",  fri_med_mode,  camp_location, fri_med_dest);
+  wireRouteButton("fri_fit",  fri_fit_mode,  camp_location, fri_fit_dest);
 
   // Back buttons
   document.getElementById("back_mon").onclick  = () => showScreen("main");
@@ -179,20 +165,20 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // More items
   const moreItems = [
-    [more_1_name, more_1_mode, more_1_origin, more_1_dest],
-    [more_2_name, more_2_mode, more_2_origin, more_2_dest],
-    [more_3_name, more_3_mode, more_3_origin, more_3_dest],
-    [more_4_name, more_4_mode, more_4_origin, more_4_dest],
-    [more_5_name, more_5_mode, more_5_origin, more_5_dest],
-    [more_6_name, more_6_mode, more_6_origin, more_6_dest],
-    [more_7_name, more_7_mode, more_7_origin, more_7_dest],
-    [more_8_name, more_8_mode, more_8_origin, more_8_dest],
-    [more_9_name, more_9_mode, more_9_origin, more_9_dest],
-    [more_10_name, more_10_mode, more_10_origin, more_10_dest]
+    [more_1_name, more_1_mode, more_1_dest],
+    [more_2_name, more_2_mode, more_2_dest],
+    [more_3_name, more_3_mode, more_3_dest],
+    [more_4_name, more_4_mode, more_4_dest],
+    [more_5_name, more_5_mode, more_5_dest],
+    [more_6_name, more_6_mode, more_6_dest],
+    [more_7_name, more_7_mode, more_7_dest],
+    [more_8_name, more_8_mode, more_8_dest],
+    [more_9_name, more_9_mode, more_9_dest],
+    [more_10_name, more_10_mode, more_10_dest]
   ];
 
   moreItems.forEach((item, index) => {
-    const [name, mode, origin, dest] = item;
+    const [name, mode, dest] = item;
     const id = `more_${index + 1}`;
     const el = document.getElementById(id);
 
@@ -202,6 +188,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     el.innerText = name;
-    wireRouteButton(id, mode, origin, dest);
+    wireRouteButton(id, mode, camp_location, dest);
   });
 });
