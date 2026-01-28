@@ -146,6 +146,14 @@ window.addEventListener("DOMContentLoaded", () => {
   wireRouteButton("fri_med",  fri_med_mode,  fri_med_dest);
   wireRouteButton("fri_fit",  fri_fit_mode,  fri_fit_dest);
 
+  // Back buttons
+  document.getElementById("back_mon").onclick  = () => showScreen("main");
+  document.getElementById("back_tue").onclick  = () => showScreen("main");
+  document.getElementById("back_wed").onclick  = () => showScreen("main");
+  document.getElementById("back_thu").onclick  = () => showScreen("main");
+  document.getElementById("back_fri").onclick  = () => showScreen("main");
+  document.getElementById("back_more").onclick = () => showScreen("main");
+
   // More items
   const moreItems = [
     [more_1_name, more_1_mode, more_1_dest],
