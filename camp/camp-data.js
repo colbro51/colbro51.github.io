@@ -1,7 +1,7 @@
 //=========================================== CAMP CONFIGURATION ====================================
 
 const year_name = "2025";
-const camp_origin = "Hanmer+Springs+TOP+10+Holiday+Park";
+const camp_location = "Hanmer+Springs+TOP+10+Holiday+Park";
 
 // Monday
 const mon_easy_name = "Hanmer Springs Environs\nEASY";
