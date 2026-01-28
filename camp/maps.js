@@ -1,6 +1,5 @@
 // maps.js
 import { appLaunch } from "./logic.js";
-import { camp_origin } from "./camp-data.js";
 import { showScreen } from "./screens.js";
 
 let appState = null;
@@ -91,16 +90,16 @@ export async function go(mode, origin, destination) {
 
   if (!appState) return;
 
+  // Checkbox override: if "Start from camp" is unticked,
+  // force origin to "Current Location".
   const useCamp = document.getElementById("startFromCamp").checked;
+  if (!useCamp) {
+    origin = "Current Location";
+  }
 
-  // --------------------------------------------------------
-  // RULE: Use GPS if:
-  //   - origin === "Current Location"
-  //   - OR "Start from camp" is unticked
-  // --------------------------------------------------------
-  const mustUseGPS =
-    origin === "Current Location" ||
-    !useCamp;
+  // If origin is the literal string "Current Location",
+  // attempt to resolve it to real coordinates.
+  const mustUseGPS = origin === "Current Location";
 
   if (mustUseGPS) {
     console.log("User wants GPS — checking permission…");
@@ -126,20 +125,14 @@ export async function go(mode, origin, destination) {
       }
     }
 
-    // ----------------------------------------------------
-    // Permission NOT granted → fall back to string
-    // ----------------------------------------------------
     console.log("GPS permission not granted — using 'Current Location' string");
-
-    const finalUrl = appState.buildURL("Current Location", destination, mode);
-    openInMapsWithDetection(finalUrl);
+    const fallbackUrl = appState.buildURL("Current Location", destination, mode);
+    openInMapsWithDetection(fallbackUrl);
     return;
   }
 
-  // --------------------------------------------------------
-  // Otherwise: start from camp
-  // --------------------------------------------------------
-  const finalUrl = appState.buildURL(camp_origin, destination, mode);
+  // Otherwise: use the literal origin passed in
+  const finalUrl = appState.buildURL(origin, destination, mode);
   openInMapsWithDetection(finalUrl);
 }
 
