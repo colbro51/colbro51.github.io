@@ -114,7 +114,7 @@ const more_10_dest = "";
 
 export {
   year_name,
-  camp_origin,
+  camp_location,
   mon_easy_name, mon_easy_mode, mon_easy_dest,
   mon_med_name,  mon_med_mode,  mon_med_dest,
   mon_fit_name,  mon_fit_mode,  mon_fit_dest,
