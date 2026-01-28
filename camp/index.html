@@ -38,6 +38,13 @@
 
 <body>
 
+<div id="install" class="screen">
+  <h1>Install This App</h1>
+  <p>To use this app, please install it to your home screen.</p>
+  <p>Open the browser menu → “Add to Home Screen”.</p>
+  <p>If you already have an older version installed, please remove it first.</p>
+</div>
+
 <div id="main" class="screen active">
   <h1 id="title"></h1>
 
@@ -51,6 +58,11 @@
       <input type="checkbox" id="useGoogleMaps" checked>
       Use Google Maps
     </label>
+
+    <label>
+      <input type="checkbox" id="helpToggle">
+      Help
+    </label>
   </div>
 
   <div class="btn mainbtn" id="btn_camp">Camp Location</div>
@@ -61,6 +73,19 @@
   <div class="btn mainbtn" id="btn_thu">Thursday</div>
   <div class="btn mainbtn" id="btn_fri">Friday</div>
   <div class="btn mainbtn" id="btn_more">More</div>
+</div>
+
+<div id="helpPanel" class="screen" style="display:none;">
+  <h1>Help</h1>
+  <p>Tap a route for details.</p>
+  <p>Single tap → trip sheet</p>
+  <p>Long press → open maps</p>
+  <div class="backonly" id="back_help">⬅ Go Back</div>
+</div>
+
+<div id="viewer" class="screen">
+  <img id="viewerImage" style="width:100%; max-width:100%; height:auto;">
+  <div class="backonly" id="viewerBack">⬅ Go Back</div>
 </div>
 
 <!-- Day Screens -->

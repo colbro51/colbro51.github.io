@@ -31,6 +31,32 @@ import {
 import { initMaps, go, closeMapsFailModal } from "./maps.js";
 import { detectOS } from "./logic.js";
 
+function attachGesture(el, onSingle, onLong) {
+  let timer = null;
+  const LONG = 500;
+
+  el.addEventListener("touchstart", () => {
+    timer = setTimeout(() => {
+      timer = null;
+      onLong();
+    }, LONG);
+  });
+
+  el.addEventListener("touchend", () => {
+    if (timer) {
+      clearTimeout(timer);
+      onSingle();
+    }
+  });
+
+  el.addEventListener("touchmove", () => {
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
+    }
+  });
+}
+
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
@@ -51,6 +77,18 @@ if ("serviceWorker" in navigator) {
 
 window.addEventListener("DOMContentLoaded", () => {
 
+  // --- INSTALL STATE GATE ---
+  const installedState =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
+
+  if (!installedState) {
+    showScreen("install");
+    return;   // STOP: do not load main UI
+  }
+
+  // Installed → continue normally
+  showScreen("main");
   initMaps();
 
   // Reveal Google Maps toggle only on iOS/iPad
@@ -59,6 +97,17 @@ window.addEventListener("DOMContentLoaded", () => {
     const label = document.getElementById("useGoogleMapsLabel");
     if (label) label.style.display = "flex";
   }
+
+  const helpToggle = document.getElementById("helpToggle");
+  const helpPanel = document.getElementById("helpPanel");
+
+  helpToggle.addEventListener("change", () => {
+    if (helpToggle.checked) {
+      showScreen("helpPanel");
+      helpToggle.checked = false; // auto-reset
+    }
+  });
+  document.getElementById("back_help").onclick = () => showScreen("main");
 
   document.getElementById("title").innerText =
     "F&B WRTG Camp " + year_name;
@@ -86,7 +135,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Main screen buttons
   document.getElementById("btn_camp").onclick = () =>
-    go("driving", "Current Location", camp_origin);
+    attachGesture(
+      document.getElementById("btn_camp"),
+      () => showDocs("btn_camp"),   // single tap
+      () => go("driving", "Current Location", camp_origin);   // long press
+    );
 
   document.getElementById("btn_mon").onclick = () => showScreen("mon");
   document.getElementById("btn_tue").onclick = () => showScreen("tue");
@@ -170,6 +223,14 @@ window.addEventListener("DOMContentLoaded", () => {
     el.innerText = name;
     el.onclick = () => go(mode, camp_origin, dest);
   });
+
+  document.getElementById("viewerBack").onclick = () => showScreen("main");
+
+  function showDocs(imageName) {
+    const img = document.getElementById("viewerImage");
+    img.src = `docs/${imageName}.png`;   // or .jpg depending on your export
+    showScreen("viewer");
+  }
 
   document.getElementById("modal_ok").onclick = closeMapsFailModal;
 });
