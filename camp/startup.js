@@ -5,10 +5,10 @@ import { detectOS } from "./logic.js";
 import { showScreen } from "./screens.js";
 
 function isRealAndroid() {
-  return /Android/i.test(navigator.userAgent) &&
-         /Linux/i.test(navigator.platform) &&
-         !/Windows/i.test(navigator.userAgent) &&
-         !/CrOS/i.test(navigator.userAgent);
+  return navigator.userAgent.includes("Android") &&
+         navigator.userAgent.includes("Mobile") &&
+         !navigator.userAgent.includes("Windows") &&
+         !navigator.userAgent.includes("CrOS");
 }
 
 window.addEventListener("DOMContentLoaded", () => {
