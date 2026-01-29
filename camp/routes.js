@@ -95,9 +95,17 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
   });
 }
 
+function wireRouteButton(id, mode, origin, dest) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+
+  attachRouteGestures(btn, id, mode, origin, dest);
+}
+
 // ------------------------------------------------------------
 // Wire everything on DOMContentLoaded
 // ------------------------------------------------------------
+
 window.addEventListener("DOMContentLoaded", () => {
 
   // Labels
