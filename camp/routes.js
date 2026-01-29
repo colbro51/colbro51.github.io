@@ -51,6 +51,14 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
     }, 500);
   });
 
+  function clearGesture() {
+    if (pressTimer) {
+      clearTimeout(pressTimer);
+      pressTimer = null;
+    }
+    pointerDownTime = 0;
+  }
+
   btn.addEventListener("pointerup", () => {
     const duration = Date.now() - pointerDownTime;
 
@@ -62,29 +70,22 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
         showDocs(docsId);       // short press → docs
       }
     }
+    pointerDownTime = 0;
+  });
+
+  btn.addEventListener("pointercancel", clearGesture);
+  btn.addEventListener("pointerleave", clearGesture);
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      clearGesture();           // app going to Maps → cancel any pending tap
+    }
   });
 
   btn.addEventListener("contextmenu", e => {
     e.preventDefault();
     go(mode, origin, dest);     // right‑click → maps
   });
-}
-
-function imageNameForButton(id) {
-  return id;
-}
-
-function wireRouteButton(id, mode, origin, dest) {
-  const el = document.getElementById(id);
-  if (!el) return;
-
-  attachRouteGestures(
-    el,
-    imageNameForButton(id),
-    mode,
-    origin,
-    dest
-  );
 }
 
 // ------------------------------------------------------------

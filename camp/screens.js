@@ -1,18 +1,9 @@
 // screens.js
 
-let lastScreen = "main";   // remembers where we came from
+let lastScreen = "main";   // only used by viewerBack
 
 export function showScreen(id) {
-  const current = document.querySelector(".screen.active");
-
-  // Only update lastScreen when ENTERING the viewer
-  if (id === "viewer" && current && current.id !== "viewer") {
-    lastScreen = current.id;
-  }
-
-  // Do NOT update lastScreen when leaving the viewer
-  // Do NOT update lastScreen when switching between main/day screens
-
+  console.log("showScreen called with:", id);
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
@@ -48,6 +39,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
 // Docs viewer
 export function showDocs(imageName) {
+  const current = document.querySelector(".screen.active");
+  if (current) {
+    lastScreen = current.id;   // remember where viewer was opened from
+  }
+
   const img = document.getElementById("viewerImage");
   img.src = `docs/${imageName}.png`;
   showScreen("viewer");
