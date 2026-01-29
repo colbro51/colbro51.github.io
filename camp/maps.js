@@ -73,10 +73,23 @@ export async function initMaps() {
 // 4. Detect if Google Maps failed to open
 // ------------------------------------------------------------
 export function openInMapsWithDetection(url) {
+  const openedAt = Date.now();
+  let becameHidden = false;
+
+  const onVisibility = () => {
+    if (document.visibilityState === "hidden") {
+      becameHidden = true;
+    }
+  };
+
+  document.addEventListener("visibilitychange", onVisibility, { once: true });
+
   window.open(url, "_blank");
 
   setTimeout(() => {
-    if (document.visibilityState === "visible") {
+    document.removeEventListener("visibilitychange", onVisibility);
+
+    if (!becameHidden) {
       showMapsFailurePopup();
     }
   }, 1200);
