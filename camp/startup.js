@@ -75,13 +75,13 @@ window.addEventListener("DOMContentLoaded", () => {
     window.navigator.standalone === true;
 
   // --- INSTALL GATE (ONLY FOR ANDROID + IOS) ---
-  if (!installedState && (isRealAndroid || isIOS)) {
+  if (!installedState && (isRealAndroid() || isIOS)) {
     showScreen("install");
     return;
   }
 
   // --- ANDROID-ONLY HELP NOTE ---
-  if (isRealAndroid) {
+  if (isRealAndroid()) {
     const androidNote = document.getElementById("androidHelpNote");
     if (androidNote) androidNote.style.display = "block";
   }
