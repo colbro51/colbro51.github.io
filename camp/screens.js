@@ -1,5 +1,13 @@
 // screens.js
+
+let lastScreen = "main";   // remembers where we came from
+
 export function showScreen(id) {
+  const current = document.querySelector(".screen.active");
+  if (current) {
+    lastScreen = current.id;   // track previous screen
+  }
+
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
@@ -26,10 +34,10 @@ window.addEventListener("DOMContentLoaded", () => {
     backHelp.onclick = () => showScreen("main");
   }
 
-  // Viewer back button
+  // Viewer back button — now returns to the correct previous screen
   const viewerBack = document.getElementById("viewerBack");
   if (viewerBack) {
-    viewerBack.onclick = () => showScreen("main");
+    viewerBack.onclick = () => showScreen(lastScreen);
   }
 });
 
