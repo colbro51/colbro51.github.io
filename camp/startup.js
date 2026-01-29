@@ -22,6 +22,12 @@ window.addEventListener("DOMContentLoaded", () => {
     return;   // STOP: do not load main UI
   }
 
+  const os = detectOS();
+  if (os === "android") {
+    const androidNote = document.getElementById("androidHelpNote");
+    if (androidNote) androidNote.style.display = "block";
+  }
+
   // --- INSTALLED OR DESKTOP → CONTINUE NORMALLY ---
   showScreen("main");
   initMaps();
