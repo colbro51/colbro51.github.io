@@ -78,7 +78,14 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
 
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") {
-      clearGesture();           // app going to Maps → cancel any pending tap
+      clearGesture();
+
+      // If viewer was active when Maps opened, close it immediately
+      const viewer = document.getElementById("viewer");
+      if (viewer.classList.contains("active")) {
+        viewer.classList.remove("active");
+        document.getElementById(lastScreen).classList.add("active");
+      }
     }
   });
 
