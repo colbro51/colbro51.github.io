@@ -4,6 +4,13 @@ import { initMaps } from "./maps.js";
 import { detectOS } from "./logic.js";
 import { showScreen } from "./screens.js";
 
+function isRealAndroid() {
+  return /Android/i.test(navigator.userAgent) &&
+         /Linux/i.test(navigator.platform) &&
+         !/Windows/i.test(navigator.userAgent) &&
+         !/CrOS/i.test(navigator.userAgent);
+}
+
 window.addEventListener("DOMContentLoaded", () => {
 
   // --- PLATFORM DETECTION ---
@@ -17,13 +24,13 @@ window.addEventListener("DOMContentLoaded", () => {
     window.navigator.standalone === true;
 
   // --- INSTALL GATE (ONLY FOR ANDROID + IOS) ---
-  if (!installedState && (isAndroid || isIOS)) {
+  if (!installedState && (isRealAndroid || isIOS)) {
     showScreen("install");
     return;
   }
 
   // --- ANDROID-ONLY HELP NOTE ---
-  if (isAndroid) {
+  if (isRealAndroid) {
     const androidNote = document.getElementById("androidHelpNote");
     if (androidNote) androidNote.style.display = "block";
   }
