@@ -3,11 +3,15 @@
 let lastScreen = "main";   // remembers where we came from
 
 export function showScreen(id) {
-  console.log("showScreen called with:", id);
   const current = document.querySelector(".screen.active");
-  if (current) {
-    lastScreen = current.id;   // track previous screen
+
+  // Only update lastScreen when ENTERING the viewer
+  if (id === "viewer" && current && current.id !== "viewer") {
+    lastScreen = current.id;
   }
+
+  // Do NOT update lastScreen when leaving the viewer
+  // Do NOT update lastScreen when switching between main/day screens
 
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
