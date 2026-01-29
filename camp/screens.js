@@ -1,25 +1,40 @@
 // screens.js
 
-let screenlevel = 1;     // 1 = main, 2 = day, 3 = viewer
+// ------------------------------------------------------------
+// Navigation state machine
+// ------------------------------------------------------------
+let screenlevel = 1;     // 1 = main, 2 = day/help, 3 = viewer
 let backscreen = "";     // where "Go Back" should return
 
+
+// ------------------------------------------------------------
+// Core screen switcher
+// ------------------------------------------------------------
 export function showScreen(id) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
-/* -----------------------------
-   ENTER LEVEL 2 (day screens)
------------------------------- */
+
+// ------------------------------------------------------------
+// LEVEL 2: Day screens + Help
+// ------------------------------------------------------------
 export function enterDay(id) {
   screenlevel = 2;
   backscreen = "main";
   showScreen(id);
 }
 
-/* -----------------------------
-   ENTER LEVEL 3 (viewer)
------------------------------- */
+export function enterHelp() {
+  screenlevel = 2;
+  backscreen = "main";
+  showScreen("helpPanel");
+}
+
+
+// ------------------------------------------------------------
+// LEVEL 3: Viewer (trip text)
+// ------------------------------------------------------------
 export function enterViewer(imageName) {
   const current = document.querySelector(".screen.active");
   const img = document.getElementById("viewerImage");
@@ -27,13 +42,14 @@ export function enterViewer(imageName) {
   img.src = `docs/${imageName}.png`;
 
   screenlevel = 3;
-  backscreen = current.id;   // the day screen
+  backscreen = current.id;   // the day/help screen we came from
   showScreen("viewer");
 }
 
-/* -----------------------------
-   GO BACK (unified logic)
------------------------------- */
+
+// ------------------------------------------------------------
+// Unified Go Back logic
+// ------------------------------------------------------------
 export function goBack() {
   showScreen(backscreen);
   screenlevel -= 1;
@@ -47,13 +63,28 @@ export function goBack() {
   }
 }
 
-/* -----------------------------
-   Wire viewer back + help back
------------------------------- */
+
+// ------------------------------------------------------------
+// Wire Help + Viewer back buttons
+// ------------------------------------------------------------
 window.addEventListener("DOMContentLoaded", () => {
+
+  // Viewer back → always goBack()
   const viewerBack = document.getElementById("viewerBack");
   if (viewerBack) viewerBack.onclick = goBack;
 
+  // Help back → also goBack()
   const backHelp = document.getElementById("back_help");
-  if (backHelp) backHelp.onclick = () => showScreen("main");
+  if (backHelp) backHelp.onclick = goBack;
+
+  // Help toggle checkbox → treat as level‑2 screen
+  const helpToggle = document.getElementById("helpToggle");
+  if (helpToggle) {
+    helpToggle.addEventListener("change", () => {
+      if (helpToggle.checked) {
+        enterHelp();
+        helpToggle.checked = false; // auto-reset
+      }
+    });
+  }
 });
