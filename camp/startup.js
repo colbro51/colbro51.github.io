@@ -22,7 +22,10 @@ window.addEventListener("DOMContentLoaded", () => {
     return;   // STOP: do not load main UI
   }
 
+  // --- OS DETECTION (DO THIS ONCE) ---
   const os = detectOS();
+
+  // Android-only help note
   if (os === "android") {
     const androidNote = document.getElementById("androidHelpNote");
     if (androidNote) androidNote.style.display = "block";
@@ -33,7 +36,6 @@ window.addEventListener("DOMContentLoaded", () => {
   initMaps();
 
   // --- iOS/iPadOS: reveal Google Maps toggle ---
-  const os = detectOS();
   if (os === "ios" || os === "ipad") {
     const label = document.getElementById("useGoogleMapsLabel");
     if (label) label.style.display = "flex";
