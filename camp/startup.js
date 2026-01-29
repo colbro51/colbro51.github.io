@@ -50,3 +50,37 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("title").innerText =
     "F&B WRTG Camp " + year_name;
 });
+
+function debugOS() {
+  const ua = navigator.userAgent;
+  const platform = navigator.platform;
+  const touch = navigator.maxTouchPoints;
+
+  const isAndroidUA = /Android/i.test(ua);
+  const isIOSUA = /iphone|ipad|ipod/i.test(ua);
+
+  const isRealAndroid =
+    ua.includes("Android") &&
+    ua.includes("Mobile") &&
+    !ua.includes("Windows") &&
+    !ua.includes("CrOS");
+
+  const installedState =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+
+  const debugText =
+    "=== DEBUG INFO ===\n" +
+    "navigator.userAgent: " + ua + "\n" +
+    "navigator.platform: " + platform + "\n" +
+    "navigator.maxTouchPoints: " + touch + "\n\n" +
+    "isAndroidUA: " + isAndroidUA + "\n" +
+    "isIOSUA: " + isIOSUA + "\n" +
+    "isRealAndroid(): " + isRealAndroid + "\n" +
+    "installedState: " + installedState + "\n";
+
+  const panel = document.getElementById("debugPanel");
+  if (panel) panel.textContent = debugText;
+}
+
+debugOS();
