@@ -19,14 +19,11 @@ window.addEventListener("DOMContentLoaded", () => {
   // --- INSTALL GATE (ONLY FOR ANDROID + IOS) ---
   if (!installedState && (isAndroid || isIOS)) {
     showScreen("install");
-    return;   // STOP: do not load main UI
+    return;
   }
 
-  // --- OS DETECTION (DO THIS ONCE) ---
-  const os = detectOS();
-
-  // Android-only help note
-  if (os === "android") {
+  // --- ANDROID-ONLY HELP NOTE ---
+  if (isAndroid) {
     const androidNote = document.getElementById("androidHelpNote");
     if (androidNote) androidNote.style.display = "block";
   }
@@ -36,6 +33,7 @@ window.addEventListener("DOMContentLoaded", () => {
   initMaps();
 
   // --- iOS/iPadOS: reveal Google Maps toggle ---
+  const os = detectOS();
   if (os === "ios" || os === "ipad") {
     const label = document.getElementById("useGoogleMapsLabel");
     if (label) label.style.display = "flex";
