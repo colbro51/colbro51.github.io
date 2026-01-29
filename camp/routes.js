@@ -33,7 +33,8 @@ import {
 } from "./camp-data.js";
 
 import { go } from "./maps.js";
-import { showScreen, showDocs } from "./screens.js";
+import { enterDay, enterViewer, goBack } from "./screens.js";
+
 
 // ------------------------------------------------------------
 // Unified cross‑platform gesture model
@@ -67,7 +68,7 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
       pressTimer = null;
 
       if (duration < 500) {
-        showDocs(docsId);       // short press → docs
+        enterViewer(docsId);    // short press → viewer
       }
     }
     pointerDownTime = 0;
@@ -79,13 +80,6 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") {
       clearGesture();
-
-      // If viewer was active when Maps opened, close it immediately
-      const viewer = document.getElementById("viewer");
-      if (viewer.classList.contains("active")) {
-        viewer.classList.remove("active");
-        document.getElementById(lastScreen).classList.add("active");
-      }
     }
   });
 
@@ -95,6 +89,10 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
   });
 }
 
+
+// ------------------------------------------------------------
+// Helper for wiring route buttons
+// ------------------------------------------------------------
 function wireRouteButton(id, mode, origin, dest) {
   const btn = document.getElementById(id);
   if (!btn) return;
@@ -102,10 +100,10 @@ function wireRouteButton(id, mode, origin, dest) {
   attachRouteGestures(btn, id, mode, origin, dest);
 }
 
+
 // ------------------------------------------------------------
 // Wire everything on DOMContentLoaded
 // ------------------------------------------------------------
-
 window.addEventListener("DOMContentLoaded", () => {
 
   // Labels
@@ -129,6 +127,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("fri_med").innerText  = fri_med_name;
   document.getElementById("fri_fit").innerText  = fri_fit_name;
 
+
   // Camp button: origin ALWAYS "Current Location"
   attachRouteGestures(
     document.getElementById("btn_camp"),
@@ -138,13 +137,15 @@ window.addEventListener("DOMContentLoaded", () => {
     camp_location
   );
 
-  // Day screens
-  document.getElementById("btn_mon").onclick = () => showScreen("mon");
-  document.getElementById("btn_tue").onclick = () => showScreen("tue");
-  document.getElementById("btn_wed").onclick = () => showScreen("wed");
-  document.getElementById("btn_thu").onclick = () => showScreen("thu");
-  document.getElementById("btn_fri").onclick = () => showScreen("fri");
-  document.getElementById("btn_more").onclick = () => showScreen("more");
+
+  // Day buttons → LEVEL 2
+  document.getElementById("btn_mon").onclick  = () => enterDay("mon");
+  document.getElementById("btn_tue").onclick  = () => enterDay("tue");
+  document.getElementById("btn_wed").onclick  = () => enterDay("wed");
+  document.getElementById("btn_thu").onclick  = () => enterDay("thu");
+  document.getElementById("btn_fri").onclick  = () => enterDay("fri");
+  document.getElementById("btn_more").onclick = () => enterDay("more");
+
 
   // Monday
   wireRouteButton("mon_easy", mon_easy_mode, camp_location, mon_easy_dest);
@@ -171,13 +172,15 @@ window.addEventListener("DOMContentLoaded", () => {
   wireRouteButton("fri_med",  fri_med_mode,  camp_location, fri_med_dest);
   wireRouteButton("fri_fit",  fri_fit_mode,  camp_location, fri_fit_dest);
 
-  // Back buttons
-  document.getElementById("back_mon").onclick  = () => showScreen("main");
-  document.getElementById("back_tue").onclick  = () => showScreen("main");
-  document.getElementById("back_wed").onclick  = () => showScreen("main");
-  document.getElementById("back_thu").onclick  = () => showScreen("main");
-  document.getElementById("back_fri").onclick  = () => showScreen("main");
-  document.getElementById("back_more").onclick = () => showScreen("main");
+
+  // Back buttons → unified goBack()
+  document.getElementById("back_mon").onclick  = goBack;
+  document.getElementById("back_tue").onclick  = goBack;
+  document.getElementById("back_wed").onclick  = goBack;
+  document.getElementById("back_thu").onclick  = goBack;
+  document.getElementById("back_fri").onclick  = goBack;
+  document.getElementById("back_more").onclick = goBack;
+
 
   // More items
   const moreItems = [
