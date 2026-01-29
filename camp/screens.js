@@ -3,6 +3,7 @@
 let lastScreen = "main";   // remembers where we came from
 
 export function showScreen(id) {
+  console.log("showScreen called with:", id);
   const current = document.querySelector(".screen.active");
   if (current) {
     lastScreen = current.id;   // track previous screen
