@@ -124,6 +124,11 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
     go(mode, origin, dest);
   });
 
+  btn.addEventListener("click", e => {
+    e.preventDefault();
+    e.stopPropagation();
+  });
+
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") {
       clearGesture();
