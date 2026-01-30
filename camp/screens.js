@@ -1,5 +1,15 @@
 // screens.js
 
+// GLOBAL gesture purge to prevent stale short-taps after Maps
+window.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") {
+    // Cancel ALL pending timers on ALL route buttons
+    document.querySelectorAll(".routeButton").forEach(btn => {
+      btn.dispatchEvent(new Event("pointercancel"));
+    });
+  }
+});
+
 // ------------------------------------------------------------
 // Navigation state machine
 // ------------------------------------------------------------
@@ -62,7 +72,6 @@ export function goBack() {
     backscreen = "";
   }
 }
-
 
 // ------------------------------------------------------------
 // DOM wiring + stale-viewer cleanup
