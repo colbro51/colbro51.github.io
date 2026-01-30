@@ -37,55 +37,68 @@ import { enterDay, enterViewer, goBack } from "./screens.js";
 
 
 // ------------------------------------------------------------
-// Unified cross‑platform gesture model
+// Deterministic gesture engine
 // ------------------------------------------------------------
 function attachRouteGestures(btn, docsId, mode, origin, dest) {
   let pressTimer = null;
   let pointerDownTime = 0;
 
+  let pointerDownValid = false;
+  let gestureSessionValid = false;
+
+  function clearGesture() {
+    pointerDownValid = false;
+    if (pressTimer) {
+      clearTimeout(pressTimer);
+      pressTimer = null;
+    }
+  }
+
   btn.addEventListener("pointerdown", () => {
+    gestureSessionValid = true;
+    pointerDownValid = true;
     pointerDownTime = Date.now();
 
     pressTimer = setTimeout(() => {
-      go(mode, origin, dest);   // long‑press → maps
+      pointerDownValid = false;
+      go(mode, origin, dest);
       pressTimer = null;
     }, 500);
   });
 
-  function clearGesture() {
-    if (pressTimer) {
-      clearTimeout(pressTimer);
-      pressTimer = null;
-    }
-    pointerDownTime = 0;
-  }
-
   btn.addEventListener("pointerup", () => {
+    if (!gestureSessionValid) {
+      clearGesture();
+      return;
+    }
+
+    if (!pointerDownValid) {
+      clearGesture();
+      return;
+    }
+
     const duration = Date.now() - pointerDownTime;
 
-    if (pressTimer) {
-      clearTimeout(pressTimer);
-      pressTimer = null;
-
-      if (duration < 500) {
-        enterViewer(docsId);    // short press → viewer
-      }
+    if (duration < 500) {
+      enterViewer(docsId);
     }
-    pointerDownTime = 0;
+
+    clearGesture();
   });
 
   btn.addEventListener("pointercancel", clearGesture);
   btn.addEventListener("pointerleave", clearGesture);
 
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden") {
-      clearGesture();
-    }
-  });
-
   btn.addEventListener("contextmenu", e => {
     e.preventDefault();
-    go(mode, origin, dest);     // right‑click → maps
+    go(mode, origin, dest);
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      gestureSessionValid = false;
+      clearGesture();
+    }
   });
 }
 
@@ -128,7 +141,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("fri_fit").innerText  = fri_fit_name;
 
 
-  // Camp button: origin ALWAYS "Current Location"
+  // Camp button
   attachRouteGestures(
     document.getElementById("btn_camp"),
     "camp",
@@ -138,7 +151,7 @@ window.addEventListener("DOMContentLoaded", () => {
   );
 
 
-  // Day buttons → LEVEL 2
+  // Day buttons
   document.getElementById("btn_mon").onclick  = () => enterDay("mon");
   document.getElementById("btn_tue").onclick  = () => enterDay("tue");
   document.getElementById("btn_wed").onclick  = () => enterDay("wed");
@@ -173,7 +186,7 @@ window.addEventListener("DOMContentLoaded", () => {
   wireRouteButton("fri_fit",  fri_fit_mode,  camp_location, fri_fit_dest);
 
 
-  // Back buttons → unified goBack()
+  // Back buttons
   document.getElementById("back_mon").onclick  = goBack;
   document.getElementById("back_tue").onclick  = goBack;
   document.getElementById("back_wed").onclick  = goBack;

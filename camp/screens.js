@@ -1,15 +1,5 @@
 // screens.js
 
-// GLOBAL gesture purge to prevent stale short-taps after Maps
-window.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "hidden") {
-    // Cancel ALL pending timers on ALL route buttons
-    document.querySelectorAll(".routeButton").forEach(btn => {
-      btn.dispatchEvent(new Event("pointercancel"));
-    });
-  }
-});
-
 // ------------------------------------------------------------
 // Navigation state machine
 // ------------------------------------------------------------
@@ -52,7 +42,7 @@ export function enterViewer(imageName) {
   img.src = `docs/${imageName}.png`;
 
   screenlevel = 3;
-  backscreen = current.id;   // the day/help screen we came from
+  backscreen = current.id;
   showScreen("viewer");
 }
 
@@ -64,53 +54,29 @@ export function goBack() {
   showScreen(backscreen);
   screenlevel -= 1;
 
-  if (screenlevel === 2) {
-    backscreen = "main";
-  }
-
-  if (screenlevel === 1) {
-    backscreen = "";
-  }
+  if (screenlevel === 2) backscreen = "main";
+  if (screenlevel === 1) backscreen = "";
 }
 
+
 // ------------------------------------------------------------
-// DOM wiring + stale-viewer cleanup
+// DOM wiring
 // ------------------------------------------------------------
 window.addEventListener("DOMContentLoaded", () => {
 
-  // Viewer back → always goBack()
   const viewerBack = document.getElementById("viewerBack");
   if (viewerBack) viewerBack.onclick = goBack;
 
-  // Help back → also goBack()
   const backHelp = document.getElementById("back_help");
   if (backHelp) backHelp.onclick = goBack;
 
-  // Help toggle checkbox → treat as level‑2 screen
   const helpToggle = document.getElementById("helpToggle");
   if (helpToggle) {
     helpToggle.addEventListener("change", () => {
       if (helpToggle.checked) {
         enterHelp();
-        helpToggle.checked = false; // auto-reset
+        helpToggle.checked = false;
       }
     });
   }
-
-  // --------------------------------------------------------
-  // CRITICAL FIX:
-  // Prevent stale viewer state after Maps or app backgrounding
-  // --------------------------------------------------------
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden") {
-
-      const viewer = document.getElementById("viewer");
-
-      // If viewer was active when Maps opened, close it immediately
-      if (viewer.classList.contains("active")) {
-        viewer.classList.remove("active");
-        document.getElementById(backscreen).classList.add("active");
-      }
-    }
-  });
 });
