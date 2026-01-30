@@ -37,7 +37,7 @@ import { enterDay, enterViewer, goBack } from "./screens.js";
 
 
 // ------------------------------------------------------------
-// Close viewer before launching Maps (critical Android fix)
+// Helper: close viewer if it happens to be active
 // ------------------------------------------------------------
 function closeViewerIfOpen() {
   const viewer = document.getElementById("viewer");
@@ -76,11 +76,13 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
     pointerDownTime = Date.now();
 
     pressTimer = setTimeout(() => {
+      // Long‑press → Maps only, never viewer
       pointerDownValid = false;
+      gestureSessionValid = false;   // kill the session so pointerup/tap can't fire viewer
 
-      closeViewerIfOpen();   // <-- CRITICAL FIX
-
+      closeViewerIfOpen();
       go(mode, origin, dest);
+
       pressTimer = null;
     }, 500);
   });
@@ -96,6 +98,7 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
 
     const duration = Date.now() - pointerDownTime;
 
+    // Short tap → viewer
     if (duration < 500) {
       enterViewer(docsId);
     }
