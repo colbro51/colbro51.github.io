@@ -54,6 +54,12 @@ h1 {
     background: #0d47a1;
 }
 
+.btn, .btn * {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
 .backonly {
     display: flex;
     justify-content: center;
