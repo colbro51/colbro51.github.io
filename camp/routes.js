@@ -37,7 +37,18 @@ import { enterDay, enterViewer, goBack } from "./screens.js";
 
 
 // ------------------------------------------------------------
-// Deterministic gesture engine
+// Close viewer before launching Maps (critical Android fix)
+// ------------------------------------------------------------
+function closeViewerIfOpen() {
+  const viewer = document.getElementById("viewer");
+  if (viewer && viewer.classList.contains("active")) {
+    viewer.classList.remove("active");
+  }
+}
+
+
+// ------------------------------------------------------------
+// Deterministic, Android-safe gesture engine
 // ------------------------------------------------------------
 function attachRouteGestures(btn, docsId, mode, origin, dest) {
   let pressTimer = null;
@@ -57,7 +68,7 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
   }
 
   btn.addEventListener("pointerdown", e => {
-    e.preventDefault();        // stop Android text-selection
+    e.preventDefault();
     e.stopPropagation();
 
     gestureSessionValid = true;
@@ -66,6 +77,9 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
 
     pressTimer = setTimeout(() => {
       pointerDownValid = false;
+
+      closeViewerIfOpen();   // <-- CRITICAL FIX
+
       go(mode, origin, dest);
       pressTimer = null;
     }, 500);
@@ -90,19 +104,20 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
   });
 
   btn.addEventListener("pointercancel", e => {
-    e.preventDefault();        // CRITICAL: stops synthetic click
+    e.preventDefault();
     e.stopPropagation();
     clearGesture();
   });
 
   btn.addEventListener("pointerleave", e => {
-    e.preventDefault();        // CRITICAL: stops synthetic click
+    e.preventDefault();
     e.stopPropagation();
     clearGesture();
   });
 
   btn.addEventListener("contextmenu", e => {
     e.preventDefault();
+    closeViewerIfOpen();
     go(mode, origin, dest);
   });
 
@@ -112,6 +127,7 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
     }
   });
 }
+
 
 // ------------------------------------------------------------
 // Helper for wiring route buttons
