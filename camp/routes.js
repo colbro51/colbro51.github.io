@@ -215,7 +215,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const el = document.getElementById(id);
 
     if (!name || name.trim() === "") {
-      el.style.display = "none";
+      el.classList.add("hidden");
       return;
     }
 

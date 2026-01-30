@@ -118,6 +118,10 @@ h1 {
     gap: 6px;
 }
 
+.hidden {
+    display: none !important;
+}
+
 #useGoogleMapsLabel,
 #useGoogleMapsLabel * {
     display: none !important;
