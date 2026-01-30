@@ -65,7 +65,7 @@ export function goBack() {
 
 
 // ------------------------------------------------------------
-// Wire Help + Viewer back buttons
+// DOM wiring + stale-viewer cleanup
 // ------------------------------------------------------------
 window.addEventListener("DOMContentLoaded", () => {
 
@@ -87,4 +87,21 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  // --------------------------------------------------------
+  // CRITICAL FIX:
+  // Prevent stale viewer state after Maps or app backgrounding
+  // --------------------------------------------------------
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+
+      const viewer = document.getElementById("viewer");
+
+      // If viewer was active when Maps opened, close it immediately
+      if (viewer.classList.contains("active")) {
+        viewer.classList.remove("active");
+        document.getElementById(backscreen).classList.add("active");
+      }
+    }
+  });
 });
