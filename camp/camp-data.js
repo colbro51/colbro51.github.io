@@ -76,7 +76,7 @@ const more_1_dest = "6 Jacks Pass Rd";
 
 const more_2_name = "Friday meal 5:30pm";
 const more_2_mode = "driving";
-const more_2_dest = "1 Conical Hill Rd";
+const more_2_dest = "1 Conical Hill Rd, Hanmer Springs";
 
 const more_3_name = "";
 const more_3_mode = "";
