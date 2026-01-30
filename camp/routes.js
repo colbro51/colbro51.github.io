@@ -48,13 +48,18 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
 
   function clearGesture() {
     pointerDownValid = false;
+    gestureSessionValid = false;
+
     if (pressTimer) {
       clearTimeout(pressTimer);
       pressTimer = null;
     }
   }
 
-  btn.addEventListener("pointerdown", () => {
+  btn.addEventListener("pointerdown", e => {
+    e.preventDefault();        // stop Android text-selection
+    e.stopPropagation();
+
     gestureSessionValid = true;
     pointerDownValid = true;
     pointerDownTime = Date.now();
@@ -66,13 +71,11 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
     }, 500);
   });
 
-  btn.addEventListener("pointerup", () => {
-    if (!gestureSessionValid) {
-      clearGesture();
-      return;
-    }
+  btn.addEventListener("pointerup", e => {
+    e.preventDefault();
+    e.stopPropagation();
 
-    if (!pointerDownValid) {
+    if (!gestureSessionValid || !pointerDownValid) {
       clearGesture();
       return;
     }
@@ -86,8 +89,17 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
     clearGesture();
   });
 
-  btn.addEventListener("pointercancel", clearGesture);
-  btn.addEventListener("pointerleave", clearGesture);
+  btn.addEventListener("pointercancel", e => {
+    e.preventDefault();        // CRITICAL: stops synthetic click
+    e.stopPropagation();
+    clearGesture();
+  });
+
+  btn.addEventListener("pointerleave", e => {
+    e.preventDefault();        // CRITICAL: stops synthetic click
+    e.stopPropagation();
+    clearGesture();
+  });
 
   btn.addEventListener("contextmenu", e => {
     e.preventDefault();
@@ -96,12 +108,10 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
 
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") {
-      gestureSessionValid = false;
       clearGesture();
     }
   });
 }
-
 
 // ------------------------------------------------------------
 // Helper for wiring route buttons
