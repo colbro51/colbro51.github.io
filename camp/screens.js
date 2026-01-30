@@ -38,14 +38,20 @@ export function enterHelp() {
 export function enterViewer(imageName) {
   const current = document.querySelector(".screen.active");
   const img = document.getElementById("viewerImage");
+  const testSrc = `docs/${imageName}.png`;
 
-  img.src = `docs/${imageName}.png`;
+  fetch(testSrc, { method: "HEAD" }).then(res => {
+    if (!res.ok) {
+      console.warn(`Viewer image missing: ${testSrc}`);
+      return;
+    }
 
-  screenlevel = 3;
-  backscreen = current.id;
-  showScreen("viewer");
+    img.src = testSrc;
+    screenlevel = 3;
+    backscreen = current.id;
+    showScreen("viewer");
+  });
 }
-
 
 // ------------------------------------------------------------
 // Unified Go Back logic
