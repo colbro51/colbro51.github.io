@@ -1,5 +1,17 @@
 // screens.js
 
+function log(...args) {
+  const ts = performance.now().toFixed(1);
+  const line = `[${ts}] ${args.join(" ")}`;
+  console.log(line);
+
+  const panel = document.getElementById("debugPanel");
+  if (panel) {
+    panel.textContent += line + "\n";
+    panel.scrollTop = panel.scrollHeight;
+  }
+}
+
 // ------------------------------------------------------------
 // Navigation state machine
 // ------------------------------------------------------------
@@ -11,18 +23,18 @@ let backscreen = "";     // where "Go Back" should return
 // Core screen switcher
 // ------------------------------------------------------------
 export function showScreen(id) {
+  log("SHOW SCREEN", id);
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
-
 // ------------------------------------------------------------
 // LEVEL 2: Day screens + Help
 // ------------------------------------------------------------
-export function enterDay(id) {
-  screenlevel = 2;
-  backscreen = "main";
-  showScreen(id);
+export function showScreen(id) {
+  log("SHOW SCREEN", id);
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
 
 export function enterHelp() {
@@ -37,18 +49,25 @@ export function enterHelp() {
 // ------------------------------------------------------------
 export function enterViewer(imageName) {
   const current = document.querySelector(".screen.active");
+  log("ENTER VIEWER start", imageName, "current=", current?.id);
+
   const img = document.getElementById("viewerImage");
   const testSrc = `docs/${imageName}.png`;
 
   fetch(testSrc, { method: "HEAD" }).then(res => {
     if (!res.ok) {
-      overlay.innerText = `Missing viewer image: ${testSrc}`;
+      log("VIEWER IMAGE MISSING", testSrc);
       return;
     }
 
     img.src = testSrc;
     screenlevel = 3;
     backscreen = current.id;
+
+    log("ENTER VIEWER commit", imageName, 
+        "screenlevel=", screenlevel, 
+        "backscreen=", backscreen);
+
     showScreen("viewer");
   });
 }
@@ -57,13 +76,22 @@ export function enterViewer(imageName) {
 // Unified Go Back logic
 // ------------------------------------------------------------
 export function goBack() {
+  const current = document.querySelector(".screen.active")?.id;
+  log("GO BACK", 
+      "current=", current, 
+      "screenlevel=", screenlevel, 
+      "backscreen=", backscreen);
+
   showScreen(backscreen);
   screenlevel -= 1;
 
+  log("GO BACK after", 
+      "screenlevel=", screenlevel, 
+      "backscreen=", backscreen);
+  
   if (screenlevel === 2) backscreen = "main";
   if (screenlevel === 1) backscreen = "";
 }
-
 
 // ------------------------------------------------------------
 // DOM wiring

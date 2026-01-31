@@ -68,6 +68,7 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
   }
 
   btn.addEventListener("pointerdown", e => {
+    log("pointerdown", docsId);
     e.preventDefault();
     e.stopPropagation();
 
@@ -77,6 +78,10 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
 
     pressTimer = setTimeout(() => {
       // Long‑press → Maps only, never viewer
+      log("LONG PRESS FIRING", docsId,
+          "viewerActive?", document.getElementById("viewer").classList.contains("active"),
+          "screenlevel=", screenlevel,
+          "backscreen=", backscreen);
       pointerDownValid = false;
       gestureSessionValid = false;   // kill the session so pointerup/tap can't fire viewer
 
@@ -88,6 +93,7 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
   });
 
   btn.addEventListener("pointerup", e => {
+    log("pointerup", docsId, "duration", Date.now() - pointerDownTime);
     e.preventDefault();
     e.stopPropagation();
 
@@ -107,12 +113,14 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
   });
 
   btn.addEventListener("pointercancel", e => {
+    log("pointercancel", docsId);
     e.preventDefault();
     e.stopPropagation();
     clearGesture();
   });
 
   btn.addEventListener("pointerleave", e => {
+    log("pointerleave", docsId);
     e.preventDefault();
     e.stopPropagation();
     clearGesture();
@@ -125,6 +133,7 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
   });
 
   btn.addEventListener("click", e => {
+    log("click", docsId);
     e.preventDefault();
     e.stopPropagation();
   });
