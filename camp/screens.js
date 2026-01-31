@@ -38,8 +38,6 @@ export function enterHelp() {
 export function enterViewer(imageName) {
   const current = document.querySelector(".screen.active");
   const img = document.getElementById("viewerImage");
-  const overlay = document.getElementById("debugOverlay"); // or whatever your overlay ID is
-
   const testSrc = `docs/${imageName}.png`;
 
   fetch(testSrc, { method: "HEAD" }).then(res => {
@@ -52,8 +50,6 @@ export function enterViewer(imageName) {
     screenlevel = 3;
     backscreen = current.id;
     showScreen("viewer");
-
-    overlay.innerText = `Viewer loaded: ${testSrc}`;
   });
 }
 
