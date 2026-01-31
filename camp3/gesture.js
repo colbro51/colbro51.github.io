@@ -2,7 +2,7 @@
 
 export function attachUniversalPressEngine(element, {
   longPressMs = 500,
-  moveThresholdPx = 10,
+  moveThresholdPx = 30,
   onClick,
   onLongPress
 }) {
@@ -81,12 +81,17 @@ export function attachUniversalPressEngine(element, {
     state = 'idle';
   }
 
-  function cancelPress() {
-    if (longPressTimer) {
-      clearTimeout(longPressTimer);
-      longPressTimer = null;
-    }
-    state = 'cancelled';
+  function cancelPress(evt) {
+      const { x, y } = getPoint(evt);
+      const moved = distance(startX, startY, x, y);
+
+      // Ignore bogus cancels
+      if (moved < 8 && state === 'pressing') {
+          return;
+      }
+
+      if (longPressTimer) clearTimeout(longPressTimer);
+      state = 'cancelled';
   }
 
   // Pointer events (modern, preferred)
@@ -95,13 +100,13 @@ export function attachUniversalPressEngine(element, {
   if (hasPointerEvents) {
     element.addEventListener('pointerdown', (evt) => {
       if (evt.button !== 0) return; // left button only
+      evt.preventDefault();
       startPress(evt);
     });
 
     element.addEventListener('pointermove', movePress);
     element.addEventListener('pointerup', endPress);
     element.addEventListener('pointercancel', cancelPress);
-    element.addEventListener('pointerleave', cancelPress);
   } else {
     // Touch fallback
     element.addEventListener('touchstart', (evt) => {

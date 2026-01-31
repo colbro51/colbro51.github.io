@@ -35,7 +35,7 @@ import {
 import { go } from "./maps.js";
 import { enterDay, enterViewer, goBack } from "./screens.js";
 
-// ⭐ NEW: import the universal gesture engine
+//  NEW: import the universal gesture engine
 import { attachUniversalPressEngine } from "./gesture.js";
 
 
@@ -51,7 +51,7 @@ function closeViewerIfOpen() {
 
 
 // ------------------------------------------------------------
-// ⭐ NEW: Universal gesture wrapper for route buttons
+//  NEW: Universal gesture wrapper for route buttons
 // ------------------------------------------------------------
 function attachRouteGestures(btn, docsId, mode, origin, dest) {
   if (!btn) return;
