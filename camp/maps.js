@@ -1,6 +1,4 @@
 // maps.js
-
-import { log } from "./debug.js";
 import { appLaunch } from "./logic.js";
 import { showScreen } from "./screens.js";
 
@@ -95,21 +93,13 @@ export function openInMapsWithDetection(url) {
       showMapsFailurePopup();
     }
   }, 1200);
-  log("RETURN FROM MAPS",
-      "viewerActive?", document.getElementById("viewer").classList.contains("active"),
-      "current=", document.querySelector(".screen.active")?.id,
-      "screenlevel=", screenlevel,
-      "backscreen=", backscreen);
 }
 
 // ------------------------------------------------------------
 // 5. Main routing function
 // ------------------------------------------------------------
 export async function go(mode, origin, destination) {
-  log("GO()", mode, origin, destination,
-    "viewerActive?", document.getElementById("viewer").classList.contains("active"),
-    "screenlevel=", screenlevel,
-    "backscreen=", backscreen);
+  console.log("GO CALLED:", { mode, origin, destination, appState });
 
   if (!appState) return;
 

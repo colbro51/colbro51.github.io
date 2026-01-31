@@ -34,9 +34,7 @@ import {
 
 import { go } from "./maps.js";
 import { enterDay, enterViewer, goBack } from "./screens.js";
-
-// ⭐ NEW: import the universal gesture engine
-import { attachUniversalPressEngine } from "./gesture.js";
+import { attachSimplePressEngine } from "./gesture.js";
 
 
 // ------------------------------------------------------------
@@ -51,18 +49,18 @@ function closeViewerIfOpen() {
 
 
 // ------------------------------------------------------------
-// ⭐ NEW: Universal gesture wrapper for route buttons
+// New gesture wiring using attachSimplePressEngine
 // ------------------------------------------------------------
-function attachRouteGestures(btn, docsId, mode, origin, dest) {
+function wireRouteButton(id, mode, origin, dest) {
+  const btn = document.getElementById(id);
   if (!btn) return;
 
-  attachUniversalPressEngine(btn, {
+  attachSimplePressEngine(btn, {
     longPressMs: 500,
-    moveThresholdPx: 10,
 
     onClick: () => {
       // Short tap → viewer
-      enterViewer(docsId);
+      enterViewer(id);
     },
 
     onLongPress: () => {
@@ -71,17 +69,6 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
       go(mode, origin, dest);
     }
   });
-}
-
-
-// ------------------------------------------------------------
-// Helper for wiring route buttons
-// ------------------------------------------------------------
-function wireRouteButton(id, mode, origin, dest) {
-  const btn = document.getElementById(id);
-  if (!btn) return;
-
-  attachRouteGestures(btn, id, mode, origin, dest);
 }
 
 
@@ -112,14 +99,19 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("fri_fit").innerText  = fri_fit_name;
 
 
-  // Camp button
-  attachRouteGestures(
-    document.getElementById("btn_camp"),
-    "camp",
-    "driving",
-    "Current Location",
-    camp_location
-  );
+  // Camp button: tap → camp viewer, long‑press → Maps from Current Location
+  attachSimplePressEngine(document.getElementById("btn_camp"), {
+    longPressMs: 500,
+
+    onClick: () => {
+      enterViewer("camp");
+    },
+
+    onLongPress: () => {
+      closeViewerIfOpen();
+      go("driving", "Current Location", camp_location);
+    }
+  });
 
 
   // Day buttons

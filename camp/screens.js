@@ -1,7 +1,5 @@
 // screens.js
 
-import { log } from "./debug.js";
-
 // ------------------------------------------------------------
 // Navigation state machine
 // ------------------------------------------------------------
@@ -13,10 +11,10 @@ let backscreen = "";     // where "Go Back" should return
 // Core screen switcher
 // ------------------------------------------------------------
 export function showScreen(id) {
-  log("SHOW SCREEN", id);
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
+
 
 // ------------------------------------------------------------
 // LEVEL 2: Day screens + Help
@@ -33,31 +31,29 @@ export function enterHelp() {
   showScreen("helpPanel");
 }
 
+
 // ------------------------------------------------------------
 // LEVEL 3: Viewer (trip text)
 // ------------------------------------------------------------
 export function enterViewer(imageName) {
   const current = document.querySelector(".screen.active");
-  log("ENTER VIEWER start", imageName, "current=", current?.id);
-
   const img = document.getElementById("viewerImage");
+  const overlay = document.getElementById("debugOverlay"); // or whatever your overlay ID is
+
   const testSrc = `docs/${imageName}.png`;
 
   fetch(testSrc, { method: "HEAD" }).then(res => {
     if (!res.ok) {
-      log("VIEWER IMAGE MISSING", testSrc);
+      overlay.innerText = `Missing viewer image: ${testSrc}`;
       return;
     }
 
     img.src = testSrc;
     screenlevel = 3;
     backscreen = current.id;
-
-    log("ENTER VIEWER commit", imageName, 
-        "screenlevel=", screenlevel, 
-        "backscreen=", backscreen);
-
     showScreen("viewer");
+
+    overlay.innerText = `Viewer loaded: ${testSrc}`;
   });
 }
 
@@ -65,22 +61,13 @@ export function enterViewer(imageName) {
 // Unified Go Back logic
 // ------------------------------------------------------------
 export function goBack() {
-  const current = document.querySelector(".screen.active")?.id;
-  log("GO BACK", 
-      "current=", current, 
-      "screenlevel=", screenlevel, 
-      "backscreen=", backscreen);
-
   showScreen(backscreen);
   screenlevel -= 1;
 
-  log("GO BACK after", 
-      "screenlevel=", screenlevel, 
-      "backscreen=", backscreen);
-  
   if (screenlevel === 2) backscreen = "main";
   if (screenlevel === 1) backscreen = "";
 }
+
 
 // ------------------------------------------------------------
 // DOM wiring
