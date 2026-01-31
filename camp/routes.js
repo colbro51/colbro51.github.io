@@ -73,9 +73,9 @@ function wireRouteButton(id, mode, origin, dest) {
 
 
 // ------------------------------------------------------------
-// Wire everything on DOMContentLoaded
+// Wire everything AFTER initMaps() has completed
 // ------------------------------------------------------------
-window.addEventListener("DOMContentLoaded", () => {
+export function wireRoutes() {
 
   // Labels
   document.getElementById("mon_easy").innerText = mon_easy_name;
@@ -185,4 +185,4 @@ window.addEventListener("DOMContentLoaded", () => {
     el.innerText = name;
     wireRouteButton(id, mode, camp_location, dest);
   });
-});
+}

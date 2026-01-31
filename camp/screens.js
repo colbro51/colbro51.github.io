@@ -49,6 +49,7 @@ export function enterViewer(imageName) {
     }
 
     img.src = testSrc;
+    document.getElementById("viewerImage").addEventListener("contextmenu", e => e.preventDefault());
     screenlevel = 3;
     backscreen = current.id;
     showScreen("viewer");

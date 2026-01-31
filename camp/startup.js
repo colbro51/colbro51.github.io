@@ -12,7 +12,7 @@ function isRealAndroid() {
          !navigator.userAgent.includes("CrOS");
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
 
   // --- PLATFORM DETECTION ---
   const ua = navigator.userAgent.toLowerCase();
@@ -38,7 +38,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // --- INSTALLED OR DESKTOP → CONTINUE NORMALLY ---
   showScreen("main");
-  initMaps();
+
+  // Ensure maps system is fully initialised BEFORE wiring routes/gestures
+  await initMaps();
+
+  // Now wire all route buttons + gesture engine
+  const routesModule = await import("./routes.js");
+  if (routesModule && typeof routesModule.wireRoutes === "function") {
+    routesModule.wireRoutes();
+  }
 
   // --- iOS/iPadOS: reveal Google Maps toggle ---
   const os = detectOS();
