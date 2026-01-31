@@ -84,11 +84,15 @@ export function openInMapsWithDetection(url) {
 
   document.addEventListener("visibilitychange", onVisibility, { once: true });
 
-  window.open(url, "_blank");
+  // IMPORTANT: use direct navigation instead of window.open()
+  // This prevents Android WebView from replaying the intent on resume.
+  location.href = url;
 
+  // Detection window
   setTimeout(() => {
     document.removeEventListener("visibilitychange", onVisibility);
 
+    // If we never became hidden, Maps didn't open
     if (!becameHidden) {
       showMapsFailurePopup();
     }
