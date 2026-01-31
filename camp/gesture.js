@@ -1,30 +1,31 @@
-// gesture.js
-
 export function attachSimplePressEngine(element, {
-  longPressMs = 500,
+  longPressMs = 2000,
   onClick,
   onLongPress
 }) {
-  let startTime = 0;
+  let timer = null;
+  let longPressFired = false;
 
-  // 1. Record the moment the finger goes down
-  element.addEventListener('pointerdown', (evt) => {
-    startTime = performance.now();
+  element.addEventListener("pointerdown", () => {
+    longPressFired = false;
+
+    timer = setTimeout(() => {
+      longPressFired = true;
+      if (onLongPress) onLongPress();
+    }, longPressMs);
   });
 
-  // 2. When the browser fires a real click, decide tap vs long-press
-  element.addEventListener('click', (evt) => {
-    const duration = performance.now() - startTime;
+  element.addEventListener("click", () => {
+    // If long‑press already happened, ignore click
+    if (longPressFired) return;
 
-    if (duration < longPressMs) {
-      // TAP
-      if (onClick) onClick(evt);
-    } else {
-      // LONG PRESS
-      if (onLongPress) onLongPress(evt);
-    }
+    // Otherwise this is a tap
+    clearTimeout(timer);
+    timer = null;
+
+    if (onClick) onClick();
   });
 
-  // Optional: prevent context menu on long-press
-  element.addEventListener('contextmenu', (evt) => evt.preventDefault());
+  // Optional: block context menu
+  element.addEventListener("contextmenu", evt => evt.preventDefault());
 }
