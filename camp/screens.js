@@ -31,7 +31,6 @@ export function enterHelp() {
   showScreen("helpPanel");
 }
 
-
 // ------------------------------------------------------------
 // LEVEL 3: Viewer (trip text)
 // ------------------------------------------------------------
@@ -69,6 +68,9 @@ export function goBack() {
   if (screenlevel === 1) backscreen = "";
 }
 
+document.querySelectorAll(".backonly").forEach(btn => {
+  btn.addEventListener("pointerdown", e => e.stopPropagation());
+});
 
 // ------------------------------------------------------------
 // DOM wiring
