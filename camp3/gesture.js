@@ -54,59 +54,64 @@ export function attachUniversalPressEngine(element, {
     if (state !== 'pressing') return;
     const { x, y } = getPoint(evt);
     if (distance(startX, startY, x, y) > moveThresholdPx) {
-      // Movement too large → cancel long-press
-      clearTimeout(longPressTimer);
-      longPressTimer = null;
+      if (longPressTimer) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+      }
       state = 'cancelled';
     }
   }
 
   function endPress(evt) {
+    // If we were cancelled or already long‑pressed, ignore this end
+    if (state !== 'pressing') {
+      state = 'idle';
+      return;
+    }
+
     if (longPressTimer) {
       clearTimeout(longPressTimer);
       longPressTimer = null;
     }
 
-    const now = performance.now();
-    const duration = now - startTime;
+    const duration = performance.now() - startTime;
 
-    if (state === 'pressing') {
-      // Short press that didn't become a long-press
-      if (duration < longPressMs && !suppressNextClick) {
-        if (onClick) onClick(evt);
-      }
+    if (duration < longPressMs && !suppressNextClick) {
+      if (onClick) onClick(evt);
     }
-    // If state === 'longPressed', we've already fired onLongPress
 
     state = 'idle';
   }
 
-  function cancelPress(evt) {
-      const { x, y } = getPoint(evt);
-      const moved = distance(startX, startY, x, y);
-
-      // Ignore bogus cancels
-      if (moved < 8 && state === 'pressing') {
-          return;
-      }
-
-      if (longPressTimer) clearTimeout(longPressTimer);
-      state = 'cancelled';
+  function cancelPress() {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      longPressTimer = null;
+    }
+    state = 'cancelled';
   }
 
-  // Pointer events (modern, preferred)
   const hasPointerEvents = window.PointerEvent !== undefined;
 
   if (hasPointerEvents) {
     element.addEventListener('pointerdown', (evt) => {
-      if (evt.button !== 0) return; // left button only
+      if (evt.button !== 0) return;
+      element.setPointerCapture(evt.pointerId);
       evt.preventDefault();
       startPress(evt);
     });
 
     element.addEventListener('pointermove', movePress);
-    element.addEventListener('pointerup', endPress);
-    element.addEventListener('pointercancel', cancelPress);
+
+    element.addEventListener('pointerup', (evt) => {
+      try { element.releasePointerCapture(evt.pointerId); } catch {}
+      endPress(evt);
+    });
+
+    element.addEventListener('pointercancel', (evt) => {
+      try { element.releasePointerCapture(evt.pointerId); } catch {}
+      cancelPress();
+    });
   } else {
     // Touch fallback
     element.addEventListener('touchstart', (evt) => {
@@ -128,7 +133,6 @@ export function attachUniversalPressEngine(element, {
     element.addEventListener('mouseleave', cancelPress);
   }
 
-  // Synthetic click suppression (Chrome, iOS Safari, etc.)
   element.addEventListener('click', (evt) => {
     if (suppressNextClick) {
       suppressNextClick = false;
@@ -136,11 +140,8 @@ export function attachUniversalPressEngine(element, {
       evt.stopPropagation();
       return;
     }
-    // If you want click to be handled only via this handler (not endPress),
-    // you can move onClick logic here instead.
   });
 
-  // Optional: prevent native context menu on long-press/right-click
   element.addEventListener('contextmenu', (evt) => {
     evt.preventDefault();
   });
