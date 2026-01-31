@@ -34,7 +34,7 @@ import {
 
 import { go } from "./maps.js";
 import { enterDay, enterViewer, goBack } from "./screens.js";
-
+import { log } from "./debug.js";
 
 // ------------------------------------------------------------
 // Helper: close viewer if it happens to be active

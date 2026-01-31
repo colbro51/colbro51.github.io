@@ -1,20 +1,6 @@
 // screens.js
 
-function log(...args) {
-  try {
-    const ts = performance.now().toFixed(1);
-    const line = `[${ts}] ${args.join(" ")}`;
-    console.log(line);
-
-    const panel = document.getElementById("debugPanel");
-    if (panel) {
-      panel.textContent += line + "\n";
-      panel.scrollTop = panel.scrollHeight;
-    }
-  } catch (err) {
-    console.warn("LOG ERROR:", err);
-  }
-}
+import { log } from "./debug.js";
 
 // ------------------------------------------------------------
 // Navigation state machine
@@ -35,10 +21,10 @@ export function showScreen(id) {
 // ------------------------------------------------------------
 // LEVEL 2: Day screens + Help
 // ------------------------------------------------------------
-export function showScreen(id) {
-  log("SHOW SCREEN", id);
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+export function enterDay(id) {
+  screenlevel = 2;
+  backscreen = "main";
+  showScreen(id);
 }
 
 export function enterHelp() {
@@ -46,7 +32,6 @@ export function enterHelp() {
   backscreen = "main";
   showScreen("helpPanel");
 }
-
 
 // ------------------------------------------------------------
 // LEVEL 3: Viewer (trip text)

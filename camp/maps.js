@@ -1,4 +1,6 @@
 // maps.js
+
+import { log } from "./debug.js";
 import { appLaunch } from "./logic.js";
 import { showScreen } from "./screens.js";
 
