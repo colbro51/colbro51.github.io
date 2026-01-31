@@ -1,10 +1,24 @@
 // startup.js
+
+import { log } from "./debug.js";
 import { year_name } from "./camp-data.js";
 import { initMaps } from "./maps.js";
 import { detectOS } from "./logic.js";
 import { showScreen } from "./screens.js";
 
+function isRealAndroid() {
+  return navigator.userAgent.includes("Android") &&
+         navigator.userAgent.includes("Mobile") &&
+         !navigator.userAgent.includes("Windows") &&
+         !navigator.userAgent.includes("CrOS");
+}
+
 window.addEventListener("DOMContentLoaded", () => {
+
+  log("UA:", navigator.userAgent);
+  log("UAData.platform:", navigator.userAgentData?.platform);
+  log("UAData.mobile:", navigator.userAgentData?.mobile);
+  log("Standalone:", window.matchMedia("(display-mode: standalone)").matches);
 
   // --- PLATFORM DETECTION ---
   const ua = navigator.userAgent.toLowerCase();
@@ -17,9 +31,15 @@ window.addEventListener("DOMContentLoaded", () => {
     window.navigator.standalone === true;
 
   // --- INSTALL GATE (ONLY FOR ANDROID + IOS) ---
-  if (!installedState && (isAndroid || isIOS)) {
+  if (!installedState && (isRealAndroid() || isIOS)) {
     showScreen("install");
-    return;   // STOP: do not load main UI
+    return;
+  }
+
+  // --- ANDROID-ONLY HELP NOTE ---
+  if (isRealAndroid()) {
+    const androidNote = document.getElementById("androidHelpNote");
+    if (androidNote) androidNote.style.display = "block";
   }
 
   // --- INSTALLED OR DESKTOP → CONTINUE NORMALLY ---

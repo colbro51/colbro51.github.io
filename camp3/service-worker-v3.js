@@ -4,10 +4,10 @@ const CACHE_NAME = "fb-summercamp-static-v1";
 
 // Only cache truly static assets (no HTML, no JS)
 const STATIC_ASSETS = [
-  "/camp2/style.css",
-  "/camp2/manifest.json",
-  "/camp2/icon-192.png",
-  "/camp2/icon-512.png"
+  "/camp3/style.css",
+  "/camp3/manifest.json",
+  "/camp3/icon-192.png",
+  "/camp3/icon-512.png"
 ];
 
 // Install: cache static shell assets
@@ -45,8 +45,8 @@ self.addEventListener("fetch", event => {
 
   // Always fetch fresh HTML (including /camp/ and /camp/index.html)
   if (req.mode === "navigate" ||
-      url.pathname === "/camp2/" ||
-      url.pathname === "/camp2/index.html") {
+      url.pathname === "/camp3/" ||
+      url.pathname === "/camp3/index.html") {
     event.respondWith(fetch(req));
     return;
   }

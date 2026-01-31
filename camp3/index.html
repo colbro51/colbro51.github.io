@@ -28,10 +28,12 @@
     navigator.serviceWorker.register("service-worker-v2.js");
   }
 
-  document.getElementById("manifest_link").href = "manifest.json?v=" + APP_VERSION;
-  document.getElementById("css_main").href      = "style.css?v=" + APP_VERSION;
-  document.getElementById("icon_192").href      = "icon-192.png?v=" + APP_VERSION;
-  document.getElementById("icon_512").href      = "icon-512.png?v=" + APP_VERSION;
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("manifest_link").href = "manifest.json?v=" + APP_VERSION;
+    document.getElementById("css_main").href      = "style.css?v=" + APP_VERSION;
+    document.getElementById("icon_192").href      = "icon-192.png?v=" + APP_VERSION;
+    document.getElementById("icon_512").href      = "icon-512.png?v=" + APP_VERSION;
+  });
 </script>
 
 </head>
@@ -72,7 +74,7 @@
   <div class="btn mainbtn" id="btn_wed">Wednesday</div>
   <div class="btn mainbtn" id="btn_thu">Thursday</div>
   <div class="btn mainbtn" id="btn_fri">Friday</div>
-  <div class="btn mainbtn" id="btn_more">More</div>
+  <div class="btn mainbtn" id="btn_more">Meals &amp; More</div>
 </div>
 
 <div id="helpPanel" class="screen">
@@ -80,6 +82,12 @@
   <p>Tap a route for details.</p>
   <p>Single tap -> trip sheet</p>
   <p>Long press -> open maps</p>
+  <div id="androidHelpNote" style="margin-top:20px; text-align:left; font-size:17px; line-height:1.4;">
+    <strong>Android / Samsung Tip</strong><br>
+    After launching Google Maps, use your phone’s <strong>Back button repeatedly</strong> until you return to this app.  
+    On Samsung devices, the Back button may first navigate through Maps screens before exiting.  
+    This is normal — just keep pressing Back until you’re back here.
+  </div>
   <div class="backonly" id="back_help">⬅ Go Back</div>
 </div>
 
@@ -131,7 +139,7 @@
 
 <!-- More Screen -->
 <div id="more" class="screen">
-  <h1>Junk</h1>
+  <h1>Meals &amp; More</h1>
 
   <div class="btn subbtn morebtn" id="more_1"></div>
   <div class="btn subbtn morebtn" id="more_2"></div>
@@ -166,6 +174,22 @@
     <button class="modal-btn" id="modal_ok">OK</button>
   </div>
 </div>
+
+<div id="debugPanel" style="
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#222;
+  color:#0f0;
+  font-size:12px;
+  padding:10px;
+  z-index:99999;
+  white-space:pre-wrap;
+  max-height:40%;
+  overflow:auto;
+  font-family:monospace;
+"></div>
 
 </body>
 </html>

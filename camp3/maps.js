@@ -1,4 +1,6 @@
 // maps.js
+
+import { log } from "./debug.js";
 import { appLaunch } from "./logic.js";
 import { showScreen } from "./screens.js";
 
@@ -73,20 +75,41 @@ export async function initMaps() {
 // 4. Detect if Google Maps failed to open
 // ------------------------------------------------------------
 export function openInMapsWithDetection(url) {
+  const openedAt = Date.now();
+  let becameHidden = false;
+
+  const onVisibility = () => {
+    if (document.visibilityState === "hidden") {
+      becameHidden = true;
+    }
+  };
+
+  document.addEventListener("visibilitychange", onVisibility, { once: true });
+
   window.open(url, "_blank");
 
   setTimeout(() => {
-    if (document.visibilityState === "visible") {
+    document.removeEventListener("visibilitychange", onVisibility);
+
+    if (!becameHidden) {
       showMapsFailurePopup();
     }
   }, 1200);
+  log("RETURN FROM MAPS",
+      "viewerActive?", document.getElementById("viewer").classList.contains("active"),
+      "current=", document.querySelector(".screen.active")?.id,
+      "screenlevel=", screenlevel,
+      "backscreen=", backscreen);
 }
 
 // ------------------------------------------------------------
 // 5. Main routing function
 // ------------------------------------------------------------
 export async function go(mode, origin, destination) {
-  console.log("GO CALLED:", { mode, origin, destination, appState });
+  log("GO()", mode, origin, destination,
+    "viewerActive?", document.getElementById("viewer").classList.contains("active"),
+    "screenlevel=", screenlevel,
+    "backscreen=", backscreen);
 
   if (!appState) return;
 
