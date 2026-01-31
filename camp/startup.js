@@ -1,5 +1,6 @@
 // startup.js
 
+import { log } from "./debug.js";
 import { year_name } from "./camp-data.js";
 import { initMaps } from "./maps.js";
 import { detectOS } from "./logic.js";
@@ -13,6 +14,11 @@ function isRealAndroid() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+
+  log("UA:", navigator.userAgent);
+  log("UAData.platform:", navigator.userAgentData?.platform);
+  log("UAData.mobile:", navigator.userAgentData?.mobile);
+  log("Standalone:", window.matchMedia("(display-mode: standalone)").matches);
 
   // --- PLATFORM DETECTION ---
   const ua = navigator.userAgent.toLowerCase();
