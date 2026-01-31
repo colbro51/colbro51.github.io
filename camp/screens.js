@@ -38,7 +38,7 @@ export function enterHelp() {
 export function enterViewer(imageName) {
   const current = document.querySelector(".screen.active");
   const img = document.getElementById("viewerImage");
-  const overlay = document.getElementById("debugOverlay"); // or whatever your overlay ID is
+  const overlay = document.getElementById("debugPanel");
 
   const testSrc = `docs/${imageName}.png`;
 

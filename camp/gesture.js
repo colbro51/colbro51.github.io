@@ -1,3 +1,7 @@
+// gesrure.js
+
+console.log("GESTURE.JS LOADED", Date.now());
+
 export function attachSimplePressEngine(element, {
   longPressMs = 2000,
   onClick,
