@@ -34,7 +34,10 @@ import {
 
 import { go } from "./maps.js";
 import { enterDay, enterViewer, goBack } from "./screens.js";
-import { log } from "./debug.js";
+
+// ⭐ NEW: import the universal gesture engine
+import { attachUniversalPressEngine } from "./gesture.js";
+
 
 // ------------------------------------------------------------
 // Helper: close viewer if it happens to be active
@@ -48,99 +51,24 @@ function closeViewerIfOpen() {
 
 
 // ------------------------------------------------------------
-// Deterministic, Android-safe gesture engine
+// ⭐ NEW: Universal gesture wrapper for route buttons
 // ------------------------------------------------------------
 function attachRouteGestures(btn, docsId, mode, origin, dest) {
-  let pressTimer = null;
-  let pointerDownTime = 0;
+  if (!btn) return;
 
-  let pointerDownValid = false;
-  let gestureSessionValid = false;
+  attachUniversalPressEngine(btn, {
+    longPressMs: 500,
+    moveThresholdPx: 10,
 
-  function clearGesture() {
-    pointerDownValid = false;
-    gestureSessionValid = false;
+    onClick: () => {
+      // Short tap → viewer
+      enterViewer(docsId);
+    },
 
-    if (pressTimer) {
-      clearTimeout(pressTimer);
-      pressTimer = null;
-    }
-  }
-
-  btn.addEventListener("pointerdown", e => {
-    log("pointerdown", docsId);
-    e.preventDefault();
-    e.stopPropagation();
-
-    gestureSessionValid = true;
-    pointerDownValid = true;
-    pointerDownTime = Date.now();
-
-    pressTimer = setTimeout(() => {
-      // Long‑press → Maps only, never viewer
-      log("LONG PRESS FIRING", docsId,
-          "viewerActive?", document.getElementById("viewer").classList.contains("active"),
-          "screenlevel=", screenlevel,
-          "backscreen=", backscreen);
-      pointerDownValid = false;
-      gestureSessionValid = false;   // kill the session so pointerup/tap can't fire viewer
-
+    onLongPress: () => {
+      // Long press → Maps
       closeViewerIfOpen();
       go(mode, origin, dest);
-
-      pressTimer = null;
-    }, 500);
-  });
-
-  btn.addEventListener("pointerup", e => {
-    log("pointerup", docsId, "duration", Date.now() - pointerDownTime);
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!gestureSessionValid || !pointerDownValid) {
-      clearGesture();
-      return;
-    }
-
-    const duration = Date.now() - pointerDownTime;
-
-    // Short tap → viewer
-    if (duration < 500) {
-      enterViewer(docsId);
-    }
-
-    clearGesture();
-  });
-
-  btn.addEventListener("pointercancel", e => {
-    log("pointercancel", docsId);
-    e.preventDefault();
-    e.stopPropagation();
-    clearGesture();
-  });
-
-  btn.addEventListener("pointerleave", e => {
-    log("pointerleave", docsId);
-    e.preventDefault();
-    e.stopPropagation();
-    clearGesture();
-  });
-
-  btn.addEventListener("contextmenu", e => {
-    e.preventDefault();
-    closeViewerIfOpen();
-    go(mode, origin, dest);
-  });
-
-  btn.addEventListener("click", e => {
-    log("click", docsId);
-    e.preventDefault();
-    e.stopPropagation();
-  });
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden") {
-      clearGesture();
     }
   });
 }
