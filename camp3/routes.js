@@ -58,7 +58,7 @@ function attachRouteGestures(btn, docsId, mode, origin, dest) {
 
   attachUniversalPressEngine(btn, {
     longPressMs: 500,
-    moveThresholdPx: 10,
+    moveThresholdPx: 30,
 
     onClick: () => {
       // Short tap → viewer

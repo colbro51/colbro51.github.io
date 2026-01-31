@@ -64,6 +64,11 @@ export function attachUniversalPressEngine(element, {
 
   function endPress(evt) {
     // If we were cancelled or already long‑pressed, ignore this end
+    if (state === 'cancelled') {
+      state = 'idle';
+      return;
+    }
+
     if (state !== 'pressing') {
       state = 'idle';
       return;
