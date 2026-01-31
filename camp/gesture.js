@@ -7,25 +7,26 @@ export function attachSimplePressEngine(element, {
   let longPressFired = false;
 
   element.addEventListener("pointerdown", () => {
+    console.log("[GESTURE] pointerdown on", element.id);
     longPressFired = false;
 
     timer = setTimeout(() => {
       longPressFired = true;
+      console.log("[GESTURE] longPress FIRE on", element.id);
       if (onLongPress) onLongPress();
     }, longPressMs);
   });
 
   element.addEventListener("click", () => {
-    // If long‑press already happened, ignore click
+    console.log("[GESTURE] click on", element.id, "longPressFired =", longPressFired);
+
     if (longPressFired) return;
 
-    // Otherwise this is a tap
     clearTimeout(timer);
     timer = null;
 
     if (onClick) onClick();
   });
 
-  // Optional: block context menu
   element.addEventListener("contextmenu", evt => evt.preventDefault());
 }
