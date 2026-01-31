@@ -33,7 +33,7 @@ h1 {
     margin: 10px 0;
     min-height: 70px;
     white-space: pre-line;
-    touch-action: none;
+    touch-action: manipulation;
 }
 
 .mainbtn {
