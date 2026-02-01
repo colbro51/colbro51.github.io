@@ -5,6 +5,10 @@ import { initMaps } from "./maps.js";
 import { detectOS } from "./logic.js";
 import { showScreen } from "./screens.js";
 
+
+// ------------------------------------------------------------
+// Helper: detect real Android devices (kept exactly as-is)
+// ------------------------------------------------------------
 function isRealAndroid() {
   return navigator.userAgent.includes("Android") &&
          navigator.userAgent.includes("Mobile") &&
@@ -12,12 +16,15 @@ function isRealAndroid() {
          !navigator.userAgent.includes("CrOS");
 }
 
+
+// ------------------------------------------------------------
+// Startup sequence
+// ------------------------------------------------------------
 window.addEventListener("DOMContentLoaded", async () => {
 
   // --- PLATFORM DETECTION ---
-  const ua = navigator.userAgent.toLowerCase();
-  const isAndroid = ua.includes("android");
-  const isIOS = /iphone|ipad|ipod/.test(ua);
+  const os = detectOS();
+  const isIOS = (os === "ios" || os === "ipad");
 
   // --- INSTALL STATE DETECTION ---
   const installedState =
@@ -49,8 +56,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   // --- iOS/iPadOS: reveal Google Maps toggle ---
-  const os = detectOS();
-  if (os === "ios" || os === "ipad") {
+  if (isIOS) {
     const label = document.getElementById("useGoogleMapsLabel");
     if (label) label.style.display = "flex";
   }

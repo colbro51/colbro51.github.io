@@ -1,16 +1,22 @@
-// service-worker.js (or whatever path you're using)
+// service-worker.js
 
-// Activate immediately and take control of all clients
-self.addEventListener('install', event => {
+// ------------------------------------------------------------
+// Install: activate immediately
+// ------------------------------------------------------------
+self.addEventListener("install", () => {
   self.skipWaiting();
 });
 
-self.addEventListener('activate', event => {
-  // Claim clients so this SW controls open pages right away
+// ------------------------------------------------------------
+// Activate: take control of all open clients
+// ------------------------------------------------------------
+self.addEventListener("activate", event => {
   event.waitUntil(self.clients.claim());
 });
 
-// Network-only fetch: no caching, no interception logic
-self.addEventListener('fetch', event => {
+// ------------------------------------------------------------
+// Fetch: network-only (no caching, no offline support)
+// ------------------------------------------------------------
+self.addEventListener("fetch", event => {
   event.respondWith(fetch(event.request));
 });

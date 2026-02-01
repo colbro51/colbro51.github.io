@@ -1,7 +1,7 @@
 // screens.js
 
 // ------------------------------------------------------------
-// Navigation state machine
+// Navigation state machine (kept exactly as-is per your request)
 // ------------------------------------------------------------
 let screenlevel = 1;     // 1 = main, 2 = day/help, 3 = viewer
 let backscreen = "";     // where "Go Back" should return
@@ -31,6 +31,7 @@ export function enterHelp() {
   showScreen("helpPanel");
 }
 
+
 // ------------------------------------------------------------
 // LEVEL 3: Viewer (trip text)
 // ------------------------------------------------------------
@@ -40,16 +41,17 @@ export function enterViewer(imageName) {
 
   const testSrc = `docs/${imageName}.png`;
 
+  // Check if image exists before switching screens
   fetch(testSrc, { method: "HEAD" }).then(res => {
     if (!res.ok) {
-      // Image missing — simply do nothing
+      // Image missing — do nothing
       return;
     }
 
     img.src = testSrc;
 
     // Prevent long‑press context menu on Android
-    img.addEventListener("contextmenu", e => e.preventDefault());
+    img.addEventListener("contextmenu", e => e.preventDefault(), { once: true });
 
     screenlevel = 3;
     backscreen = current.id;
@@ -57,6 +59,7 @@ export function enterViewer(imageName) {
     showScreen("viewer");
   });
 }
+
 
 // ------------------------------------------------------------
 // Unified Go Back logic
@@ -69,9 +72,12 @@ export function goBack() {
   if (screenlevel === 1) backscreen = "";
 }
 
+
+// Prevent back buttons from triggering gesture engine
 document.querySelectorAll(".backonly").forEach(btn => {
   btn.addEventListener("pointerdown", e => e.stopPropagation());
 });
+
 
 // ------------------------------------------------------------
 // DOM wiring

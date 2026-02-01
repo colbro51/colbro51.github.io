@@ -6,7 +6,7 @@
   const APP_VERSION = Date.now();
 </script>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0", viewport-fit=cover>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1976d2">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-status-bar-style" content="default">
@@ -40,15 +40,17 @@
 
 <body>
 
+<!-- INSTALL SCREEN -->
 <div id="install" class="screen">
   <h1>Install This App</h1>
   <p>To use this app, please install it to your home screen.</p>
-  <p>Open the browser menu -> "Add to Home Screen".</p>
+  <p>Open the browser menu → "Add to Home Screen".</p>
   <p>If you already have an older version installed, please remove it first.</p>
   <p>After you have installed, close this app, go to your app drawer and long press
-     then drag the new icon to your home screen when it appears.<p>
+     then drag the new icon to your home screen when it appears.</p>
 </div>
 
+<!-- MAIN SCREEN -->
 <div id="main" class="screen active">
   <h1 id="title"></h1>
 
@@ -79,26 +81,30 @@
   <button class="btn mainbtn" id="btn_more">Meals & More</button>
 </div>
 
+<!-- HELP PANEL -->
 <div id="helpPanel" class="screen">
   <h1>Help</h1>
   <p>Tap a route for details.</p>
-  <p>Single tap -> trip sheet</p>
-  <p>Long press -> open maps</p>
+  <p>Single tap → trip sheet</p>
+  <p>Long press → open maps</p>
+
   <div id="androidHelpNote" style="margin-top:20px; text-align:left; font-size:17px; line-height:1.4;">
     <strong>Android / Samsung Tip</strong><br>
-    After launching Google Maps, use your phone’s <strong>Back button repeatedly</strong> until you return to this app.  
-    On Samsung devices, the Back button may first navigate through Maps screens before exiting.  
+    After launching Google Maps, use your phone’s <strong>Back button repeatedly</strong> until you return to this app.
+    On Samsung devices, the Back button may first navigate through Maps screens before exiting.
     This is normal — just keep pressing Back until you’re back here.
   </div>
+
   <button class="backonly" id="back_help">⬅ Go Back</button>
 </div>
 
+<!-- VIEWER -->
 <div id="viewer" class="screen">
-  <img id="viewerImage" style="width:100%; max-width:100%; height:auto;">
+  <img id="viewerImage" alt="">
   <button class="backonly" id="viewerBack">⬅ Go Back</button>
 </div>
 
-<!-- Day Screens -->
+<!-- DAY SCREENS -->
 <div id="mon" class="screen">
   <h1>Monday</h1>
   <button class="btn subbtn" id="mon_easy"></button>
@@ -139,7 +145,7 @@
   <button class="backonly" id="back_fri">⬅ Go Back</button>
 </div>
 
-<!-- More Screen -->
+<!-- MORE SCREEN -->
 <div id="more" class="screen">
   <h1>Meals & More</h1>
 
@@ -157,8 +163,8 @@
   <button class="backonly" id="back_more">⬅ Go Back</button>
 </div>
 
-<!-- Maps Failure Modal -->
-<div id="mapsFailModal" class="modal">
+<!-- MAPS FAILURE MODAL -->
+<div id="mapsFailModal" class="modal" role="dialog" aria-modal="true">
   <div class="modal-content">
     <h2>Google Maps Didn’t Open</h2>
 

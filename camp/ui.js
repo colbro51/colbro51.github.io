@@ -1,5 +1,8 @@
 // ui.js
+
+// Startup sequence and screen logic
 import "./startup.js";
 import "./screens.js";
-// routes.js is now loaded dynamically from startup.js AFTER initMaps()
-// so we do NOT import it here anymore.
+
+// routes.js is loaded dynamically from startup.js AFTER initMaps()
+// so we do NOT import it here.
