@@ -37,23 +37,24 @@ export function enterHelp() {
 export function enterViewer(imageName) {
   const current = document.querySelector(".screen.active");
   const img = document.getElementById("viewerImage");
-  const overlay = document.getElementById("debugPanel");
 
   const testSrc = `docs/${imageName}.png`;
 
   fetch(testSrc, { method: "HEAD" }).then(res => {
     if (!res.ok) {
-      overlay.innerText = `Missing viewer image: ${testSrc}`;
+      // Image missing — simply do nothing
       return;
     }
 
     img.src = testSrc;
-    document.getElementById("viewerImage").addEventListener("contextmenu", e => e.preventDefault());
+
+    // Prevent long‑press context menu on Android
+    img.addEventListener("contextmenu", e => e.preventDefault());
+
     screenlevel = 3;
     backscreen = current.id;
-    showScreen("viewer");
 
-    overlay.innerText = `Viewer loaded: ${testSrc}`;
+    showScreen("viewer");
   });
 }
 
