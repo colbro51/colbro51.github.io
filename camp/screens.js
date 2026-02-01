@@ -1,10 +1,13 @@
 // screens.js
 
 // ------------------------------------------------------------
-// Navigation state machine (kept exactly as-is per your request)
+// Navigation stack (Option A: clears when returning to main)
 // ------------------------------------------------------------
-let screenlevel = 1;     // 1 = main, 2 = day/help, 3 = viewer
-let backscreen = "";     // where "Go Back" should return
+const navStack = [];
+
+function currentScreen() {
+  return document.querySelector(".screen.active")?.id || "main";
+}
 
 
 // ------------------------------------------------------------
@@ -17,18 +20,29 @@ export function showScreen(id) {
 
 
 // ------------------------------------------------------------
-// LEVEL 2: Day screens + Help
+// Push navigation: go to a new screen
 // ------------------------------------------------------------
-export function enterDay(id) {
-  screenlevel = 2;
-  backscreen = "main";
+function navigateTo(id) {
+  const from = currentScreen();
+
+  // Only push if not navigating to the same screen
+  if (from !== id) {
+    navStack.push(from);
+  }
+
   showScreen(id);
 }
 
+
+// ------------------------------------------------------------
+// LEVEL 2: Day screens + Help
+// ------------------------------------------------------------
+export function enterDay(id) {
+  navigateTo(id);
+}
+
 export function enterHelp() {
-  screenlevel = 2;
-  backscreen = "main";
-  showScreen("helpPanel");
+  navigateTo("helpPanel");
 }
 
 
@@ -36,44 +50,46 @@ export function enterHelp() {
 // LEVEL 3: Viewer (trip text)
 // ------------------------------------------------------------
 export function enterViewer(imageName) {
-  const current = document.querySelector(".screen.active");
   const img = document.getElementById("viewerImage");
-
   const testSrc = `docs/${imageName}.png`;
 
-  // Check if image exists before switching screens
   fetch(testSrc, { method: "HEAD" }).then(res => {
-    if (!res.ok) {
-      // Image missing — do nothing
-      return;
-    }
+    if (!res.ok) return; // Missing image → do nothing
 
     img.src = testSrc;
 
     // Prevent long‑press context menu on Android
     img.addEventListener("contextmenu", e => e.preventDefault(), { once: true });
 
-    screenlevel = 3;
-    backscreen = current.id;
-
-    showScreen("viewer");
+    navigateTo("viewer");
   });
 }
 
 
 // ------------------------------------------------------------
-// Unified Go Back logic
+// Unified Go Back logic (Option A)
 // ------------------------------------------------------------
 export function goBack() {
-  showScreen(backscreen);
-  screenlevel -= 1;
+  if (navStack.length === 0) {
+    // Already at main
+    showScreen("main");
+    return;
+  }
 
-  if (screenlevel === 2) backscreen = "main";
-  if (screenlevel === 1) backscreen = "";
+  const previous = navStack.pop();
+
+  // If we popped back to main, clear stack completely
+  if (previous === "main") {
+    navStack.length = 0;
+  }
+
+  showScreen(previous);
 }
 
 
+// ------------------------------------------------------------
 // Prevent back buttons from triggering gesture engine
+// ------------------------------------------------------------
 document.querySelectorAll(".backonly").forEach(btn => {
   btn.addEventListener("pointerdown", e => e.stopPropagation());
 });

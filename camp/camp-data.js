@@ -48,19 +48,19 @@ export const days = {
 
   wed: {
     easy: {
-      name: "Workin Bee at Boyle",
+      name: "Workin Bee",
       mode: "driving",
       dest: "St+James+Walkway+Car+Park"
     },
     med: {
-      name: "St James Walkway Car Park",
+      name: "Workin Bee",
       mode: "driving",
       dest: "St+James+Walkway+Car+Park"
     },
     fit: {
-      name: "Cannibal Gorge",
+      name: "Workin Bee",
       mode: "driving",
-      dest: "-42.37368053104093,172.37790006192594"
+      dest: "St+James+Walkway+Car+Park"
     }
   },
 
