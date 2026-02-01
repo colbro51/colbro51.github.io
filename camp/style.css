@@ -176,6 +176,7 @@ button {
     gap: 30px;
     margin-bottom: 20px;
     font-size: 18px;
+    flex-wrap: wrap;
 }
 
 .checkbox-row label {
