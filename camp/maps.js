@@ -73,7 +73,6 @@ export async function initMaps() {
 // 4. Detect if Google Maps failed to open
 // ------------------------------------------------------------
 export function openInMapsWithDetection(url) {
-  const openedAt = Date.now();
   let becameHidden = false;
 
   const onVisibility = () => {
@@ -84,19 +83,17 @@ export function openInMapsWithDetection(url) {
 
   document.addEventListener("visibilitychange", onVisibility, { once: true });
 
-  // IMPORTANT: use direct navigation instead of window.open()
-  // This prevents Android WebView from replaying the intent on resume.
+  // Use direct navigation to avoid Android intent replay
   location.href = url;
 
-  // Detection window
+  // Increased timeout to avoid false "Maps didn't open" failures
   setTimeout(() => {
     document.removeEventListener("visibilitychange", onVisibility);
 
-    // If we never became hidden, Maps didn't open
     if (!becameHidden) {
       showMapsFailurePopup();
     }
-  }, 1200);
+  }, 2500);   // was 1200
 }
 
 // ------------------------------------------------------------
