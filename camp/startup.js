@@ -36,7 +36,7 @@ function isIosSafari() {
 
 function getAndroidSkipFlag() {
   try {
-    return localStorage.getItem("androidSkipInstall") === "1";
+    return sessionStorage.getItem("androidSkipInstall") === "1";
   } catch {
     return false;
   }
