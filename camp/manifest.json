@@ -1,6 +1,6 @@
 {
   "name": "F&B Summer Camp",
-  "short_name": "Summer Camp",
+  "short_name": "WRTG Camp",
   "start_url": "index.html",
   "scope": "./",
   "display": "standalone",
