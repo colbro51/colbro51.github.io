@@ -6,63 +6,98 @@ import { detectOS } from "./logic.js";
 import { showScreen } from "./screens.js";
 
 // ------------------------------------------------------------
-// Helper: detect real Android devices (kept exactly as-is)
+// EARLY PLATFORM REDIRECTS (runs immediately on module load)
 // ------------------------------------------------------------
-function isRealAndroid() {
-  return navigator.userAgent.includes("Android") &&
-         navigator.userAgent.includes("Mobile") &&
-         !navigator.userAgent.includes("Windows") &&
-         !navigator.userAgent.includes("CrOS");
-}
+(function () {
 
-// ------------------------------------------------------------
-// Startup sequence
-// ------------------------------------------------------------
-window.addEventListener("DOMContentLoaded", async () => {
+  function isIosSafari() {
+    const ua = navigator.userAgent.toLowerCase();
+    const isIOS = /iphone|ipad|ipod/.test(ua);
+    const isSafari =
+      !ua.includes("crios") &&
+      !ua.includes("fxios") &&
+      !ua.includes("chrome");
+    return isIOS && isSafari;
+  }
 
-  // --- PLATFORM DETECTION ---
-  const os = detectOS();
-  const isIOS = (os === "ios" || os === "ipad");
+  function isStandalone() {
+    return (
+      window.navigator.standalone === true ||
+      window.matchMedia("(display-mode: standalone)").matches
+    );
+  }
 
-  // --- INSTALL STATE DETECTION ---
-  const installedState =
-    window.matchMedia("(display-mode: standalone)").matches ||
-    window.navigator.standalone === true;
+  function isRealAndroid() {
+    return (
+      navigator.userAgent.includes("Android") &&
+      navigator.userAgent.includes("Mobile") &&
+      !navigator.userAgent.includes("Windows") &&
+      !navigator.userAgent.includes("CrOS")
+    );
+  }
 
-  // ------------------------------------------------------------
-  // ANDROID INSTALL GATE ONLY
-  // (iOS is now handled by ios-install.html redirect in index.html)
-  // ------------------------------------------------------------
-  if (!installedState && isRealAndroid()) {
-    showScreen("install");
+  const standalone = isStandalone();
+
+  // iOS → Safari-only instructions page
+  if (!standalone && isIosSafari()) {
+    window.location.href = "/camp/ios-safari-home.html";
     return;
   }
 
-  // --- ANDROID-ONLY HELP NOTE ---
+  // Android → dedicated install page
+  if (!standalone && isRealAndroid()) {
+    window.location.href = "/camp/android-install.html";
+    return;
+  }
+
+  // Desktop or installed → continue normally
+})();
+  
+// ------------------------------------------------------------
+// Helper: detect real Android devices (kept for help note)
+// ------------------------------------------------------------
+function isRealAndroid() {
+  return (
+    navigator.userAgent.includes("Android") &&
+    navigator.userAgent.includes("Mobile") &&
+    !navigator.userAgent.includes("Windows") &&
+    !navigator.userAgent.includes("CrOS")
+  );
+}
+
+// ------------------------------------------------------------
+// MAIN STARTUP SEQUENCE
+// ------------------------------------------------------------
+window.addEventListener("DOMContentLoaded", async () => {
+
+  const os = detectOS();
+  const isIOS = os === "ios" || os === "ipad";
+
+  // Android-only help note
   if (isRealAndroid()) {
     const androidNote = document.getElementById("androidHelpNote");
     if (androidNote) androidNote.style.display = "block";
   }
 
-  // --- INSTALLED OR DESKTOP OR iOS → CONTINUE NORMALLY ---
+  // Always start on main screen (install gates handled above)
   showScreen("main");
 
-  // Ensure maps system is fully initialised BEFORE wiring routes/gestures
+  // Initialize maps system BEFORE wiring routes
   await initMaps();
 
-  // Now wire all route buttons + gesture engine
+  // Dynamically load routes.js AFTER maps is ready
   const routesModule = await import("./routes.js");
   if (routesModule && typeof routesModule.wireRoutes === "function") {
     routesModule.wireRoutes();
   }
 
-  // --- iOS/iPadOS: reveal Google Maps toggle ---
+  // Reveal Google Maps toggle on iOS/iPadOS
   if (isIOS) {
     const label = document.getElementById("useGoogleMapsLabel");
     if (label) label.style.display = "flex";
   }
 
-  // --- SET TITLE ---
+  // Set title
   document.getElementById("title").innerText =
     "F&B WRTG Camp " + year_name;
 });

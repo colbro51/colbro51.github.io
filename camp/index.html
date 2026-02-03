@@ -108,47 +108,5 @@
     </div>
   </div>
 
-  <!-- ------------------------------------------------------------ -->
-  <!-- iOS SAFARI-ONLY REDIRECT (NEW) -->
-  <!-- ------------------------------------------------------------ -->
-<script>
-function isIosSafari() {
-  const ua = navigator.userAgent.toLowerCase();
-  const isIOS = /iphone|ipad|ipod/.test(ua);
-  const isSafari = !ua.includes("crios") && !ua.includes("fxios") && !ua.includes("chrome");
-  return isIOS && isSafari;
-}
-
-function isStandalone() {
-  return window.navigator.standalone === true ||
-         window.matchMedia("(display-mode: standalone)").matches;
-}
-
-function isRealAndroid() {
-  return navigator.userAgent.includes("Android") &&
-         navigator.userAgent.includes("Mobile") &&
-         !navigator.userAgent.includes("Windows") &&
-         !navigator.userAgent.includes("CrOS");
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-  const standalone = isStandalone();
-
-  // iOS → Safari-only instructions
-  if (!standalone && isIosSafari()) {
-    window.location.href = "/camp/ios-safari-home.html";
-    return;
-  }
-
-  // Android → dedicated install page
-  if (!standalone && isRealAndroid()) {
-    window.location.href = "/camp/android-install.html";
-    return;
-  }
-
-  // Desktop or installed → continue normally
-});
-</script>
-
 </body>
 </html>
