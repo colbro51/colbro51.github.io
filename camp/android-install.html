@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install on Android</title>
+
+<style>
+  body {
+    font-family: sans-serif;
+    background: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+    color: #222;
+  }
+
+  h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+
+  #instructions {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 14px;
+    padding: 20px;
+    max-width: 420px;
+    margin: 0 auto;
+    text-align: left;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  .step {
+    margin-top: 14px;
+  }
+
+  .hint {
+    background: #eef6ff;
+    border-left: 4px solid #1976d2;
+    padding: 12px;
+    margin-top: 16px;
+    font-size: 16px;
+  }
+
+  button {
+    margin-top: 30px;
+    padding: 16px 20px;
+    font-size: 20px;
+    background: #1976d2;
+    color: white;
+    border-radius: 12px;
+    border: none;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  button:active {
+    background: #0d47a1;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Install This App</h1>
+
+<div id="instructions">
+  <div class="step">
+    Installing this app gives you faster access and a full‑screen experience.
+  </div>
+
+  <div class="step">
+    1. Tap the <strong>Install</strong> button when Chrome shows the popup.
+  </div>
+
+  <div class="step">
+    2. If you see a message saying the app is not trusted, tap the small
+    <strong>Help</strong> link.
+  </div>
+
+  <div class="hint">
+    Inside the Help section, tap <strong>Install anyway</strong>.<br>
+    This button is hidden until you expand the Help link.
+  </div>
+
+  <div class="step" style="margin-top:18px; font-size:16px; color:#555;">
+    If you prefer, you can continue without installing.
+  </div>
+</div>
+
+<button id="continueBtn">Continue Without Installing</button>
+
+<script>
+document.getElementById("continueBtn").onclick = () => {
+  window.location.href = "/camp/";
+};
+</script>
+
+</body>
+</html>

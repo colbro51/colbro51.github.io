@@ -5,6 +5,7 @@ import { initMaps } from "./maps.js";
 import { detectOS } from "./logic.js";
 import { showScreen } from "./screens.js";
 
+
 // ------------------------------------------------------------
 // Helper: detect real Android devices (kept exactly as-is)
 // ------------------------------------------------------------
@@ -14,6 +15,7 @@ function isRealAndroid() {
          !navigator.userAgent.includes("Windows") &&
          !navigator.userAgent.includes("CrOS");
 }
+
 
 // ------------------------------------------------------------
 // Startup sequence
@@ -29,11 +31,8 @@ window.addEventListener("DOMContentLoaded", async () => {
     window.matchMedia("(display-mode: standalone)").matches ||
     window.navigator.standalone === true;
 
-  // ------------------------------------------------------------
-  // ANDROID INSTALL GATE ONLY
-  // (iOS is now handled by ios-install.html redirect in index.html)
-  // ------------------------------------------------------------
-  if (!installedState && isRealAndroid()) {
+  // --- INSTALL GATE (ONLY FOR ANDROID + IOS) ---
+  if (!installedState && (isRealAndroid() || isIOS)) {
     showScreen("install");
     return;
   }
@@ -44,7 +43,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (androidNote) androidNote.style.display = "block";
   }
 
-  // --- INSTALLED OR DESKTOP OR iOS → CONTINUE NORMALLY ---
+  // --- INSTALLED OR DESKTOP → CONTINUE NORMALLY ---
   showScreen("main");
 
   // Ensure maps system is fully initialised BEFORE wiring routes/gestures
