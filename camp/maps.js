@@ -1,8 +1,8 @@
-// maps.js
-import { appLaunch } from "./logic.js";
+// /camp/maps.js
+import { buildMapURL } from "./logic.js";
 import { showScreen } from "./screens.js";
 
-let appState = null;
+let useGoogleMaps = true;
 
 // ------------------------------------------------------------
 // 1. Check if browser already has geolocation permission
@@ -58,19 +58,19 @@ function getStableLocation() {
 export async function initMaps() {
   console.log("MAPS: initMaps() starting");
 
-  appState = await appLaunch();
+  // Read user preference from checkbox
+  const chk = document.getElementById("useGoogleMaps");
+  useGoogleMaps = chk ? chk.checked : true;
 
-  if (appState.error === "location") {
-    alert("Location services unavailable. Please enable them.");
-    return;
+  if (chk) {
+    chk.addEventListener("change", () => {
+      useGoogleMaps = chk.checked;
+    });
   }
-
-  console.log("OS:", appState.os);
-  console.log("Routing state:", appState.state);
 }
 
 // ------------------------------------------------------------
-// 4. Detect if Google Maps failed to open
+// 4. Detect if Maps failed to open
 // ------------------------------------------------------------
 export function openInMapsWithDetection(url) {
   let becameHidden = false;
@@ -83,70 +83,55 @@ export function openInMapsWithDetection(url) {
 
   document.addEventListener("visibilitychange", onVisibility, { once: true });
 
-  // Use direct navigation to avoid Android intent replay
   location.href = url;
 
-  // Increased timeout to avoid false "Maps didn't open" failures
   setTimeout(() => {
     document.removeEventListener("visibilitychange", onVisibility);
 
     if (!becameHidden) {
       showMapsFailurePopup();
     }
-  }, 2500);   // was 1200
+  }, 2500);
 }
 
 // ------------------------------------------------------------
 // 5. Main routing function
 // ------------------------------------------------------------
 export async function go(mode, origin, destination) {
-  console.log("GO CALLED:", { mode, origin, destination, appState });
+  console.log("GO:", { mode, origin, destination, useGoogleMaps });
 
-  if (!appState) return;
-
-  // Checkbox override: if "Start from camp" is unticked,
-  // force origin to "Current Location".
   const useCamp = document.getElementById("startFromCamp").checked;
   if (!useCamp) {
     origin = "Current Location";
   }
 
-  // If origin is the literal string "Current Location",
-  // attempt to resolve it to real coordinates.
   const mustUseGPS = origin === "Current Location";
 
   if (mustUseGPS) {
-    console.log("User wants GPS — checking permission…");
-
     const allowed = await hasLocationPermission();
 
     if (allowed) {
-      console.log("GPS permission granted — fetching stable location…");
-
       try {
         const pos = await getStableLocation();
         const lat = pos.coords.latitude.toFixed(6);
         const lon = pos.coords.longitude.toFixed(6);
         const realOrigin = `${lat},${lon}`;
 
-        const finalUrl = appState.buildURL(realOrigin, destination, mode);
+        const finalUrl = buildMapURL(realOrigin, destination, mode, useGoogleMaps);
         openInMapsWithDetection(finalUrl);
         return;
 
       } catch (err) {
-        console.error("GPS failed:", err);
         alert("Unable to get your location.");
       }
     }
 
-    console.log("GPS permission not granted — using 'Current Location' string");
-    const fallbackUrl = appState.buildURL("Current Location", destination, mode);
+    const fallbackUrl = buildMapURL("Current Location", destination, mode, useGoogleMaps);
     openInMapsWithDetection(fallbackUrl);
     return;
   }
 
-  // Otherwise: use the literal origin passed in
-  const finalUrl = appState.buildURL(origin, destination, mode);
+  const finalUrl = buildMapURL(origin, destination, mode, useGoogleMaps);
   openInMapsWithDetection(finalUrl);
 }
 

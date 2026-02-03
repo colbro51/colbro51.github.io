@@ -6,38 +6,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#1976d2">
 
-  <!-- iOS Safari fullscreen support (still fine even if not installing PWA) -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
   <title>F&B Summer Camp</title>
 
-  <link rel="manifest" href="/camp/manifest.json">
-  <link rel="apple-touch-icon" sizes="180x180" href="/camp/apple-icon-180.png">
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-icon-180.png">
+
   <link rel="stylesheet" href="style.css">
 
-  <script type="module" src="camp-data.js"></script>
-  <script type="module" src="logic.js"></script>
-  <script type="module" src="maps.js"></script>
+  <!-- Core modules -->
   <script type="module" src="ui.js"></script>
 
   <script>
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/camp/service-worker.js");
+      navigator.serviceWorker.register("service-worker.js");
     }
   </script>
 
 </head>
 
 <body>
-
-  <!-- ANDROID INSTALL SCREEN (unchanged) -->
-  <div id="install" class="screen">
-    <h1>Install This App</h1>
-    <p>To use this app, please install it to your home screen.</p>
-    <p>Open the browser menu → "Add to Home Screen".</p>
-    <p>If you already have an older version installed, please remove it first.</p>
-  </div>
 
   <!-- MAIN SCREEN -->
   <div id="main" class="screen active">
@@ -77,11 +65,6 @@
     <p>Single tap → walk details</p>
     <p>Long press → opens maps app</p>
 
-    <div id="androidHelpNote" style="margin-top:20px; text-align:left; font-size:17px; line-height:1.4;">
-      <strong>Android / Samsung Tip</strong><br>
-      After launching Google Maps, use your phone’s <strong>Back button repeatedly</strong> to return here.
-    </div>
-
     <button class="backonly" id="back_help">⬅ Go Back</button>
   </div>
 
@@ -92,68 +75,66 @@
   </div>
 
   <!-- DAY SCREENS -->
-  <!-- (unchanged — omitted here for brevity but identical to your original) -->
+  <div id="mon" class="screen">
+    <h1>Monday</h1>
+    <button class="btn subbtn" id="mon_easy"></button>
+    <button class="btn subbtn" id="mon_med"></button>
+    <button class="btn subbtn" id="mon_fit"></button>
+    <button class="backonly" id="back_mon">⬅ Go Back</button>
+  </div>
 
-<div id="mon" class="screen">
-  <h1>Monday</h1>
-  <button class="btn subbtn" id="mon_easy"></button>
-  <button class="btn subbtn" id="mon_med"></button>
-  <button class="btn subbtn" id="mon_fit"></button>
-  <button class="backonly" id="back_mon">⬅ Go Back</button>
-</div>
+  <div id="tue" class="screen">
+    <h1>Tuesday</h1>
+    <button class="btn subbtn" id="tue_easy"></button>
+    <button class="btn subbtn" id="tue_med"></button>
+    <button class="btn subbtn" id="tue_fit"></button>
+    <button class="backonly" id="back_tue">⬅ Go Back</button>
+  </div>
 
-<div id="tue" class="screen">
-  <h1>Tuesday</h1>
-  <button class="btn subbtn" id="tue_easy"></button>
-  <button class="btn subbtn" id="tue_med"></button>
-  <button class="btn subbtn" id="tue_fit"></button>
-  <button class="backonly" id="back_tue">⬅ Go Back</button>
-</div>
+  <div id="wed" class="screen">
+    <h1>Wednesday</h1>
+    <button class="btn subbtn" id="wed_easy"></button>
+    <button class="btn subbtn" id="wed_med"></button>
+    <button class="btn subbtn" id="wed_fit"></button>
+    <button class="backonly" id="back_wed">⬅ Go Back</button>
+  </div>
 
-<div id="wed" class="screen">
-  <h1>Wednesday</h1>
-  <button class="btn subbtn" id="wed_easy"></button>
-  <button class="btn subbtn" id="wed_med"></button>
-  <button class="btn subbtn" id="wed_fit"></button>
-  <button class="backonly" id="back_wed">⬅ Go Back</button>
-</div>
+  <div id="thu" class="screen">
+    <h1>Thursday</h1>
+    <button class="btn subbtn" id="thu_easy"></button>
+    <button class="btn subbtn" id="thu_med"></button>
+    <button class="btn subbtn" id="thu_fit"></button>
+    <button class="backonly" id="back_thu">⬅ Go Back</button>
+  </div>
 
-<div id="thu" class="screen">
-  <h1>Thursday</h1>
-  <button class="btn subbtn" id="thu_easy"></button>
-  <button class="btn subbtn" id="thu_med"></button>
-  <button class="btn subbtn" id="thu_fit"></button>
-  <button class="backonly" id="back_thu">⬅ Go Back</button>
-</div>
+  <div id="fri" class="screen">
+    <h1>Friday</h1>
+    <button class="btn subbtn" id="fri_easy"></button>
+    <button class="btn subbtn" id="fri_med"></button>
+    <button class="btn subbtn" id="fri_fit"></button>
+    <button class="backonly" id="back_fri">⬅ Go Back</button>
+  </div>
 
-<div id="fri" class="screen">
-  <h1>Friday</h1>
-  <button class="btn subbtn" id="fri_easy"></button>
-  <button class="btn subbtn" id="fri_med"></button>
-  <button class="btn subbtn" id="fri_fit"></button>
-  <button class="backonly" id="back_fri">⬅ Go Back</button>
-</div>
-
-<div id="more" class="screen">
-  <h1>Meals & More</h1>
-  <button class="btn subbtn morebtn" id="more_1"></button>
-  <button class="btn subbtn morebtn" id="more_2"></button>
-  <button class="btn subbtn morebtn" id="more_3"></button>
-  <button class="btn subbtn morebtn" id="more_4"></button>
-  <button class="btn subbtn morebtn" id="more_5"></button>
-  <button class="btn subbtn morebtn" id="more_6"></button>
-  <button class="btn subbtn morebtn" id="more_7"></button>
-  <button class="btn subbtn morebtn" id="more_8"></button>
-  <button class="btn subbtn morebtn" id="more_9"></button>
-  <button class="btn subbtn morebtn" id="more_10"></button>
-  <button class="backonly" id="back_more">⬅ Go Back</button>
-</div>
+  <div id="more" class="screen">
+    <h1>Meals & More</h1>
+    <button class="btn subbtn morebtn" id="more_1"></button>
+    <button class="btn subbtn morebtn" id="more_2"></button>
+    <button class="btn subbtn morebtn" id="more_3"></button>
+    <button class="btn subbtn morebtn" id="more_4"></button>
+    <button class="btn subbtn morebtn" id="more_5"></button>
+    <button class="btn subbtn morebtn" id="more_6"></button>
+    <button class="btn subbtn morebtn" id="more_7"></button>
+    <button class="btn subbtn morebtn" id="more_8"></button>
+    <button class="btn subbtn morebtn" id="more_9"></button>
+    <button class="btn subbtn morebtn" id="more_10"></button>
+    <button class="backonly" id="back_more">⬅ Go Back</button>
+  </div>
 
   <!-- MAPS FAILURE MODAL -->
   <div id="mapsFailModal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content">
       <h2>Google Maps Didn’t Open</h2>
-      <p>Your device didn’t switch to the Google Maps app.</p>
+      <p>Your device didn’t switch to the Maps app.</p>
       <ul>
         <li>Maps app isn’t installed</li>
         <li>Your device opens links in the browser</li>
