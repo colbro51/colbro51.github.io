@@ -1,20 +1,20 @@
 {
   "name": "F&B Summer Camp",
   "short_name": "Summer Camp",
-  "start_url": "/camp/index.html",
-  "scope": "/camp/",
+  "start_url": "index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f5f5f5",
   "theme_color": "#1976d2",
 
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
