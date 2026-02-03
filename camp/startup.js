@@ -6,36 +6,46 @@ import { detectOS } from "./logic.js";
 import { showScreen } from "./screens.js";
 
 // ------------------------------------------------------------
+// Shared helpers (top-level so both IIFE + DOMContentLoaded can use them)
+// ------------------------------------------------------------
+function isRealAndroid() {
+  return (
+    navigator.userAgent.includes("Android") &&
+    navigator.userAgent.includes("Mobile") &&
+    !navigator.userAgent.includes("Windows") &&
+    !navigator.userAgent.includes("CrOS")
+  );
+}
+
+function isStandalone() {
+  return (
+    window.navigator.standalone === true ||
+    window.matchMedia("(display-mode: standalone)").matches
+  );
+}
+
+function isIosSafari() {
+  const ua = navigator.userAgent.toLowerCase();
+  const isIOS = /iphone|ipad|ipod/.test(ua);
+  const isSafari =
+    !ua.includes("crios") &&
+    !ua.includes("fxios") &&
+    !ua.includes("chrome");
+  return isIOS && isSafari;
+}
+
+function getAndroidSkipFlag() {
+  try {
+    return localStorage.getItem("androidSkipInstall") === "1";
+  } catch {
+    return false;
+  }
+}
+
+// ------------------------------------------------------------
 // EARLY PLATFORM REDIRECTS (runs immediately on module load)
 // ------------------------------------------------------------
 (function () {
-
-  function isIosSafari() {
-    const ua = navigator.userAgent.toLowerCase();
-    const isIOS = /iphone|ipad|ipod/.test(ua);
-    const isSafari =
-      !ua.includes("crios") &&
-      !ua.includes("fxios") &&
-      !ua.includes("chrome");
-    return isIOS && isSafari;
-  }
-
-  function isStandalone() {
-    return (
-      window.navigator.standalone === true ||
-      window.matchMedia("(display-mode: standalone)").matches
-    );
-  }
-
-  function isRealAndroid() {
-    return (
-      navigator.userAgent.includes("Android") &&
-      navigator.userAgent.includes("Mobile") &&
-      !navigator.userAgent.includes("Windows") &&
-      !navigator.userAgent.includes("CrOS")
-    );
-  }
-
   const standalone = isStandalone();
 
   // iOS → Safari-only instructions page
@@ -44,30 +54,23 @@ import { showScreen } from "./screens.js";
     return;
   }
 
-  // Android → dedicated install page
-if (!standalone && isRealAndroid()) {
-
-    // If user previously chose "Continue Without Installing", skip redirect
-    if (localStorage.getItem("androidSkipInstall") === "1") {
-        return;
+  // Android → dedicated install page (unless user chose to skip)
+  if (!standalone && isRealAndroid()) {
+    if (getAndroidSkipFlag()) {
+      // User previously tapped "Continue Without Installing"
+      return;
     }
-
     window.location.href = "/camp/android-install.html";
     return;
-}
+  }
 
   // Desktop or installed → continue normally
 })();
-  
-// ------------------------------------------------------------
-// Helper: detect real Android devices (kept for help note) -> function isRealAndroid() above
-// ------------------------------------------------------------
 
 // ------------------------------------------------------------
 // MAIN STARTUP SEQUENCE
 // ------------------------------------------------------------
 window.addEventListener("DOMContentLoaded", async () => {
-
   const os = detectOS();
   const isIOS = os === "ios" || os === "ipad";
 
@@ -96,6 +99,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   // Set title
-  document.getElementById("title").innerText =
-    "F&B WRTG Camp " + year_name;
+  const titleEl = document.getElementById("title");
+  if (titleEl) {
+    titleEl.innerText = "F&B WRTG Camp " + year_name;
+  }
 });
