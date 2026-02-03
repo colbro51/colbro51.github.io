@@ -94,6 +94,7 @@
 
 <script>
 document.getElementById("continueBtn").onclick = () => {
+  localStorage.setItem("androidSkipInstall", "1");
   window.location.href = "/camp/";
 };
 </script>

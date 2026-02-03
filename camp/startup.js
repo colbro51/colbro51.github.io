@@ -45,25 +45,23 @@ import { showScreen } from "./screens.js";
   }
 
   // Android → dedicated install page
-  if (!standalone && isRealAndroid()) {
+if (!standalone && isRealAndroid()) {
+
+    // If user previously chose "Continue Without Installing", skip redirect
+    if (localStorage.getItem("androidSkipInstall") === "1") {
+        return;
+    }
+
     window.location.href = "/camp/android-install.html";
     return;
-  }
+}
 
   // Desktop or installed → continue normally
 })();
   
 // ------------------------------------------------------------
-// Helper: detect real Android devices (kept for help note)
+// Helper: detect real Android devices (kept for help note) -> function isRealAndroid() above
 // ------------------------------------------------------------
-function isRealAndroid() {
-  return (
-    navigator.userAgent.includes("Android") &&
-    navigator.userAgent.includes("Mobile") &&
-    !navigator.userAgent.includes("Windows") &&
-    !navigator.userAgent.includes("CrOS")
-  );
-}
 
 // ------------------------------------------------------------
 // MAIN STARTUP SEQUENCE
