@@ -17,12 +17,12 @@ export const days = {
       dest: "-42.527129,172.831639"
     },
     med: {
-      name: "Mt Isobel to Jacks Pass\nMEDIUM",
+      name: "Mt Isobel to Jacks Pass\nMEDIUM [$6]",
       mode: "driving",
       dest: "-42.488176,172.826614"
     },
     fit: {
-      name: "Mt Isobel Dog Stream Waterfall\nFIT",
+      name: "Mt Isobel Dog Stream Waterfall\nFIT [$6]",
       mode: "driving",
       dest: "-42.488176,172.826614"
     }
@@ -35,12 +35,12 @@ export const days = {
       dest: "-42.527129,172.831639"
     },
     med: {
-      name: "Mt Dumblane\nMEDIUM",
+      name: "Mt Dumblane\nMEDIUM [$6]",
       mode: "driving",
       dest: "-42.488176,172.826614"
     },
     fit: {
-      name: "Mt Dumblane and Tops\nFIT",
+      name: "Mt Dumblane and Tops\nFIT [$6]",
       mode: "driving",
       dest: "-42.488176,172.826614"
     }
@@ -66,17 +66,17 @@ export const days = {
 
   thu: {
     easy: {
-      name: "Cannibal Gorge Track\nSluice Box\nLewis Pass Alpine walk\nEASY",
+      name: "Cannibal Gorge Track\nSluice Box\nLewis Pass Alpine walk\nEASY [$17]",
       mode: "driving",
       dest: "-42.37368053104093,172.37790006192594"
     },
     med: {
-      name: "St James Walkway\ntowards Gorge Hut\nMEDIUM",
+      name: "St James Walkway\ntowards Gorge Hut\nMEDIUM [$14]",
       mode: "driving",
       dest: "-42.37368053104093,172.37790006192594"
     },
     fit: {
-      name: "Lewis Tops\nFIT",
+      name: "Lewis Tops\nFIT [$14]",
       mode: "driving",
       dest: "-42.37368053104093,172.37790006192594"
     }
@@ -84,17 +84,17 @@ export const days = {
 
   fri: {
     easy: {
-      name: "St James Homestead\nPeters Track\nEASY",
+      name: "St James Homestead\nPeters Track\nEASY [$11]",
       mode: "driving",
       dest: "-42.37368053104093,172.37790006192594"
     },
     med: {
-      name: "Ghost Spur Track to Rocky\nLookout and Kam Point\nMEDIUM",
+      name: "Ghost Spur Track to Rocky\nLookout and Kam Point\nMEDIUM [$11]",
       mode: "driving",
       dest: "-42.37368053104093,172.37790006192594"
     },
     fit: {
-      name: "Ghost Spur Track and Ghost\nLink to Ghost Rock\nFIT",
+      name: "Ghost Spur Track and Ghost\nLink to Ghost Rock\nFIT [$11]",
       mode: "driving",
       dest: "-42.37368053104093,172.37790006192594"
     }
