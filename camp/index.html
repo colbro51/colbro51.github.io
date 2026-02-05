@@ -26,24 +26,16 @@ function isStandalone() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-    const standalone = isStandalone();
+    const params = new URLSearchParams();
 
-    if (isIOS()) {
-        window.location.href = standalone ? "ios.html" : "ios-install.html";
-        return;
-    }
+    if (isIOS()) params.set("platform", "ios");
+    else if (isAndroid()) params.set("platform", "android");
+    else if (isWindows()) params.set("platform", "windows");
+    else params.set("platform", "other");
 
-    if (isAndroid()) {
-        window.location.href = standalone ? "android.html" : "android-install.html";
-        return;
-    }
+    params.set("standalone", isStandalone() ? "true" : "false");
 
-    if (isWindows()) {
-        window.location.href = standalone ? "windows.html" : "windows-browser.html";
-        return;
-    }
-
-    window.location.href = standalone ? "other.html" : "other-browser.html";
+    window.location.href = "app.html?" + params.toString();
 });
 </script>
 
