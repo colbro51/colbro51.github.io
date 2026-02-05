@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Loading…</title>
-<link rel="manifest" href="manifest.json">
 </head>
 <body>
 
@@ -12,16 +11,14 @@
 function isIOS() {
     return /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
 }
-
 function isAndroid() {
     return /android/.test(navigator.userAgent.toLowerCase());
 }
-
 function isWindows() {
     return navigator.userAgent.toLowerCase().includes("windows");
 }
 
-// --- UNIVERSAL STANDALONE DETECTION ---
+// --- STANDALONE DETECTION ---
 function isStandalone() {
     if (window.matchMedia('(display-mode: standalone)').matches) return true;
     if ('standalone' in navigator && navigator.standalone === true) return true;
@@ -31,25 +28,21 @@ function isStandalone() {
 window.addEventListener("DOMContentLoaded", () => {
     const standalone = isStandalone();
 
-    // iOS
     if (isIOS()) {
         window.location.href = standalone ? "ios.html" : "ios-install.html";
         return;
     }
 
-    // Android
     if (isAndroid()) {
         window.location.href = standalone ? "android.html" : "android-install.html";
         return;
     }
 
-    // Windows
     if (isWindows()) {
         window.location.href = standalone ? "windows.html" : "windows-browser.html";
         return;
     }
 
-    // Other platforms (macOS, Linux, ChromeOS, etc.)
     window.location.href = standalone ? "other.html" : "other-browser.html";
 });
 </script>

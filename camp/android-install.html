@@ -1,35 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Install Camp – Android</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Make this page a real PWA entry -->
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" sizes="192x192" href="icon-192.png">
-  <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+<title>Install Camp – Android</title>
 
-  <style>
-    html { -webkit-text-size-adjust: 100%; }
-    .install-screen {
-      padding: 40px 20px;
-      font-size: 22px;
-      line-height: 1.6;
-      text-align: left;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .install-container h1 { font-size: 32px; margin-bottom: 20px; }
-    .install-container p { margin: 20px 0; }
-  </style>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" sizes="192x192" href="icon-192.png">
 
-  <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("service-worker.js");
-    }
-  </script>
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+  }
+</script>
+
+<style>
+html { -webkit-text-size-adjust: 100%; }
+.install-screen {
+    padding: 40px 20px;
+    font-size: 22px;
+    line-height: 1.6;
+    text-align: left;
+}
+.install-container h1 { font-size: 32px; margin-bottom: 20px; }
+.install-container p { margin: 20px 0; }
+</style>
 </head>
+
 <body class="install-screen">
   <div class="install-container">
     <h1>Install Camp on Android</h1>
