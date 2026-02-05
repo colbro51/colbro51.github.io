@@ -3,6 +3,9 @@ import { initMaps } from "./maps.js";
 import { showScreen } from "./screens.js";
 import { enterHelp } from "./screens.js";
 
+// ------------------------------------------------------------
+// Utility: show exit screen (Firefox, wrong browser, etc.)
+// ------------------------------------------------------------
 function showExitScreen(title, message) {
     const canonicalURL = "https://colbro51.github.io/camp/";
 
@@ -23,7 +26,6 @@ function showExitScreen(title, message) {
             await navigator.clipboard.writeText(canonicalURL);
             alert("Link copied. Open Safari and paste to continue.");
         } catch (err) {
-            // Fallback for older iOS
             const temp = document.createElement("input");
             temp.value = canonicalURL;
             document.body.appendChild(temp);
@@ -35,69 +37,108 @@ function showExitScreen(title, message) {
     });
 }
 
+// ------------------------------------------------------------
+// First‑time help nudge
+// ------------------------------------------------------------
 const HELP_NUDGE_KEY = "helpNudgeShown";
 
 function applyFirstTimeGreyoutAndHelp() {
     const hasShown = localStorage.getItem(HELP_NUDGE_KEY) === "true";
     if (hasShown) return;
 
-    // Grey out all buttons
     document.body.classList.add("disable-buttons");
 
     setTimeout(() => {
-        // Re-enable buttons
         document.body.classList.remove("disable-buttons");
-
-        // Mark as done so it never happens again
         localStorage.setItem(HELP_NUDGE_KEY, "true");
-
-        // Now show the help screen
         enterHelp();
     }, 1000);
 }
 
+// ------------------------------------------------------------
+// Returning‑user detection (Safari only)
+// ------------------------------------------------------------
+const VISITED_KEY = "visitedBefore";
+
+function markVisited() {
+    localStorage.setItem(VISITED_KEY, "true");
+}
+
+function hasVisitedBefore() {
+    return localStorage.getItem(VISITED_KEY) === "true";
+}
+
+// ------------------------------------------------------------
+// Main startup
+// ------------------------------------------------------------
 window.addEventListener("DOMContentLoaded", async () => {
 
-  const params = new URLSearchParams(window.location.search);
-  const platform = params.get("platform");
-  const browser = params.get("browser");
-  const standalone = params.get("standalone") === "true";
+    const params = new URLSearchParams(window.location.search);
+    const platform = params.get("platform");
+    const browser = params.get("browser");
+    const standalone = params.get("standalone") === "true";
 
-  // Firefox anywhere
-  if (browser === "firefox") {
-      showExitScreen(
-          "Browser Not Supported",
-          "This app cannot run in Firefox. Please reopen the link in your device's default browser."
-      );
-      throw new Error("Blocked: Firefox not supported");
-  }
+    // Mark this visit for future Safari logic
+    markVisited();
 
-  // iOS but not Safari
-  if (platform === "ios" && browser !== "safari") {
-      showExitScreen(
-          "Open in Safari",
-          "To install this app, please reopen the link in Safari."
-      );
-      throw new Error("Blocked: iOS non-Safari browser");
-  }
+    // --------------------------------------------------------
+    // Block Firefox anywhere
+    // --------------------------------------------------------
+    if (browser === "firefox") {
+        showExitScreen(
+            "Browser Not Supported",
+            "This app cannot run in Firefox. Please reopen the link in your device's default browser."
+        );
+        throw new Error("Blocked: Firefox not supported");
+    }
 
-  if (!standalone) {
-    if (platform === "android") showScreen("install_android");
-    else if (platform === "ios") showScreen("install_ios");
-    else if (platform === "windows") showScreen("install_windows");
-    else showScreen("install_other");
-    return;
-  }
+    // --------------------------------------------------------
+    // iOS but not Safari
+    // --------------------------------------------------------
+    if (platform === "ios" && browser !== "safari") {
+        showExitScreen(
+            "Open in Safari",
+            "To install this app, please reopen the link in Safari."
+        );
+        throw new Error("Blocked: iOS non-Safari browser");
+    }
 
-  // Standalone -> real app
-  showScreen("app_main");
+    // --------------------------------------------------------
+    // NOT standalone → Install funnel
+    // --------------------------------------------------------
+    if (!standalone) {
 
-  await initMaps();
-  applyFirstTimeGreyoutAndHelp();
+        // Returning iOS Safari user
+        if (platform === "ios" && browser === "safari" && hasVisitedBefore()) {
+            showScreen("install_ios_returning");
+            return;
+        }
 
-  const routesModule = await import("./routes.js");
-  if (routesModule?.wireRoutes) routesModule.wireRoutes();
+        // First‑time iOS Safari user
+        if (platform === "ios") {
+            showScreen("install_ios");
+            return;
+        }
 
-  const titleEl = document.getElementById("title");
-  if (titleEl) titleEl.innerText = "F&B WRTG Camp " + year_name;
+        // Other platforms
+        if (platform === "android") showScreen("install_android");
+        else if (platform === "windows") showScreen("install_windows");
+        else showScreen("install_other");
+
+        return;
+    }
+
+    // --------------------------------------------------------
+    // Standalone → Real app
+    // --------------------------------------------------------
+    showScreen("app_main");
+
+    await initMaps();
+    applyFirstTimeGreyoutAndHelp();
+
+    const routesModule = await import("./routes.js");
+    if (routesModule?.wireRoutes) routesModule.wireRoutes();
+
+    const titleEl = document.getElementById("title");
+    if (titleEl) titleEl.innerText = "F&B WRTG Camp " + year_name;
 });
