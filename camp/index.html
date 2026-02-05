@@ -3,10 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <title>Loading…</title>
+
+// ADD THIS: Make index.html a PWA entry point
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1976d2">
+<link rel="apple-touch-icon" href="apple-icon-180.png">
+
 </head>
 <body>
 
 <script>
+//  ADD THIS: Register the service worker at the root
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+}
+
 // --- PLATFORM DETECTION ---
 function isIOS() {
     return /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
@@ -20,31 +31,21 @@ function isWindows() {
 
 // --- BROWSER DETECTION ---
 function isFirefox() {
-    // True Firefox exposes InstallTrigger everywhere except iOS
     if (typeof InstallTrigger !== "undefined") return true;
-
-    // UA fallback (covers Android + desktop)
     const ua = navigator.userAgent;
     return ua.includes("Firefox") && !ua.includes("FxiOS");
 }
 
 function isSafariIOS() {
     const ua = navigator.userAgent;
-
-    // Must be iOS
     if (!isIOS()) return false;
-
-    // Safari has "Safari" but NOT CriOS, FxiOS, EdgiOS, DuckDuckGo
     const isSafariUA =
         ua.includes("Safari") &&
         !ua.includes("CriOS") &&
         !ua.includes("FxiOS") &&
         !ua.includes("EdgiOS") &&
         !ua.includes("DuckDuckGo");
-
-    // Safari exposes navigator.standalone (even in browser mode)
     const hasStandalone = ('standalone' in navigator);
-
     return isSafariUA && hasStandalone;
 }
 
