@@ -126,6 +126,11 @@ button {
     white-space: nowrap;
 }
 
+.disable-buttons * {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
 /* ============================================================
    VIEWER IMAGE
    ============================================================ */

@@ -18,6 +18,36 @@ function isWindows() {
     return navigator.userAgent.toLowerCase().includes("windows");
 }
 
+// --- BROWSER DETECTION ---
+function isFirefox() {
+    // True Firefox exposes InstallTrigger everywhere except iOS
+    if (typeof InstallTrigger !== "undefined") return true;
+
+    // UA fallback (covers Android + desktop)
+    const ua = navigator.userAgent;
+    return ua.includes("Firefox") && !ua.includes("FxiOS");
+}
+
+function isSafariIOS() {
+    const ua = navigator.userAgent;
+
+    // Must be iOS
+    if (!isIOS()) return false;
+
+    // Safari has "Safari" but NOT CriOS, FxiOS, EdgiOS, DuckDuckGo
+    const isSafariUA =
+        ua.includes("Safari") &&
+        !ua.includes("CriOS") &&
+        !ua.includes("FxiOS") &&
+        !ua.includes("EdgiOS") &&
+        !ua.includes("DuckDuckGo");
+
+    // Safari exposes navigator.standalone (even in browser mode)
+    const hasStandalone = ('standalone' in navigator);
+
+    return isSafariUA && hasStandalone;
+}
+
 // --- STANDALONE DETECTION ---
 function isStandalone() {
     if (window.matchMedia('(display-mode: standalone)').matches) return true;
@@ -28,13 +58,21 @@ function isStandalone() {
 window.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams();
 
+    // PLATFORM
     if (isIOS()) params.set("platform", "ios");
     else if (isAndroid()) params.set("platform", "android");
     else if (isWindows()) params.set("platform", "windows");
     else params.set("platform", "other");
 
+    // BROWSER
+    if (isFirefox()) params.set("browser", "firefox");
+    else if (isSafariIOS()) params.set("browser", "safari");
+    else params.set("browser", "other");
+
+    // STANDALONE
     params.set("standalone", isStandalone() ? "true" : "false");
 
+    // REDIRECT TO PWA
     window.location.href = "app.html?" + params.toString();
 });
 </script>
