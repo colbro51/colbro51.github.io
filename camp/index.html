@@ -20,16 +20,21 @@ if ("serviceWorker" in navigator) {
 
 // --- PLATFORM DETECTION ---
 function isIOS() {
-    return /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    const ua = navigator.userAgent.toLowerCase();
+    return ua.includes("iphone") ||
+           ua.includes("ipad")  ||
+           ua.includes("ipod")  ||
+           (ua.includes("like mac os x") && ua.includes("mobile"));
 }
+
 function isAndroid() {
     return /android/.test(navigator.userAgent.toLowerCase());
 }
+
 function isWindows() {
     return navigator.userAgent.toLowerCase().includes("windows");
 }
 
-// --- BROWSER DETECTION ---
 function isFirefox() {
     if (typeof InstallTrigger !== "undefined") return true;
     const ua = navigator.userAgent;
@@ -39,17 +44,18 @@ function isFirefox() {
 function isSafariIOS() {
     const ua = navigator.userAgent;
     if (!isIOS()) return false;
+
     const isSafariUA =
         ua.includes("Safari") &&
         !ua.includes("CriOS") &&
         !ua.includes("FxiOS") &&
         !ua.includes("EdgiOS") &&
         !ua.includes("DuckDuckGo");
-    const hasStandalone = ('standalone' in navigator);
-    return isSafariUA && hasStandalone;
+
+    // drop the hasStandalone check – it’s too brittle
+    return isSafariUA;
 }
 
-// --- STANDALONE DETECTION ---
 function isStandalone() {
     if (window.matchMedia('(display-mode: standalone)').matches) return true;
     if ('standalone' in navigator && navigator.standalone === true) return true;
@@ -73,7 +79,6 @@ window.addEventListener("DOMContentLoaded", () => {
     // STANDALONE
     params.set("standalone", isStandalone() ? "true" : "false");
 
-    // REDIRECT TO PWA
     window.location.href = "app.html?" + params.toString();
 });
 </script>
