@@ -81,27 +81,27 @@ window.addEventListener("DOMContentLoaded", async () => {
     // Mark this visit for future Safari logic
     markVisited();
 
-    // --------------------------------------------------------
-    // Block Firefox anywhere
-    // --------------------------------------------------------
-    if (browser === "firefox") {
-        showExitScreen(
-            "Browser Not Supported",
-            "This app cannot run in Firefox. Please reopen the link in your device's default browser."
-        );
-        throw new Error("Blocked: Firefox not supported");
-    }
+  // --------------------------------------------------------
+  // Block Firefox anywhere
+  // --------------------------------------------------------
+  if (browser === "firefox") {
+      showExitScreen(
+          "Installer Not Supported",
+          "The Camp installer cannot run in Firefox. Please reopen the link in your device's default browser to continue installation."
+      );
+      throw new Error("Blocked: Firefox not supported");
+  }
 
-    // --------------------------------------------------------
-    // iOS but not Safari
-    // --------------------------------------------------------
-    if (platform === "ios" && browser !== "safari") {
-        showExitScreen(
-            "Open in Safari",
-            "To install this app, please reopen the link in Safari."
-        );
-        throw new Error("Blocked: iOS non-Safari browser");
-    }
+  // --------------------------------------------------------
+  // iOS but not Safari
+  // --------------------------------------------------------
+  if (platform === "ios" && browser !== "safari") {
+      showExitScreen(
+          "Open Installer in Safari",
+          "To continue installing Camp, you must open this installer in Safari. Copy the link and paste it into Safari to proceed."
+      );
+      throw new Error("Blocked: iOS non-Safari browser");
+  }
 
     // --------------------------------------------------------
     // NOT standalone → Install funnel
