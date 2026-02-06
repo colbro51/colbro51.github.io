@@ -207,7 +207,6 @@ button {
    iOS Google Maps toggle hidden by default
    (startup.js reveals it on iOS/iPadOS)
    ============================================================ */
-#useGoogleMapsLabel,
-#useGoogleMapsLabel * {
+#useGoogleMapsLabel {
     display: none;
 }
