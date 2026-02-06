@@ -209,5 +209,5 @@ button {
    ============================================================ */
 #useGoogleMapsLabel,
 #useGoogleMapsLabel * {
-    display: none !important;
+    display: none;
 }
