@@ -1,7 +1,6 @@
 import { year_name } from "./camp-data.js";
 import { initMaps } from "./maps.js";
-import { showScreen } from "./screens.js";
-import { enterHelp } from "./screens.js";
+import { showScreen, enterHelp } from "./screens.js";
 
 // ------------------------------------------------------------
 // Utility: show exit screen (Firefox, wrong browser, etc.)
@@ -38,24 +37,6 @@ function showExitScreen(title, message) {
 }
 
 // ------------------------------------------------------------
-// First‑time help nudge
-// ------------------------------------------------------------
-const HELP_NUDGE_KEY = "helpNudgeShown";
-
-function applyFirstTimeGreyoutAndHelp() {
-    const hasShown = localStorage.getItem(HELP_NUDGE_KEY) === "true";
-    if (hasShown) return;
-
-    document.body.classList.add("disable-buttons");
-
-    setTimeout(() => {
-        document.body.classList.remove("disable-buttons");
-        localStorage.setItem(HELP_NUDGE_KEY, "true");
-        enterHelp();
-    }, 1000);
-}
-
-// ------------------------------------------------------------
 // Main startup
 // ------------------------------------------------------------
 window.addEventListener("DOMContentLoaded", async () => {
@@ -64,6 +45,36 @@ window.addEventListener("DOMContentLoaded", async () => {
     const platform = params.get("platform");
     const browser = params.get("browser");
     const standalone = params.get("standalone") === "true";
+    const useGoogleMaps = params.get("usegmaps") === "true";
+    const helpNudgeShown = params.get("helpnudge") === "true";
+
+    // --------------------------------------------------------
+    // Apply initial UI state from params
+    // --------------------------------------------------------
+    const mapsChk = document.getElementById("useGoogleMaps");
+    if (mapsChk) mapsChk.checked = useGoogleMaps;
+
+    // Reveal Google Maps toggle only where appropriate (iOS)
+    const mapsLabel = document.getElementById("useGoogleMapsLabel");
+    if (mapsLabel && platform === "ios") {
+        mapsLabel.style.display = "flex";
+        Array.from(mapsLabel.children).forEach(c => c.style.display = "");
+    }
+
+    // --------------------------------------------------------
+    // First‑time help nudge (now correctly scoped)
+    // --------------------------------------------------------
+    function applyFirstTimeGreyoutAndHelp() {
+        if (helpNudgeShown) return;
+
+        document.body.classList.add("disable-buttons");
+
+        setTimeout(() => {
+            document.body.classList.remove("disable-buttons");
+            localStorage.setItem("helpNudgeShown", "true");
+            enterHelp();
+        }, 1000);
+    }
 
     // --------------------------------------------------------
     // Block Firefox anywhere
@@ -92,26 +103,21 @@ window.addEventListener("DOMContentLoaded", async () => {
     // --------------------------------------------------------
     if (!standalone) {
 
-        // iOS Safari logic (stateless)
         if (platform === "ios" && browser === "safari") {
-            // iOS installable (first-time)
             showScreen("install_ios");
             return;
         }
 
-        // Android
         if (platform === "android") {
             showScreen("install_android");
             return;
         }
 
-        // Windows
         if (platform === "windows") {
             showScreen("install_windows");
             return;
         }
 
-        // Other platforms
         showScreen("install_other");
         return;
     }

@@ -4,21 +4,23 @@
 <meta charset="UTF-8">
 <title>Loading…</title>
 
-// ADD THIS: Make index.html a PWA entry point
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1976d2">
 <link rel="apple-touch-icon" href="apple-icon-180.png">
-
 </head>
 <body>
 
 <script>
-//  ADD THIS: Register the service worker at the root
+// ------------------------------------------------------------
+// Service worker
+// ------------------------------------------------------------
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("service-worker.js");
 }
 
-// --- PLATFORM DETECTION ---
+// ------------------------------------------------------------
+// PLATFORM DETECTION
+// ------------------------------------------------------------
 function isIOS() {
     const ua = navigator.userAgent.toLowerCase();
     return ua.includes("iphone") ||
@@ -28,13 +30,16 @@ function isIOS() {
 }
 
 function isAndroid() {
-    return /android/.test(navigator.userAgent.toLowerCase());
+    return navigator.userAgent.toLowerCase().includes("android");
 }
 
 function isWindows() {
     return navigator.userAgent.toLowerCase().includes("windows");
 }
 
+// ------------------------------------------------------------
+// BROWSER DETECTION
+// ------------------------------------------------------------
 function isFirefox() {
     if (typeof InstallTrigger !== "undefined") return true;
     const ua = navigator.userAgent;
@@ -52,16 +57,53 @@ function isSafariIOS() {
         !ua.includes("EdgiOS") &&
         !ua.includes("DuckDuckGo");
 
-    // drop the hasStandalone check – it’s too brittle
     return isSafariUA;
 }
 
+// ------------------------------------------------------------
+// STANDALONE DETECTION
+// ------------------------------------------------------------
 function isStandalone() {
     if (window.matchMedia('(display-mode: standalone)').matches) return true;
     if ('standalone' in navigator && navigator.standalone === true) return true;
     return false;
 }
 
+// ------------------------------------------------------------
+// LOAD USER PREFERENCES FROM localStorage
+// ------------------------------------------------------------
+function loadPreferences() {
+    const prefs = {};
+
+    // useGoogleMaps: default = false (off)
+    const storedMaps = localStorage.getItem("useGoogleMaps");
+    prefs.useGoogleMaps = storedMaps === "true";
+
+    // helpNudgeShown: default = false (not shown yet)
+    const storedHelp = localStorage.getItem("helpNudgeShown");
+    prefs.helpNudgeShown = storedHelp === "true";
+
+    return prefs;
+}
+
+// ------------------------------------------------------------
+// APPLY DEBUG OVERRIDES FROM URL
+//   /camp/?usegmaps=true
+// ------------------------------------------------------------
+function applyDebugOverrides(prefs) {
+    const url = new URL(window.location.href);
+
+    const overrideMaps = url.searchParams.get("usegmaps");
+    if (overrideMaps === "true") prefs.useGoogleMaps = true;
+    if (overrideMaps === "false") prefs.useGoogleMaps = false;
+
+    // (You could add debug for helpNudgeShown later if you want)
+    return prefs;
+}
+
+// ------------------------------------------------------------
+// MAIN REDIRECT
+// ------------------------------------------------------------
 window.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams();
 
@@ -79,6 +121,14 @@ window.addEventListener("DOMContentLoaded", () => {
     // STANDALONE
     params.set("standalone", isStandalone() ? "true" : "false");
 
+    // PREFERENCES
+    let prefs = loadPreferences();
+    prefs = applyDebugOverrides(prefs);
+
+    params.set("usegmaps", prefs.useGoogleMaps ? "true" : "false");
+    params.set("helpnudge", prefs.helpNudgeShown ? "true" : "false");
+
+    // REDIRECT TO PWA
     window.location.href = "app.html?" + params.toString();
 });
 </script>

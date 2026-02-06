@@ -2,7 +2,7 @@
 import { buildMapURL } from "./logic.js";
 import { showScreen } from "./screens.js";
 
-let useGoogleMaps = true;
+let useGoogleMaps;   // no default — startup.js sets the checkbox
 
 // ------------------------------------------------------------
 // 1. Check if browser already has geolocation permission
@@ -58,13 +58,15 @@ function getStableLocation() {
 export async function initMaps() {
   console.log("MAPS: initMaps() starting");
 
-  // Read user preference from checkbox
   const chk = document.getElementById("useGoogleMaps");
-  useGoogleMaps = chk ? chk.checked : true;
+
+  // Checkbox state was set by startup.js from query params
+  useGoogleMaps = chk ? chk.checked : false;
 
   if (chk) {
     chk.addEventListener("change", () => {
       useGoogleMaps = chk.checked;
+      localStorage.setItem("useGoogleMaps", useGoogleMaps ? "true" : "false");
     });
   }
 }
@@ -144,5 +146,5 @@ export function showMapsFailurePopup() {
 
 export function closeMapsFailModal() {
   document.getElementById("mapsFailModal").style.display = "none";
-  showScreen("main");
+  showScreen("app_main");
 }

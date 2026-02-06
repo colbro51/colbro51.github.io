@@ -6,7 +6,7 @@
 const navStack = [];
 
 function currentScreen() {
-  return document.querySelector(".screen.active")?.id || "main";
+  return document.querySelector(".screen.active")?.id || "app_main";
 }
 
 
@@ -72,14 +72,14 @@ export function enterViewer(imageName) {
 export function goBack() {
   if (navStack.length === 0) {
     // Already at main
-    showScreen("main");
+    showScreen("app_main");
     return;
   }
 
   const previous = navStack.pop();
 
   // If we popped back to main, clear stack completely
-  if (previous === "main") {
+  if (previous === "app_main") {
     navStack.length = 0;
   }
 
