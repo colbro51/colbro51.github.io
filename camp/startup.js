@@ -56,19 +56,6 @@ function applyFirstTimeGreyoutAndHelp() {
 }
 
 // ------------------------------------------------------------
-// Returning‑user detection (Safari only)
-// ------------------------------------------------------------
-const VISITED_KEY = "visitedBefore";
-
-function markVisited() {
-    localStorage.setItem(VISITED_KEY, "true");
-}
-
-function hasVisitedBefore() {
-    return localStorage.getItem(VISITED_KEY) === "true";
-}
-
-// ------------------------------------------------------------
 // Main startup
 // ------------------------------------------------------------
 window.addEventListener("DOMContentLoaded", async () => {
@@ -78,53 +65,54 @@ window.addEventListener("DOMContentLoaded", async () => {
     const browser = params.get("browser");
     const standalone = params.get("standalone") === "true";
 
-    // Mark this visit for future Safari logic
-    markVisited();
+    // --------------------------------------------------------
+    // Block Firefox anywhere
+    // --------------------------------------------------------
+    if (browser === "firefox") {
+        showExitScreen(
+            "Installer Not Supported",
+            "The Camp installer cannot run in Firefox. Please reopen the link in your device's default browser to continue installation."
+        );
+        throw new Error("Blocked: Firefox not supported");
+    }
 
-  // --------------------------------------------------------
-  // Block Firefox anywhere
-  // --------------------------------------------------------
-  if (browser === "firefox") {
-      showExitScreen(
-          "Installer Not Supported",
-          "The Camp installer cannot run in Firefox. Please reopen the link in your device's default browser to continue installation."
-      );
-      throw new Error("Blocked: Firefox not supported");
-  }
-
-  // --------------------------------------------------------
-  // iOS but not Safari
-  // --------------------------------------------------------
-  if (platform === "ios" && browser !== "safari") {
-      showExitScreen(
-          "Open Installer in Safari",
-          "To continue installing Camp, you must open this installer in Safari. Copy the link and paste it into Safari to proceed."
-      );
-      throw new Error("Blocked: iOS non-Safari browser");
-  }
+    // --------------------------------------------------------
+    // iOS but not Safari
+    // --------------------------------------------------------
+    if (platform === "ios" && browser !== "safari") {
+        showExitScreen(
+            "Open Installer in Safari",
+            "To continue installing Camp, you must open this installer in Safari. Copy the link and paste it into Safari to proceed."
+        );
+        throw new Error("Blocked: iOS non-Safari browser");
+    }
 
     // --------------------------------------------------------
     // NOT standalone → Install funnel
     // --------------------------------------------------------
     if (!standalone) {
 
-        // Returning iOS Safari user
-        if (platform === "ios" && browser === "safari" && hasVisitedBefore()) {
-            showScreen("install_ios_returning");
-            return;
-        }
-
-        // First‑time iOS Safari user
-        if (platform === "ios") {
+        // iOS Safari logic (stateless)
+        if (platform === "ios" && browser === "safari") {
+            // iOS installable (first-time)
             showScreen("install_ios");
             return;
         }
 
-        // Other platforms
-        if (platform === "android") showScreen("install_android");
-        else if (platform === "windows") showScreen("install_windows");
-        else showScreen("install_other");
+        // Android
+        if (platform === "android") {
+            showScreen("install_android");
+            return;
+        }
 
+        // Windows
+        if (platform === "windows") {
+            showScreen("install_windows");
+            return;
+        }
+
+        // Other platforms
+        showScreen("install_other");
         return;
     }
 
