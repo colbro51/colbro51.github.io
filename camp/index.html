@@ -85,7 +85,6 @@ function showScreen(id) {
 // ------------------------------------------------------------
 async function copyInstallLink() {
   const url = new URL(window.location.href);
-  url.searchParams.set("install", "true");
   const link = url.toString();
 
   try {
