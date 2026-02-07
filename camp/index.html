@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Loading…</title>
+  <meta charset="UTF-8">
+  <title>Camp Installer</title>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1976d2">
-<link rel="apple-touch-icon" href="apple-icon-180.png">
+  <meta name="theme-color" content="#1976d2">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-icon-180.png">
+  <link rel="stylesheet" href="style_install.css">
 </head>
+
 <body>
 
 <script>
@@ -15,123 +17,215 @@
 // Service worker
 // ------------------------------------------------------------
 if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
+  navigator.serviceWorker.register("service-worker.js");
 }
 
 // ------------------------------------------------------------
 // PLATFORM DETECTION
 // ------------------------------------------------------------
 function isIOS() {
-    const ua = navigator.userAgent.toLowerCase();
-    return ua.includes("iphone") ||
-           ua.includes("ipad")  ||
-           ua.includes("ipod")  ||
-           (ua.includes("like mac os x") && ua.includes("mobile"));
+  const ua = navigator.userAgent.toLowerCase();
+  return ua.includes("iphone") ||
+         ua.includes("ipad")  ||
+         ua.includes("ipod")  ||
+         (ua.includes("like mac os x") && ua.includes("mobile"));
 }
 
 function isAndroid() {
-    return navigator.userAgent.toLowerCase().includes("android");
+  return navigator.userAgent.toLowerCase().includes("android");
 }
 
 function isWindows() {
-    return navigator.userAgent.toLowerCase().includes("windows");
+  return navigator.userAgent.toLowerCase().includes("windows");
 }
 
 // ------------------------------------------------------------
-// BROWSER DETECTION
+// BROWSER DETECTION (only used when install=true)
 // ------------------------------------------------------------
-function isFirefox() {
-    if (typeof InstallTrigger !== "undefined") return true;
-    const ua = navigator.userAgent;
-    return ua.includes("Firefox") && !ua.includes("FxiOS");
-}
-
 function isSafariIOS() {
-    const ua = navigator.userAgent;
-    if (!isIOS()) return false;
+  const ua = navigator.userAgent;
+  if (!isIOS()) return false;
 
-    const isSafariUA =
-        ua.includes("Safari") &&
-        !ua.includes("CriOS") &&
-        !ua.includes("FxiOS") &&
-        !ua.includes("EdgiOS") &&
-        !ua.includes("DuckDuckGo");
+  return ua.includes("Safari") &&
+         !ua.includes("CriOS") &&
+         !ua.includes("FxiOS") &&
+         !ua.includes("EdgiOS") &&
+         !ua.includes("DuckDuckGo");
+}
 
-    return isSafariUA;
+function isChrome() {
+  const ua = navigator.userAgent;
+  return ua.includes("Chrome") && !ua.includes("Edg");
 }
 
 // ------------------------------------------------------------
 // STANDALONE DETECTION
 // ------------------------------------------------------------
 function isStandalone() {
-    if (window.matchMedia('(display-mode: standalone)').matches) return true;
-    if ('standalone' in navigator && navigator.standalone === true) return true;
-    return false;
+  if (window.matchMedia('(display-mode: standalone)').matches) return true;
+  if ('standalone' in navigator && navigator.standalone === true) return true;
+  return false;
 }
 
 // ------------------------------------------------------------
-// LOAD USER PREFERENCES FROM localStorage
+// SCREEN SWITCHER
 // ------------------------------------------------------------
-function loadPreferences() {
-    const prefs = {};
-
-    // useGoogleMaps: default = false (off)
-    const storedMaps = localStorage.getItem("useGoogleMaps");
-    prefs.useGoogleMaps = storedMaps === "true";
-
-    // helpNudgeShown: default = false (not shown yet)
-    const storedHelp = localStorage.getItem("helpNudgeShown");
-    prefs.helpNudgeShown = storedHelp === "true";
-
-    return prefs;
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  const el = document.getElementById(id);
+  if (el) el.classList.add("active");
 }
 
 // ------------------------------------------------------------
-// APPLY DEBUG OVERRIDES FROM URL
-//   /camp/?usegmaps=true
+// COPY INSTALL LINK
 // ------------------------------------------------------------
-function applyDebugOverrides(prefs) {
-    const url = new URL(window.location.href);
+async function copyInstallLink() {
+  const url = new URL(window.location.href);
+  url.searchParams.set("install", "true");
+  const link = url.toString();
 
-    const overrideMaps = url.searchParams.get("usegmaps");
-    if (overrideMaps === "true") prefs.useGoogleMaps = true;
-    if (overrideMaps === "false") prefs.useGoogleMaps = false;
-
-    // (You could add debug for helpNudgeShown later if you want)
-    return prefs;
+  try {
+    await navigator.clipboard.writeText(link);
+    alert("Link copied to clipboard.");
+  } catch {
+    const temp = document.createElement("input");
+    temp.value = link;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand("copy");
+    temp.remove();
+    alert("Link copied to clipboard.");
+  }
 }
 
 // ------------------------------------------------------------
-// MAIN REDIRECT
+// MAIN FLOW
 // ------------------------------------------------------------
 window.addEventListener("DOMContentLoaded", () => {
-    const params = new URLSearchParams();
 
-    // PLATFORM
-    if (isIOS()) params.set("platform", "ios");
-    else if (isAndroid()) params.set("platform", "android");
-    else if (isWindows()) params.set("platform", "windows");
-    else params.set("platform", "other");
+  const url = new URL(window.location.href);
+  const install = url.searchParams.get("install") === "true";
 
-    // BROWSER
-    if (isFirefox()) params.set("browser", "firefox");
-    else if (isSafariIOS()) params.set("browser", "safari");
-    else params.set("browser", "other");
+  // PLATFORM
+  let platform = "other";
+  if (isIOS()) platform = "ios";
+  else if (isAndroid()) platform = "android";
+  else if (isWindows()) platform = "windows";
 
-    // STANDALONE
-    params.set("standalone", isStandalone() ? "true" : "false");
+  // BROWSER (only matters when install=true)
+  let browser = "other";
+  if (isSafariIOS()) browser = "safari";
+  else if (isChrome()) browser = "chrome";
 
-    // PREFERENCES
-    let prefs = loadPreferences();
-    prefs = applyDebugOverrides(prefs);
+  // --------------------------------------------------------
+  // If already installed → go straight to app
+  // --------------------------------------------------------
+  if (isStandalone()) {
+    window.location.href = "app.html?platform=" + platform;
+    return;
+  }
 
-    params.set("usegmaps", prefs.useGoogleMaps ? "true" : "false");
-    params.set("helpnudge", prefs.helpNudgeShown ? "true" : "false");
+  // --------------------------------------------------------
+  // ALWAYS clear prefs only when installing
+  // --------------------------------------------------------
+  localStorage.removeItem("useGoogleMaps");
+  localStorage.removeItem("helpNudgeShown");
 
-    // REDIRECT TO PWA
-    window.location.href = "app.html?" + params.toString();
+  // --------------------------------------------------------
+  // If install=true AND browser is correct → show instructions
+  // --------------------------------------------------------
+  if (install) {
+    if (platform === "ios" && browser === "safari") {
+      showScreen("install_ios");
+      return;
+    }
+
+    if (platform === "android" && browser === "chrome") {
+      showScreen("install_android");
+      return;
+    }
+
+    if (platform === "windows" && browser === "chrome") {
+      showScreen("install_windows");
+      return;
+    }
+
+    // install=true but wrong browser → fall through to copy-link screen
+  }
+
+  // --------------------------------------------------------
+  // Default: show "copy link and paste into correct browser"
+  // --------------------------------------------------------
+  if (platform === "ios") {
+    showScreen("launch_safari");
+    return;
+  }
+
+  if (platform === "android") {
+    showScreen("launch_chrome");
+    return;
+  }
+
+  if (platform === "windows") {
+    showScreen("launch_edge");
+    return;
+  }
+
+  showScreen("not_supported");
 });
 </script>
+
+<!-- =========================================================
+     INSTALL INSTRUCTIONS
+     ========================================================= -->
+
+<div id="install_android" class="screen installer-screen">
+  <h1>Install Camp (Android)</h1>
+  <p>Tap the <strong>⋮ menu</strong> in Chrome.</p>
+  <p>Select <strong>Install App</strong> or <strong>Add to Home Screen</strong>.</p>
+</div>
+
+<div id="install_ios" class="screen installer-screen">
+  <h1>Install Camp (iPhone)</h1>
+  <ol>
+    <li>Tap the <strong>Share</strong> button.</li>
+    <li>Select <strong>Add to Home Screen</strong>.</li>
+    <li>Open Camp from the new icon.</li>
+  </ol>
+</div>
+
+<div id="install_windows" class="screen installer-screen">
+  <h1>Install Camp (Windows)</h1>
+  <p>Use the <strong>Chrome</strong> menu → <strong>Install</strong>.</p>
+</div>
+
+<!-- =========================================================
+     COPY-LINK SCREENS
+     ========================================================= -->
+
+<div id="launch_safari" class="screen installer-screen">
+  <h1>Open in Safari</h1>
+  <p>To install Camp, open this link in Safari.</p>
+  <div class="btn" onclick="copyInstallLink()">Copy install link</div>
+</div>
+
+<div id="launch_chrome" class="screen installer-screen">
+  <h1>Open in Chrome</h1>
+  <p>To install Camp, open this link in Chrome.</p>
+  <div class="btn" onclick="copyInstallLink()">Copy install link</div>
+</div>
+
+<div id="launch_edge" class="screen installer-screen">
+  <h1>Open in Chrome</h1>
+  <p>To install Camp on Windows, open this link in Chrome.</p>
+  <div class="btn" onclick="copyInstallLink()">Copy install link</div>
+</div>
+
+<div id="not_supported" class="screen installer-screen">
+  <h1>Camp Installer</h1>
+  <p>Your platform is not supported.</p>
+  <div class="btn" onclick="copyInstallLink()">Copy install link</div>
+</div>
 
 </body>
 </html>
