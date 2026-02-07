@@ -74,7 +74,19 @@ export async function initMaps() {
 // ------------------------------------------------------------
 // 4. Detect if Maps failed to open
 // ------------------------------------------------------------
+function isAndroidChrome() {
+  const ua = navigator.userAgent || "";
+  return ua.includes("Android") && ua.includes("Chrome");
+}
+
 export function openInMapsWithDetection(url) {
+  if (isAndroidChrome()) {
+    // A05/A06 and friends: auto‑detection is unreliable → just open Maps
+    location.href = url;
+    return;
+  }
+
+  // keep the detection logic for iOS / desktop if you like
   let timer = null;
   let hiddenSeen = false;
   let finished = false;
@@ -90,13 +102,11 @@ export function openInMapsWithDetection(url) {
     const state = document.visibilityState;
 
     if (state === "hidden") {
-      // Maps is opening
       hiddenSeen = true;
       cleanup();
     }
 
     if (state === "visible" && !hiddenSeen) {
-      // Returned without ever going hidden → suppress failure
       cleanup();
     }
   };
