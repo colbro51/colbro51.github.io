@@ -6,7 +6,7 @@ import { attachSimplePressEngine } from "./gesture.js";
 
 
 // ------------------------------------------------------------
-// Helper: wire a single route button (tap → viewer, long press → Maps)
+// Helper: wire a single route button (tap → Maps, long press → viewer)
 // ------------------------------------------------------------
 function wireRouteButton(id, mode, origin, dest) {
   const btn = document.getElementById(id);
@@ -16,13 +16,13 @@ function wireRouteButton(id, mode, origin, dest) {
     longPressMs: 500,
 
     onClick: () => {
-      // Short tap → viewer
-      enterViewer(id);
+      // Short tap → Maps
+      go(mode, origin, dest);
     },
 
     onLongPress: () => {
-      // Long press → Maps
-      go(mode, origin, dest);
+      // Long press → viewer
+      enterViewer(id);
     }
   });
 }
@@ -50,17 +50,19 @@ export function wireRoutes() {
 
 
   // ------------------------------------------------------------
-  // 2. Camp button (tap → viewer, long press → Maps)
+  // 2. Camp button (tap → Maps, long press → viewer)
   // ------------------------------------------------------------
   attachSimplePressEngine(document.getElementById("btn_camp"), {
     longPressMs: 500,
 
     onClick: () => {
-      enterViewer("camp");
+      // Short tap → Maps
+      go("driving", "Current Location", camp_location);
     },
 
     onLongPress: () => {
-      go("driving", "Current Location", camp_location);
+      // Long press → viewer
+      enterViewer("camp");
     }
   });
 
