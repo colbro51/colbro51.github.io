@@ -121,11 +121,14 @@ window.addEventListener("DOMContentLoaded", () => {
   if (isSafariIOS()) browser = "safari";
   else if (isChrome()) browser = "chrome";
 
-console.log("DEBUG FULL URL:", window.location.href);
-console.log("DEBUG UA:", navigator.userAgent);
-console.log("DEBUG install:", install);
-console.log("DEBUG platform:", platform);
-console.log("DEBUG browser:", browser);
+  const justInstalled = localStorage.getItem("justInstalled") === "true";
+
+  if (justInstalled) {
+    // Chrome has opened the standalone window but hasn't set display-mode yet.
+    // Skip installer screens entirely.
+    window.location.href = "app.html?platform=" + platform;
+    return;
+  }
 
   // --------------------------------------------------------
   // If already installed → go straight to app
@@ -146,16 +149,19 @@ console.log("DEBUG browser:", browser);
   // --------------------------------------------------------
   if (install) {
     if (platform === "ios" && browser === "safari") {
+      localStorage.setItem("justInstalled", "true");
       showScreen("install_ios");
       return;
     }
 
     if (platform === "android" && browser === "chrome") {
+      localStorage.setItem("justInstalled", "true");
       showScreen("install_android");
       return;
     }
 
     if (platform === "windows" && browser === "chrome") {
+      localStorage.setItem("justInstalled", "true");
       showScreen("install_windows");
       return;
     }
@@ -206,7 +212,8 @@ console.log("DEBUG browser:", browser);
 
 <div id="install_windows" class="screen installer-screen">
   <h1>Install Camp (Windows)</h1>
-  <p>Use the <strong>Chrome</strong> menu → <strong>Install</strong>.</p>
+  <p>Click the Install button in the address bar.</p>
+  <p>If you don’t see it, refresh the page.</p>
 </div>
 
 <!-- =========================================================

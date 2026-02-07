@@ -49,6 +49,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   // 5. Show main screen
   // ------------------------------------------------------------
   showScreen("app_main");
+  localStorage.removeItem("justInstalled");
 
   // ------------------------------------------------------------
   // 6. Initialize Maps system
