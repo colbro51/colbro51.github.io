@@ -110,11 +110,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const url = new URL(window.location.href);
   const install = url.searchParams.get("install") === "true";
 
-console.log("DEBUG UA:", navigator.userAgent);
-console.log("DEBUG install:", install);
-console.log("DEBUG platform:", platform);
-console.log("DEBUG browser:", browser);
-
   // PLATFORM
   let platform = "other";
   if (isIOS()) platform = "ios";
@@ -125,6 +120,12 @@ console.log("DEBUG browser:", browser);
   let browser = "other";
   if (isSafariIOS()) browser = "safari";
   else if (isChrome()) browser = "chrome";
+
+console.log("DEBUG FULL URL:", window.location.href);
+console.log("DEBUG UA:", navigator.userAgent);
+console.log("DEBUG install:", install);
+console.log("DEBUG platform:", platform);
+console.log("DEBUG browser:", browser);
 
   // --------------------------------------------------------
   // If already installed → go straight to app
