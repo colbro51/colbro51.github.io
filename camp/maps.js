@@ -103,7 +103,9 @@ export async function go(mode, origin, destination) {
   console.log("GO:", { mode, origin, destination, useGoogleMaps });
 
   if (platform === "windows") {
-    useGoogleMaps = true;
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=${mode}`;
+    window.location.href = url;
+    return;
   }
 
   const useCamp = document.getElementById("startFromCamp").checked;
