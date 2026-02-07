@@ -85,6 +85,7 @@ function showScreen(id) {
 // ------------------------------------------------------------
 async function copyInstallLink() {
   const url = new URL(window.location.href);
+  url.searchParams.set("install", "true");
   const link = url.toString();
 
   try {
@@ -215,25 +216,33 @@ console.log("DEBUG browser:", browser);
 <div id="launch_safari" class="screen installer-screen">
   <h1>Open in Safari</h1>
   <p>To install Camp, open this link in Safari.</p>
-  <div class="btn" onclick="copyInstallLink()">Copy install link</div>
+  <div class="copy-link-btn" onclick="copyInstallLink()">
+          Copy install link to clipboard
+    </div>
 </div>
 
 <div id="launch_chrome" class="screen installer-screen">
   <h1>Open in Chrome</h1>
   <p>To install Camp, open this link in Chrome.</p>
-  <div class="btn" onclick="copyInstallLink()">Copy install link</div>
+  <div class="copy-link-btn" onclick="copyInstallLink()">
+          Copy install link to clipboard
+    </div>
 </div>
 
 <div id="launch_edge" class="screen installer-screen">
   <h1>Open in Chrome</h1>
   <p>To install Camp on Windows, open this link in Chrome.</p>
-  <div class="btn" onclick="copyInstallLink()">Copy install link</div>
+  <div class="copy-link-btn" onclick="copyInstallLink()">
+          Copy install link to clipboard
+    </div>
 </div>
 
 <div id="not_supported" class="screen installer-screen">
   <h1>Camp Installer</h1>
   <p>Your platform is not supported.</p>
-  <div class="btn" onclick="copyInstallLink()">Copy install link</div>
+  <div class="copy-link-btn" onclick="copyInstallLink()">
+          Copy install link to clipboard
+    </div>
 </div>
 
 </body>
