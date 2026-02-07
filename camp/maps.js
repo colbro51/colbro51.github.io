@@ -75,22 +75,34 @@ export async function initMaps() {
 // 4. Detect if Maps failed to open
 // ------------------------------------------------------------
 export function openInMapsWithDetection(url) {
-  let becameHidden = false;
+  let timer = null;
+  let finished = false;
+
+  const clearAll = () => {
+    if (finished) return;
+    finished = true;
+    if (timer) clearTimeout(timer);
+    document.removeEventListener("visibilitychange", onVisibility);
+  };
 
   const onVisibility = () => {
     if (document.visibilityState === "hidden") {
-      becameHidden = true;
+      // Maps is opening
+      clearAll();
+    } else if (document.visibilityState === "visible") {
+      // User has returned — suppress failure popup
+      clearAll();
     }
   };
 
-  document.addEventListener("visibilitychange", onVisibility, { once: true });
+  document.addEventListener("visibilitychange", onVisibility);
 
   location.href = url;
 
-  setTimeout(() => {
-    document.removeEventListener("visibilitychange", onVisibility);
-
-    if (!becameHidden) {
+  timer = setTimeout(() => {
+    if (!finished) {
+      finished = true;
+      document.removeEventListener("visibilitychange", onVisibility);
       showMapsFailurePopup();
     }
   }, 2500);
