@@ -32,7 +32,8 @@ function isIOS() {
 }
 
 function isAndroid() {
-  return navigator.userAgent.toLowerCase().includes("android");
+  const ua = navigator.userAgent;
+  return ua.includes("Android") && !ua.includes("Windows");
 }
 
 function isWindows() {
@@ -55,7 +56,10 @@ function isSafariIOS() {
 
 function isChrome() {
   const ua = navigator.userAgent;
-  return ua.includes("Chrome") && !ua.includes("Edg");
+  return ua.includes("Chrome") &&
+         ua.includes("Safari") &&
+         !ua.includes("Firefox") &&
+         !ua.includes("Edg");
 }
 
 // ------------------------------------------------------------
@@ -105,6 +109,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const url = new URL(window.location.href);
   const install = url.searchParams.get("install") === "true";
+
+console.log("DEBUG UA:", navigator.userAgent);
+console.log("DEBUG install:", install);
+console.log("DEBUG platform:", platform);
+console.log("DEBUG browser:", browser);
 
   // PLATFORM
   let platform = "other";
