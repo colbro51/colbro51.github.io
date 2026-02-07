@@ -74,50 +74,23 @@ export async function initMaps() {
 // ------------------------------------------------------------
 // 4. Detect if Maps failed to open
 // ------------------------------------------------------------
-function isAndroidChrome() {
-  const ua = navigator.userAgent || "";
-  return ua.includes("Android") && ua.includes("Chrome");
-}
-
 export function openInMapsWithDetection(url) {
-  if (isAndroidChrome()) {
-    // A05/A06 and friends: auto‑detection is unreliable → just open Maps
-    location.href = url;
-    return;
-  }
-
-  // keep the detection logic for iOS / desktop if you like
-  let timer = null;
-  let hiddenSeen = false;
-  let finished = false;
-
-  const cleanup = () => {
-    if (finished) return;
-    finished = true;
-    if (timer) clearTimeout(timer);
-    document.removeEventListener("visibilitychange", onVisibility);
-  };
+  let becameHidden = false;
 
   const onVisibility = () => {
-    const state = document.visibilityState;
-
-    if (state === "hidden") {
-      hiddenSeen = true;
-      cleanup();
-    }
-
-    if (state === "visible" && !hiddenSeen) {
-      cleanup();
+    if (document.visibilityState === "hidden") {
+      becameHidden = true;
     }
   };
 
-  document.addEventListener("visibilitychange", onVisibility);
+  document.addEventListener("visibilitychange", onVisibility, { once: true });
 
   location.href = url;
 
-  timer = setTimeout(() => {
-    if (!finished) {
-      cleanup();
+  setTimeout(() => {
+    document.removeEventListener("visibilitychange", onVisibility);
+
+    if (!becameHidden) {
       showMapsFailurePopup();
     }
   }, 2500);
