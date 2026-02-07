@@ -102,6 +102,10 @@ export function openInMapsWithDetection(url) {
 export async function go(mode, origin, destination) {
   console.log("GO:", { mode, origin, destination, useGoogleMaps });
 
+  if (platform === "windows") {
+    useGoogleMaps = true;
+  }
+
   const useCamp = document.getElementById("startFromCamp").checked;
   if (!useCamp) {
     origin = "Current Location";
