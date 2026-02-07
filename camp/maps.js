@@ -76,9 +76,10 @@ export async function initMaps() {
 // ------------------------------------------------------------
 export function openInMapsWithDetection(url) {
   let timer = null;
+  let hiddenSeen = false;
   let finished = false;
 
-  const clearAll = () => {
+  const cleanup = () => {
     if (finished) return;
     finished = true;
     if (timer) clearTimeout(timer);
@@ -86,12 +87,17 @@ export function openInMapsWithDetection(url) {
   };
 
   const onVisibility = () => {
-    if (document.visibilityState === "hidden") {
+    const state = document.visibilityState;
+
+    if (state === "hidden") {
       // Maps is opening
-      clearAll();
-    } else if (document.visibilityState === "visible") {
-      // User has returned — suppress failure popup
-      clearAll();
+      hiddenSeen = true;
+      cleanup();
+    }
+
+    if (state === "visible" && !hiddenSeen) {
+      // Returned without ever going hidden → suppress failure
+      cleanup();
     }
   };
 
@@ -101,8 +107,7 @@ export function openInMapsWithDetection(url) {
 
   timer = setTimeout(() => {
     if (!finished) {
-      finished = true;
-      document.removeEventListener("visibilitychange", onVisibility);
+      cleanup();
       showMapsFailurePopup();
     }
   }, 2500);
