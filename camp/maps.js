@@ -1,6 +1,4 @@
 // /camp/maps.js
-const platform = window.platform ?? "other";
-
 import { buildMapURL } from "./logic.js";
 import { showScreen } from "./screens.js";
 
@@ -104,6 +102,7 @@ export function openInMapsWithDetection(url) {
 export async function go(mode, origin, destination) {
   console.log("GO:", { mode, origin, destination, useGoogleMaps });
 
+  const platform = window.platform ?? "other";
 if (platform === "windows") {
   const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=${mode}`;
 
