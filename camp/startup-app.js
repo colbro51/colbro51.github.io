@@ -10,6 +10,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   // ------------------------------------------------------------
   const params = new URLSearchParams(window.location.search);
   const platform = params.get("platform") || "other";
+  window.platform = platform;
 
   // ------------------------------------------------------------
   // 2. Restore preferences from localStorage
