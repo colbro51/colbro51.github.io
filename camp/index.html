@@ -109,11 +109,8 @@ if ("serviceWorker" in navigator) {
 // PLATFORM DETECTION
 // ------------------------------------------------------------
 function isIOS() {
-  const ua = navigator.userAgent.toLowerCase();
-  return ua.includes("iphone") ||
-         ua.includes("ipad")  ||
-         ua.includes("ipod")  ||
-         (ua.includes("like mac os x") && ua.includes("mobile"));
+  return /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+         (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 }
 
 function isAndroid() {
@@ -130,14 +127,11 @@ function isWindows() {
 // BROWSER DETECTION
 // ------------------------------------------------------------
 function isSafariIOS() {
-  const ua = navigator.userAgent;
   if (!isIOS()) return false;
 
-  return ua.includes("Safari") &&
-         !ua.includes("CriOS") &&
-         !ua.includes("FxiOS") &&
-         !ua.includes("EdgiOS") &&
-         !ua.includes("DuckDuckGo");
+  const ua = navigator.userAgent;
+  return /Safari/i.test(ua) &&
+         !/CriOS|FxiOS|EdgiOS|DuckDuckGo/i.test(ua);
 }
 
 function isEdge() {
@@ -320,8 +314,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 <div id="not_supported" class="screen installer-screen">
   <h1>Camp Installer</h1>
-  <p>Your platform is not supported.</p>
-  <div class="copy-link-btn" onclick="copyInstallLink()">Copy install link to clipboard</div>
+  <p>Sorry, your phone is not supported.</p>
 </div>
 
 </body>
