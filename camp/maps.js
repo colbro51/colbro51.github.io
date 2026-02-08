@@ -104,11 +104,20 @@ export function openInMapsWithDetection(url) {
 export async function go(mode, origin, destination) {
   console.log("GO:", { mode, origin, destination, useGoogleMaps });
 
-  if (platform === "windows") {
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=${mode}`;
-    window.open(url, "_blank");
-    return;
-  }
+if (platform === "windows") {
+  const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=${mode}`;
+
+  // Create a real link and click it synchronously
+  const a = document.createElement("a");
+  a.href = url;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  return;
+}
 
   const useCamp = document.getElementById("startFromCamp").checked;
   if (!useCamp) {
