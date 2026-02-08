@@ -106,7 +106,7 @@ export async function go(mode, origin, destination) {
 
   if (platform === "windows") {
     const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=${mode}`;
-    window.location.href = url;
+    window.open(url, "_blank");
     return;
   }
 
