@@ -17,18 +17,27 @@
 }
 
 /* Typography */
-.installer-screen h1 {
-    margin-bottom: 20px;
-    font-size: 28px;
+/* Make installer text readable on mobile */
+.installer-screen p,
+.installer-screen li {
+    font-size: 20px;
+    line-height: 1.55;
+    max-width: none;
+    width: 100%;
+    text-align: left;
 }
 
-.installer-screen p,
-.installer-screen ol {
-    max-width: 420px;
-    line-height: 1.45;
-    text-align: left;
-    margin-bottom: 14px;
+/* Make headings big and friendly */
+.installer-screen h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
 }
+
+/* Improve spacing */
+.installer-screen {
+    padding: 40px 24px;
+}
+
 
 /* Primary action button */
 .installer-screen .btn {
