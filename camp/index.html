@@ -7,7 +7,95 @@
   <meta name="theme-color" content="#1976d2">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="apple-icon-180.png">
-  <link rel="stylesheet" href="style_install.css">
+  <style>
+/* INSTALLER CSS — TEMPORARY INLINE VERSION FOR DEVELOPMENT */
+
+/* ============================================================
+   INSTALLER SCREENS — clean, mobile‑first, full‑width layout
+   ============================================================ */
+
+.installer-screen {
+    min-height: 100vh;
+    padding: 32px 24px;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    /* Full-width content, no centering squeeze */
+    align-items: stretch;
+    text-align: left;
+
+    background: #fafafa;
+}
+
+/* Headings: large, friendly, readable */
+.installer-screen h1 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    text-align: center;   /* headings centered, text left */
+}
+
+/* Paragraphs + list items: full width, large text */
+.installer-screen p,
+.installer-screen li {
+    font-size: 22px;
+    line-height: 1.55;
+    margin-bottom: 18px;
+    width: 100%;
+}
+
+/* Improve spacing between sections */
+.installer-screen .section {
+    margin-bottom: 28px;
+}
+
+/* Primary action button */
+.installer-screen .btn,
+.copy-link-btn {
+    background: #ff9800;
+    color: #000;
+    font-weight: bold;
+    font-size: 22px;
+
+    padding: 18px 24px;
+    border-radius: 14px;
+
+    width: 100%;
+    max-width: 360px;
+
+    text-align: center;
+    margin: 24px auto 0 auto;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+.copy-link-btn:active,
+.installer-screen .btn:active {
+    background: #e68900;
+}
+
+/* Screen visibility */
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* Slightly larger text on small Android screens */
+@media (max-width: 480px) {
+    .installer-screen p,
+    .installer-screen li {
+        font-size: 23px;
+    }
+}
+
+</style>
+
 </head>
 
 <body>
@@ -17,7 +105,7 @@
 // Service worker
 // ------------------------------------------------------------
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js");
+  navigator.serviceWorker.register("service-worker.js?v=2");
 }
 
 // ------------------------------------------------------------
