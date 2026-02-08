@@ -1,5 +1,5 @@
 /* ============================================================
-   INSTALLER SCREENS — clean, minimal, self-contained
+   INSTALLER SCREENS — clean, mobile‑first, full‑width layout
    ============================================================ */
 
 .installer-screen {
@@ -10,44 +10,62 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
 
-    text-align: center;
+    /* Full-width content, no centering squeeze */
+    align-items: stretch;
+    text-align: left;
+
     background: #fafafa;
 }
 
-/* Typography */
-/* Make installer text readable on mobile */
+/* Headings: large, friendly, readable */
+.installer-screen h1 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    text-align: center;   /* headings centered, text left */
+}
+
+/* Paragraphs + list items: full width, large text */
 .installer-screen p,
 .installer-screen li {
-    font-size: 20px;
+    font-size: 22px;
     line-height: 1.55;
-    max-width: none;
+    margin-bottom: 18px;
     width: 100%;
-    text-align: left;
 }
 
-/* Make headings big and friendly */
-.installer-screen h1 {
-    font-size: 28px;
-    margin-bottom: 20px;
+/* Improve spacing between sections */
+.installer-screen .section {
+    margin-bottom: 28px;
 }
-
-/* Improve spacing */
-.installer-screen {
-    padding: 40px 24px;
-}
-
 
 /* Primary action button */
-.installer-screen .btn {
-    padding: 16px;
-    font-size: 20px;
-    border-radius: 12px;
-    max-width: 320px;
-    margin-top: 10px;
+.installer-screen .btn,
+.copy-link-btn {
+    background: #ff9800;
+    color: #000;
+    font-weight: bold;
+    font-size: 22px;
+
+    padding: 18px 24px;
+    border-radius: 14px;
+
+    width: 100%;
+    max-width: 360px;
+
+    text-align: center;
+    margin: 24px auto 0 auto;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
 }
 
+.copy-link-btn:active,
+.installer-screen .btn:active {
+    background: #e68900;
+}
+
+/* Screen visibility */
 .screen {
     display: none;
 }
@@ -56,19 +74,10 @@
     display: flex;
 }
 
-.copy-link-btn {
-    background: #ff9800;
-    color: #000;
-    font-weight: bold;
-    font-size: 22px;
-    padding: 18px 24px;
-    border-radius: 14px;
-    margin-top: 20px;
-    width: 100%;
-    max-width: 360px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-}
-.copy-link-btn:active {
-    background: #e68900;
+/* Slightly larger text on small Android screens */
+@media (max-width: 480px) {
+    .installer-screen p,
+    .installer-screen li {
+        font-size: 23px;
+    }
 }
