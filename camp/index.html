@@ -9,8 +9,9 @@
 
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="apple-icon-180.png">
+
   <style>
-/* INSTALLER CSS — TEMPORARY INLINE VERSION FOR DEVELOPMENT */
+/* INSTALLER CSS — INLINE */
 
 /* ============================================================
    INSTALLER SCREENS — clean, mobile‑first, full‑width layout
@@ -25,22 +26,19 @@
     flex-direction: column;
     justify-content: center;
 
-    /* Full-width content, no centering squeeze */
     align-items: stretch;
     text-align: left;
 
     background: #fafafa;
 }
 
-/* Headings: large, friendly, readable */
 .installer-screen h1 {
     font-size: 30px;
     font-weight: 700;
     margin-bottom: 24px;
-    text-align: center;   /* headings centered, text left */
+    text-align: center;
 }
 
-/* Paragraphs + list items: full width, large text */
 .installer-screen p,
 .installer-screen li {
     font-size: 22px;
@@ -49,12 +47,10 @@
     width: 100%;
 }
 
-/* Improve spacing between sections */
 .installer-screen .section {
     margin-bottom: 28px;
 }
 
-/* Primary action button */
 .installer-screen .btn,
 .copy-link-btn {
     background: #ff9800;
@@ -62,12 +58,12 @@
     font-weight: bold;
     font-size: 22px;
 
-    padding: 18px 20px;      /* slightly reduced horizontal padding */
+    padding: 18px 20px;
     border-radius: 14px;
 
-    width: 100%;             /* full width of container */
-    max-width: 100%;         /* prevent overflow on Samsung */
-    box-sizing: border-box;  /* ensures padding stays inside width */
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 
     text-align: center;
     margin-top: 24px;
@@ -80,7 +76,6 @@
     background: #e68900;
 }
 
-/* Screen visibility */
 .screen {
     display: none;
 }
@@ -89,16 +84,13 @@
     display: flex;
 }
 
-/* Slightly larger text on small Android screens */
 @media (max-width: 480px) {
     .installer-screen p,
     .installer-screen li {
         font-size: 23px;
     }
 }
-
-</style>
-
+  </style>
 </head>
 
 <body>
@@ -108,7 +100,9 @@
 // Service worker
 // ------------------------------------------------------------
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js?v=2");
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js?v=2");
+  });
 }
 
 // ------------------------------------------------------------
@@ -128,11 +122,12 @@ function isAndroid() {
 }
 
 function isWindows() {
-  return navigator.userAgent.toLowerCase().includes("windows");
+  const ua = navigator.userAgent.toLowerCase();
+  return ua.includes("windows nt") || ua.includes("win64") || ua.includes("wow64");
 }
 
 // ------------------------------------------------------------
-// BROWSER DETECTION (only used when install=true)
+// BROWSER DETECTION
 // ------------------------------------------------------------
 function isSafariIOS() {
   const ua = navigator.userAgent;
@@ -143,6 +138,11 @@ function isSafariIOS() {
          !ua.includes("FxiOS") &&
          !ua.includes("EdgiOS") &&
          !ua.includes("DuckDuckGo");
+}
+
+function isEdge() {
+  const ua = navigator.userAgent;
+  return ua.includes("Edg") && ua.includes("Chrome");
 }
 
 function isChrome() {
@@ -207,37 +207,30 @@ window.addEventListener("DOMContentLoaded", () => {
   else if (isAndroid()) platform = "android";
   else if (isWindows()) platform = "windows";
 
-  // BROWSER (only matters when install=true)
+  // BROWSER
   let browser = "other";
   if (isSafariIOS()) browser = "safari";
+  else if (isEdge()) browser = "edge";
   else if (isChrome()) browser = "chrome";
+
+  window.platform = platform; // expose globally for maps.js
 
   const justInstalled = localStorage.getItem("justInstalled") === "true";
 
   if (justInstalled) {
-    // Chrome has opened the standalone window but hasn't set display-mode yet.
-    // Skip installer screens entirely.
     window.location.href = "app.html?platform=" + platform;
     return;
   }
 
-  // --------------------------------------------------------
-  // If already installed → go straight to app
-  // --------------------------------------------------------
   if (isStandalone()) {
     window.location.href = "app.html?platform=" + platform;
     return;
   }
 
-  // --------------------------------------------------------
-  // ALWAYS clear prefs only when installing
-  // --------------------------------------------------------
   localStorage.removeItem("useGoogleMaps");
   localStorage.removeItem("helpNudgeShown");
 
-  // --------------------------------------------------------
-  // If install=true AND browser is correct → show instructions
-  // --------------------------------------------------------
+  // INSTALL FLOW
   if (install) {
     if (platform === "ios" && browser === "safari") {
       localStorage.setItem("justInstalled", "true");
@@ -251,18 +244,14 @@ window.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (platform === "windows" && browser === "chrome") {
+    if (platform === "windows" && browser === "edge") {
       localStorage.setItem("justInstalled", "true");
       showScreen("install_windows");
       return;
     }
-
-    // install=true but wrong browser → fall through to copy-link screen
   }
 
-  // --------------------------------------------------------
-  // Default: show "copy link and paste into correct browser"
-  // --------------------------------------------------------
+  // FALLBACK SCREENS
   if (platform === "ios") {
     showScreen("launch_safari");
     return;
@@ -314,33 +303,25 @@ window.addEventListener("DOMContentLoaded", () => {
 <div id="launch_safari" class="screen installer-screen">
   <h1>Open in Safari</h1>
   <p>To install Camp, open this link in Safari.</p>
-  <div class="copy-link-btn" onclick="copyInstallLink()">
-          Copy install link to clipboard
-    </div>
+  <div class="copy-link-btn" onclick="copyInstallLink()">Copy install link to clipboard</div>
 </div>
 
 <div id="launch_chrome" class="screen installer-screen">
   <h1>Open in Chrome</h1>
   <p>To install Camp, open this link in Chrome.</p>
-  <div class="copy-link-btn" onclick="copyInstallLink()">
-          Copy install link to clipboard
-    </div>
+  <div class="copy-link-btn" onclick="copyInstallLink()">Copy install link to clipboard</div>
 </div>
 
 <div id="launch_edge" class="screen installer-screen">
-  <h1>Open in Chrome</h1>
-  <p>To install Camp on Windows, open this link in Chrome.</p>
-  <div class="copy-link-btn" onclick="copyInstallLink()">
-          Copy install link to clipboard
-    </div>
+  <h1>Open in Edge</h1>
+  <p>To install Camp on Windows, open this link in Edge.</p>
+  <div class="copy-link-btn" onclick="copyInstallLink()">Copy install link to clipboard</div>
 </div>
 
 <div id="not_supported" class="screen installer-screen">
   <h1>Camp Installer</h1>
   <p>Your platform is not supported.</p>
-  <div class="copy-link-btn" onclick="copyInstallLink()">
-          Copy install link to clipboard
-    </div>
+  <div class="copy-link-btn" onclick="copyInstallLink()">Copy install link to clipboard</div>
 </div>
 
 </body>

@@ -1,4 +1,6 @@
 // /camp/maps.js
+const platform = window.platform ?? "other";
+
 import { buildMapURL } from "./logic.js";
 import { showScreen } from "./screens.js";
 
