@@ -2,7 +2,7 @@
 import { buildMapURL } from "./logic.js";
 import { showScreen } from "./screens.js";
 
-let useGoogleMaps;   // no default — startup.js sets the checkbox
+let useGoogleMaps;
 
 // ------------------------------------------------------------
 // 1. Check if browser already has geolocation permission
@@ -56,11 +56,7 @@ function getStableLocation() {
 // 3. Initialize maps system
 // ------------------------------------------------------------
 export async function initMaps() {
-  console.log("MAPS: initMaps() starting");
-
   const chk = document.getElementById("useGoogleMaps");
-
-  // Checkbox state was set by startup.js from query params
   useGoogleMaps = chk ? chk.checked : false;
 
   if (chk) {
@@ -72,9 +68,9 @@ export async function initMaps() {
 }
 
 // ------------------------------------------------------------
-// 4. Detect if Maps failed to open
+// 4. iOS‑only detection (Android does NOT use this)
 // ------------------------------------------------------------
-export function openInMapsWithDetection(url) {
+function openWithIOSDetection(url) {
   let becameHidden = false;
 
   const onVisibility = () => {
@@ -85,28 +81,18 @@ export function openInMapsWithDetection(url) {
 
   document.addEventListener("visibilitychange", onVisibility, { once: true });
 
-  location.href = url;
+  window.location.href = url;
 
   setTimeout(() => {
     document.removeEventListener("visibilitychange", onVisibility);
-
-    if (!becameHidden) {
-      showMapsFailurePopup();
-    }
+    if (!becameHidden) showMapsFailurePopup();
   }, 2500);
 }
 
 // ------------------------------------------------------------
-// 5. Main routing function
+// 5. Android-safe opener (no detection)
 // ------------------------------------------------------------
-export async function go(mode, origin, destination) {
-  console.log("GO:", { mode, origin, destination, useGoogleMaps });
-
-  const platform = window.platform ?? "other";
-if (platform === "windows") {
-  const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=${mode}`;
-
-  // Create a real link and click it synchronously
+function openOnAndroid(url) {
   const a = document.createElement("a");
   a.href = url;
   a.target = "_blank";
@@ -114,10 +100,28 @@ if (platform === "windows") {
   document.body.appendChild(a);
   a.click();
   a.remove();
-
-  return;
 }
 
+// ------------------------------------------------------------
+// 6. Main routing function
+// ------------------------------------------------------------
+export async function go(mode, origin, destination) {
+  const platform = window.platform ?? "other";
+
+  // Windows: already handled separately
+  if (platform === "windows") {
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=${mode}`;
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    return;
+  }
+
+  // Start-from-camp logic
   const useCamp = document.getElementById("startFromCamp").checked;
   if (!useCamp) {
     origin = "Current Location";
@@ -136,25 +140,34 @@ if (platform === "windows") {
         const realOrigin = `${lat},${lon}`;
 
         const finalUrl = buildMapURL(realOrigin, destination, mode, useGoogleMaps);
-        openInMapsWithDetection(finalUrl);
-        return;
 
-      } catch (err) {
+        if (platform === "ios") openWithIOSDetection(finalUrl);
+        else openOnAndroid(finalUrl);
+
+        return;
+      } catch {
         alert("Unable to get your location.");
       }
     }
 
+    // Fallback if permission not granted
     const fallbackUrl = buildMapURL("Current Location", destination, mode, useGoogleMaps);
-    openInMapsWithDetection(fallbackUrl);
+
+    if (platform === "ios") openWithIOSDetection(fallbackUrl);
+    else openOnAndroid(fallbackUrl);
+
     return;
   }
 
+  // Non-GPS origin
   const finalUrl = buildMapURL(origin, destination, mode, useGoogleMaps);
-  openInMapsWithDetection(finalUrl);
+
+  if (platform === "ios") openWithIOSDetection(finalUrl);
+  else openOnAndroid(finalUrl);
 }
 
 // ------------------------------------------------------------
-// 6. Modal controls
+// 7. Modal controls
 // ------------------------------------------------------------
 export function showMapsFailurePopup() {
   document.getElementById("mapsFailModal").style.display = "flex";
