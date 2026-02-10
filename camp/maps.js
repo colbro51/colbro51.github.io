@@ -74,6 +74,17 @@ function openWithIOSDetection(url) {
   }, 2500);
 }
 
+async function hasLocationPermission() {
+  try {
+    const perm = await navigator.permissions.query({ name: "geolocation" });
+    debug("permissions.query returned:", perm.state);
+    return perm.state === "granted";
+  } catch (err) {
+    debug("permissions.query ERROR:", err.message);
+    return false;
+  }
+}
+
 // ------------------------------------------------------------
 // Main routing function (instrumented)
 // ------------------------------------------------------------
