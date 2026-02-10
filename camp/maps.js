@@ -91,6 +91,20 @@ async function hasLocationPermission() {
   }
 }
 
+async function getStableLocation() {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve(pos),
+      err => reject(err),
+      {
+        enableHighAccuracy: true,
+        timeout: 8000,
+        maximumAge: 0
+      }
+    );
+  });
+}
+
 // ------------------------------------------------------------
 // Main routing function (instrumented)
 // ------------------------------------------------------------
