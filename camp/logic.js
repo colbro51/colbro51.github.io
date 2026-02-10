@@ -2,11 +2,15 @@
 // Clean routing helpers — no OS detection, no state machine.
 
 export function buildMapURL(origin, destination, mode, useGoogle) {
+  const isAndroid = /android/i.test(navigator.userAgent);
+
+  // Force Google Maps on Android
+  if (isAndroid) useGoogle = true;
+
   if (useGoogle) {
-    // Google Maps URL (works on all platforms)
     return `https://www.google.com/maps/dir/?api=1&travelmode=${mode}&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
   }
 
-  // Apple Maps URL (iOS will open the app; Android will open browser)
+  // Apple Maps for iOS only
   return `maps://?dirflg=${mode[0]}&saddr=${encodeURIComponent(origin)}&daddr=${encodeURIComponent(destination)}`;
 }
