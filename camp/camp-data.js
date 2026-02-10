@@ -3,7 +3,7 @@
 // ===========================================================
 
 export const year_name = "2025";
-export const camp_location = "Hanmer+Springs+TOP+10+Holiday+Park";
+export const camp_location = "-42.528150744255456, 172.82987346924634";
 
 // ===========================================================
 // DAY ROUTES (structured by day → difficulty → {name, mode, dest})
