@@ -95,7 +95,18 @@ async function getStableLocation() {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
       pos => resolve(pos),
-      err => reject(err),
+      err => {
+        // Huawei fallback: try again with low accuracy
+        navigator.geolocation.getCurrentPosition(
+          pos => resolve(pos),
+          err2 => reject(err2),
+          {
+            enableHighAccuracy: false,
+            timeout: 15000,
+            maximumAge: 60000
+          }
+        );
+      },
       {
         enableHighAccuracy: true,
         timeout: 8000,
