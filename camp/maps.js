@@ -75,6 +75,12 @@ function openWithIOSDetection(url) {
 }
 
 async function hasLocationPermission() {
+  // Android WebView and some Samsung/Huawei devices crash on permissions.query
+  if (/android/i.test(navigator.userAgent)) {
+    debug("Skipping permissions.query on Android");
+    return true; // Let getCurrentPosition() decide
+  }
+
   try {
     const perm = await navigator.permissions.query({ name: "geolocation" });
     debug("permissions.query returned:", perm.state);
