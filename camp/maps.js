@@ -93,19 +93,49 @@ async function hasLocationPermission() {
 
 async function getStableLocation() {
   return new Promise((resolve, reject) => {
+
+    // Attempt 1: High accuracy (often fails on Huawei)
     navigator.geolocation.getCurrentPosition(
       pos => resolve(pos),
-      err => {
-        // Huawei fallback: try again with low accuracy
+      err1 => {
+
+        // Attempt 2: Low accuracy
         navigator.geolocation.getCurrentPosition(
           pos => resolve(pos),
-          err2 => reject(err2),
+          err2 => {
+
+            // Attempt 3: Cached (Huawei often returns this)
+            navigator.geolocation.getCurrentPosition(
+              pos => resolve(pos),
+              err3 => {
+
+                // Attempt 4: Force network-only mode (Huawei trick)
+                navigator.geolocation.getCurrentPosition(
+                  pos => resolve(pos),
+                  err4 => reject(err4),
+                  {
+                    enableHighAccuracy: false,
+                    timeout: 20000,
+                    maximumAge: Infinity
+                  }
+                );
+
+              },
+              {
+                enableHighAccuracy: false,
+                timeout: 15000,
+                maximumAge: 300000   // 5 minutes
+              }
+            );
+
+          },
           {
             enableHighAccuracy: false,
-            timeout: 15000,
+            timeout: 12000,
             maximumAge: 60000
           }
         );
+
       },
       {
         enableHighAccuracy: true,
@@ -113,6 +143,7 @@ async function getStableLocation() {
         maximumAge: 0
       }
     );
+
   });
 }
 
