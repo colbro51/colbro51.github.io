@@ -1,31 +1,123 @@
-// maps.js (instrumented)
+// maps.js
+
 import { buildMapURL } from "./logic.js";
-import { showScreen } from "./screens.js";
 
-let useGoogleMaps;
-
-export async function initMaps() {
-  debug("initMaps() starting");
-
-  const chk = document.getElementById("useGoogleMaps");
-  useGoogleMaps = chk ? chk.checked : false;
-
-  if (chk) {
-    chk.addEventListener("change", () => {
-      useGoogleMaps = chk.checked;
-      localStorage.setItem("useGoogleMaps", useGoogleMaps ? "true" : "false");
-      debug("useGoogleMaps changed:", useGoogleMaps);
-    });
-  }
-
-  debug("initMaps() complete, useGoogleMaps =", useGoogleMaps);
+// ------------------------------------------------------------
+// Small helpers
+// ------------------------------------------------------------
+function dbg(...args) {
+  if (window.debug) window.debug(...args);
 }
 
 // ------------------------------------------------------------
-// Android opener (instrumented)
+// User-facing "please wait" message (Android, slow GPS only)
+// ------------------------------------------------------------
+function showLocationWaitMessage() {
+  // Only ever show one
+  if (document.getElementById("locationWaitMsg")) return;
+
+  const msg = document.createElement("div");
+  msg.id = "locationWaitMsg";
+  msg.textContent = "Getting your location… this can take a little longer on some phones.";
+  msg.style.position = "fixed";
+  msg.style.bottom = "20px";
+  msg.style.left = "50%";
+  msg.style.transform = "translateX(-50%)";
+  msg.style.background = "#1976d2";
+  msg.style.color = "white";
+  msg.style.padding = "12px 18px";
+  msg.style.borderRadius = "8px";
+  msg.style.fontSize = "14px";
+  msg.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+  msg.style.zIndex = "99999";
+  document.body.appendChild(msg);
+}
+
+function hideLocationWaitMessage() {
+  const msg = document.getElementById("locationWaitMsg");
+  if (msg) msg.remove();
+}
+
+// ------------------------------------------------------------
+// Huawei / Android-safe stable location getter
+// ------------------------------------------------------------
+async function getStableLocation() {
+  const isAndroid = (window.platform || "").toLowerCase() === "android";
+
+  // Attempt 1: High accuracy GPS (fast devices succeed here)
+  dbg("Getting stable location… (Attempt 1: high accuracy)");
+  try {
+    const pos = await new Promise((resolve, reject) =>
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+        timeout: 8000,
+        maximumAge: 0
+      })
+    );
+    dbg("Got GPS (Attempt 1):", pos.coords.latitude, pos.coords.longitude);
+    return pos;
+  } catch (e1) {
+    dbg("GPS error on Attempt 1:", e1 && e1.message ? e1.message : e1);
+    // Only now do we show the wait message, and only on Android
+    if (isAndroid) showLocationWaitMessage();
+  }
+
+  // Attempt 2: Low accuracy (network)
+  dbg("Getting stable location… (Attempt 2: low accuracy, network)");
+  try {
+    const pos = await new Promise((resolve, reject) =>
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: false,
+        timeout: 12000,
+        maximumAge: 60000
+      })
+    );
+    dbg("Got GPS (Attempt 2):", pos.coords.latitude, pos.coords.longitude);
+    hideLocationWaitMessage();
+    return pos;
+  } catch (e2) {
+    dbg("GPS error on Attempt 2:", e2 && e2.message ? e2.message : e2);
+  }
+
+  // Attempt 3: Cached (≤5 minutes)
+  dbg("Getting stable location… (Attempt 3: cached ≤5 min)");
+  try {
+    const pos = await new Promise((resolve, reject) =>
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: false,
+        timeout: 15000,
+        maximumAge: 300000 // 5 minutes
+      })
+    );
+    dbg("Got GPS (Attempt 3):", pos.coords.latitude, pos.coords.longitude);
+    hideLocationWaitMessage();
+    return pos;
+  } catch (e3) {
+    dbg("GPS error on Attempt 3:", e3 && e3.message ? e3.message : e3);
+  }
+
+  // Attempt 4: Any cached fix (Huawei last resort)
+  dbg("Getting stable location… (Attempt 4: any cached fix)");
+  try {
+    const pos = await new Promise((resolve, reject) =>
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: false,
+        timeout: 20000,
+        maximumAge: Infinity
+      })
+    );
+    dbg("Got GPS (Attempt 4):", pos.coords.latitude, pos.coords.longitude);
+    return pos;
+  } finally {
+    hideLocationWaitMessage();
+  }
+}
+
+// ------------------------------------------------------------
+// Open URL on Android (PWA-safe)
 // ------------------------------------------------------------
 function openOnAndroid(url) {
-  debug("openOnAndroid() called with URL:", url);
+  dbg("openOnAndroid() called with URL:", url);
 
   try {
     const a = document.createElement("a");
@@ -34,201 +126,155 @@ function openOnAndroid(url) {
     a.rel = "noopener noreferrer";
     document.body.appendChild(a);
 
-    debug("About to click <a>…");
+    dbg("About to click <a>...");
     a.click();
-    debug("<a>.click() returned");
-
+    dbg("<a>.click() returned");
     a.remove();
-    debug("Anchor removed");
+    dbg("Anchor removed");
   } catch (err) {
-    debug("ERROR in openOnAndroid:", err.message);
+    dbg("Error in openOnAndroid:", err && err.message ? err.message : err);
+    const modal = document.getElementById("mapsFailModal");
+    if (modal) modal.style.display = "flex";
   }
 }
 
 // ------------------------------------------------------------
-// iOS opener (instrumented)
+// Open URL on iOS / desktop
 // ------------------------------------------------------------
-function openWithIOSDetection(url) {
-  debug("openWithIOSDetection() URL:", url);
-
-  let becameHidden = false;
-
-  const onVisibility = () => {
-    debug("visibilitychange:", document.visibilityState);
-    if (document.visibilityState === "hidden") {
-      becameHidden = true;
-    }
-  };
-
-  document.addEventListener("visibilitychange", onVisibility, { once: true });
-
-  debug("Navigating via location.href…");
-  window.location.href = url;
-
-  setTimeout(() => {
-    debug("iOS detection timeout fired. becameHidden =", becameHidden);
-    if (!becameHidden) {
-      debug("Showing failure popup");
-      showMapsFailurePopup();
-    }
-  }, 2500);
-}
-
-async function hasLocationPermission() {
-  // Android WebView and some Samsung/Huawei devices crash on permissions.query
-  if (/android/i.test(navigator.userAgent)) {
-    debug("Skipping permissions.query on Android");
-    return true; // Let getCurrentPosition() decide
-  }
+function openGeneric(url) {
+  dbg("openGeneric() called with URL:", url);
 
   try {
-    const perm = await navigator.permissions.query({ name: "geolocation" });
-    debug("permissions.query returned:", perm.state);
-    return perm.state === "granted";
+    const win = window.open(url, "_blank", "noopener,noreferrer");
+    if (!win) {
+      dbg("window.open returned null/blocked");
+      const modal = document.getElementById("mapsFailModal");
+      if (modal) modal.style.display = "flex";
+    }
   } catch (err) {
-    debug("permissions.query ERROR:", err.message);
-    return false;
+    dbg("Error in openGeneric:", err && err.message ? err.message : err);
+    const modal = document.getElementById("mapsFailModal");
+    if (modal) modal.style.display = "flex";
   }
 }
 
-async function getStableLocation() {
-  return new Promise((resolve, reject) => {
+// ------------------------------------------------------------
+// Public: initialise Maps system
+// ------------------------------------------------------------
+export async function initMaps() {
+  dbg("initMaps() starting");
 
-    // Attempt 1: High accuracy (often fails on Huawei)
-    navigator.geolocation.getCurrentPosition(
-      pos => resolve(pos),
-      err1 => {
+  try {
+    const mapsChk = document.getElementById("useGoogleMaps");
+    let useGoogleMaps = false;
 
-        // Attempt 2: Low accuracy
-        navigator.geolocation.getCurrentPosition(
-          pos => resolve(pos),
-          err2 => {
+    if (mapsChk) {
+      useGoogleMaps = mapsChk.checked;
+      mapsChk.addEventListener("change", () => {
+        const val = !!mapsChk.checked;
+        localStorage.setItem("useGoogleMaps", String(val));
+        dbg("useGoogleMaps changed:", val);
+      });
+    }
 
-            // Attempt 3: Cached (Huawei often returns this)
-            navigator.geolocation.getCurrentPosition(
-              pos => resolve(pos),
-              err3 => {
+    dbg("initMaps() complete, useGoogleMaps =", useGoogleMaps);
+  } catch (err) {
+    dbg("initMaps() error:", err && err.message ? err.message : err);
+  }
+}
 
-                // Attempt 4: Force network-only mode (Huawei trick)
-                navigator.geolocation.getCurrentPosition(
-                  pos => resolve(pos),
-                  err4 => reject(err4),
-                  {
-                    enableHighAccuracy: false,
-                    timeout: 20000,
-                    maximumAge: Infinity
-                  }
-                );
+// ------------------------------------------------------------
+// Public: main navigation entry point
+// route = { mode, origin, destination }
+// ------------------------------------------------------------
+export async function go(route) {
+  dbg("go() called:", JSON.stringify(route || {}));
 
-              },
-              {
-                enableHighAccuracy: false,
-                timeout: 15000,
-                maximumAge: 300000   // 5 minutes
-              }
-            );
+  try {
+    const platform = (window.platform || "other").toLowerCase();
+    dbg("Platform =", platform);
 
-          },
-          {
-            enableHighAccuracy: false,
-            timeout: 12000,
-            maximumAge: 60000
+    const mapsChk = document.getElementById("useGoogleMaps");
+    const useGoogleMaps = mapsChk ? !!mapsChk.checked : false;
+
+    const origin = route.origin || "Current Location";
+    const destination = route.destination || "";
+    const mode = route.mode || "driving";
+
+    const useCamp = destination.toLowerCase().includes("hanmer");
+    dbg("useCamp =", useCamp);
+
+    const mustUseGPS = origin === "Current Location";
+    dbg("mustUseGPS =", mustUseGPS);
+
+    let finalOrigin = origin;
+
+    // --------------------------------------------------------
+    // GPS path (Current Location)
+    // --------------------------------------------------------
+    if (mustUseGPS) {
+      // Permissions API (non-Android only; Android prompts inline)
+      if (navigator.permissions && platform !== "android") {
+        try {
+          dbg("Checking geolocation permission via permissions.query");
+          const status = await navigator.permissions.query({ name: "geolocation" });
+          dbg("permissions.query result:", status.state);
+          if (status.state === "denied") {
+            dbg("GPS permission denied");
+            alert("Location permission is blocked. Please enable it in your browser settings.");
+            return;
           }
-        );
-
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 8000,
-        maximumAge: 0
+        } catch (errPerm) {
+          dbg("permissions.query error:", errPerm && errPerm.message ? errPerm.message : errPerm);
+        }
+      } else {
+        dbg("Skipping permissions.query on Android");
       }
-    );
 
-  });
-}
+      dbg("GPS permission = true");
 
-// ------------------------------------------------------------
-// Main routing function (instrumented)
-// ------------------------------------------------------------
-export async function go(mode, origin, destination) {
-  debug("go() called:", JSON.stringify({ mode, origin, destination }));
-
-  const platform = window.platform ?? "other";
-  debug("Platform =", platform);
-
-  // Windows path
-  if (platform === "windows") {
-    debug("Windows path");
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=${mode}`;
-    openOnAndroid(url); // same opener works fine
-    return;
-  }
-
-  const useCamp = document.getElementById("startFromCamp").checked;
-  debug("useCamp =", useCamp);
-
-  if (!useCamp) origin = "Current Location";
-
-  const mustUseGPS = origin === "Current Location";
-  debug("mustUseGPS =", mustUseGPS);
-
-  if (mustUseGPS) {
-    const allowed = await hasLocationPermission();
-    debug("GPS permission =", allowed);
-
-    if (allowed) {
       try {
-        debug("Getting stable location…");
         const pos = await getStableLocation();
-        debug("Got GPS:", pos.coords.latitude, pos.coords.longitude);
+        if (!pos || !pos.coords) {
+          throw new Error("No coordinates returned");
+        }
 
-        const lat = pos.coords.latitude.toFixed(6);
-        const lon = pos.coords.longitude.toFixed(6);
-        const realOrigin = `${lat},${lon}`;
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        dbg("Got GPS:", lat, lon);
 
-        const finalUrl = buildMapURL(realOrigin, destination, mode, useGoogleMaps);
-        debug("Final URL =", finalUrl);
-
-        if (platform === "ios") openWithIOSDetection(finalUrl);
-        else openOnAndroid(finalUrl);
-
-        return;
-      } catch (err) {
-        debug("GPS ERROR:", err.message);
-        alert("Unable to get your location.");
+        finalOrigin = `${lat},${lon}`;
+      } catch (errLoc) {
+        dbg("Unable to get location:", errLoc && errLoc.message ? errLoc.message : errLoc);
+        alert("Unable to get your location. We'll open the camp in Maps instead.");
+        finalOrigin = ""; // Let Maps infer current location if possible
       }
     }
 
-    debug("GPS not allowed, using fallback");
-    const fallbackUrl = buildMapURL("Current Location", destination, mode, useGoogleMaps);
-    debug("Fallback URL =", fallbackUrl);
+    // --------------------------------------------------------
+    // Build final URL
+    // --------------------------------------------------------
+    const url = buildMapURL(
+      finalOrigin || "Current Location",
+      destination,
+      mode,
+      useGoogleMaps
+    );
 
-    if (platform === "ios") openWithIOSDetection(fallbackUrl);
-    else openOnAndroid(fallbackUrl);
+    dbg("Final URL =", url);
 
-    return;
+    // --------------------------------------------------------
+    // Open based on platform
+    // --------------------------------------------------------
+    if (platform === "android") {
+      openOnAndroid(url);
+    } else {
+      openGeneric(url);
+    }
+
+  } catch (err) {
+    dbg("go() error:", err && err.message ? err.message : err);
+    const modal = document.getElementById("mapsFailModal");
+    if (modal) modal.style.display = "flex";
   }
-
-  const finalUrl = buildMapURL(origin, destination, mode, useGoogleMaps);
-  debug("Final URL =", finalUrl);
-
-  if (platform === "ios") openWithIOSDetection(finalUrl);
-  else openOnAndroid(finalUrl);
-}
-
-// ------------------------------------------------------------
-export function showMapsFailurePopup() {
-  debug("showMapsFailurePopup()");
-  const el = document.getElementById("mapsFailModal");
-  if (!el) {
-    debug("ERROR: mapsFailModal not found");
-    return;
-  }
-  el.style.display = "flex";
-}
-
-export function closeMapsFailModal() {
-  debug("closeMapsFailModal()");
-  document.getElementById("mapsFailModal").style.display = "none";
-  showScreen("app_main");
 }
