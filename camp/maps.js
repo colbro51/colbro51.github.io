@@ -187,8 +187,16 @@ export async function initMaps() {
 // Public: main navigation entry point
 // route = { mode, origin, destination }
 // ------------------------------------------------------------
-export async function go(route) {
-  dbg("go() called:", JSON.stringify(route || {}));
+export async function go(mode, origin, destination) {
+  dbg("go() called:", JSON.stringify({ mode, origin, destination }));
+
+  const platform = (window.platform || "other").toLowerCase();
+  const mapsChk = document.getElementById("useGoogleMaps");
+  const useGoogleMaps = mapsChk ? !!mapsChk.checked : false;
+
+  origin = origin || "Current Location";
+  destination = destination || "";
+  mode = mode || "driving";
 
   try {
     const platform = (window.platform || "other").toLowerCase();
@@ -200,9 +208,6 @@ export async function go(route) {
     const origin = route.origin || "Current Location";
     const destination = route.destination || "";
     const mode = route.mode || "driving";
-
-    const useCamp = destination.toLowerCase().includes("hanmer");
-    dbg("useCamp =", useCamp);
 
     const mustUseGPS = origin === "Current Location";
     dbg("mustUseGPS =", mustUseGPS);
