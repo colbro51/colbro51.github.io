@@ -23,6 +23,22 @@
 
 <body>
 
+<div id="debugLog" style="
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  max-height:40%;
+  overflow:auto;
+  background:rgba(0,0,0,0.8);
+  color:#0f0;
+  font-size:12px;
+  padding:6px;
+  z-index:999999;
+  white-space:pre-wrap;
+  display:none;
+"></div>
+
 <script>
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js");
