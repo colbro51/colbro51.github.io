@@ -1,13 +1,5 @@
 // startup-app.js
 
-window.debug = function (...args) {
-  const box = document.getElementById("debugLog");
-  if (!box) return;
-  box.style.display = "block";
-  box.textContent += args.join(" ") + "\n";
-  box.scrollTop = box.scrollHeight;
-};
-
 import { year_name } from "./camp-data.js";
 import { initMaps } from "./maps.js";
 import { showScreen, enterHelp } from "./screens.js";

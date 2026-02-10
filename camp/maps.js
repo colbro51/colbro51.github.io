@@ -2,18 +2,14 @@
 
 import { buildMapURL } from "./logic.js";
 
-// ------------------------------------------------------------
-// Small helpers
-// ------------------------------------------------------------
 function dbg(...args) {
   if (window.debug) window.debug(...args);
 }
 
 // ------------------------------------------------------------
-// User-facing "please wait" message (Android, slow GPS only)
+// Location wait message (Android slow GPS)
 // ------------------------------------------------------------
 function showLocationWaitMessage() {
-  // Only ever show one
   if (document.getElementById("locationWaitMsg")) return;
 
   const msg = document.createElement("div");
@@ -39,13 +35,11 @@ function hideLocationWaitMessage() {
 }
 
 // ------------------------------------------------------------
-// Huawei / Android-safe stable location getter
+// Stable GPS getter (Android/Huawei safe)
 // ------------------------------------------------------------
 async function getStableLocation() {
   const isAndroid = (window.platform || "").toLowerCase() === "android";
 
-  // Attempt 1: High accuracy GPS (fast devices succeed here)
-  dbg("Getting stable location… (Attempt 1: high accuracy)");
   try {
     const pos = await new Promise((resolve, reject) =>
       navigator.geolocation.getCurrentPosition(resolve, reject, {
@@ -54,16 +48,11 @@ async function getStableLocation() {
         maximumAge: 0
       })
     );
-    dbg("Got GPS (Attempt 1):", pos.coords.latitude, pos.coords.longitude);
     return pos;
-  } catch (e1) {
-    dbg("GPS error on Attempt 1:", e1 && e1.message ? e1.message : e1);
-    // Only now do we show the wait message, and only on Android
+  } catch {
     if (isAndroid) showLocationWaitMessage();
   }
 
-  // Attempt 2: Low accuracy (network)
-  dbg("Getting stable location… (Attempt 2: low accuracy, network)");
   try {
     const pos = await new Promise((resolve, reject) =>
       navigator.geolocation.getCurrentPosition(resolve, reject, {
@@ -72,32 +61,22 @@ async function getStableLocation() {
         maximumAge: 60000
       })
     );
-    dbg("Got GPS (Attempt 2):", pos.coords.latitude, pos.coords.longitude);
     hideLocationWaitMessage();
     return pos;
-  } catch (e2) {
-    dbg("GPS error on Attempt 2:", e2 && e2.message ? e2.message : e2);
-  }
+  } catch {}
 
-  // Attempt 3: Cached (≤5 minutes)
-  dbg("Getting stable location… (Attempt 3: cached ≤5 min)");
   try {
     const pos = await new Promise((resolve, reject) =>
       navigator.geolocation.getCurrentPosition(resolve, reject, {
         enableHighAccuracy: false,
         timeout: 15000,
-        maximumAge: 300000 // 5 minutes
+        maximumAge: 300000
       })
     );
-    dbg("Got GPS (Attempt 3):", pos.coords.latitude, pos.coords.longitude);
     hideLocationWaitMessage();
     return pos;
-  } catch (e3) {
-    dbg("GPS error on Attempt 3:", e3 && e3.message ? e3.message : e3);
-  }
+  } catch {}
 
-  // Attempt 4: Any cached fix (Huawei last resort)
-  dbg("Getting stable location… (Attempt 4: any cached fix)");
   try {
     const pos = await new Promise((resolve, reject) =>
       navigator.geolocation.getCurrentPosition(resolve, reject, {
@@ -106,7 +85,6 @@ async function getStableLocation() {
         maximumAge: Infinity
       })
     );
-    dbg("Got GPS (Attempt 4):", pos.coords.latitude, pos.coords.longitude);
     return pos;
   } finally {
     hideLocationWaitMessage();
@@ -114,81 +92,58 @@ async function getStableLocation() {
 }
 
 // ------------------------------------------------------------
-// Open URL on Android (PWA-safe)
+// Android opener: deep link first → fallback to web
 // ------------------------------------------------------------
-function openOnAndroid(url) {
-  dbg("openOnAndroid() called with URL:", url);
+function openOnAndroid(urlWeb, urlDeep) {
+  dbg("Android deep link:", urlDeep);
 
   try {
-    const a = document.createElement("a");
-    a.href = url;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    document.body.appendChild(a);
+    const win = window.open(urlDeep, "_blank", "noopener,noreferrer");
+    if (win) return;
+  } catch {}
 
-    dbg("About to click <a>...");
-    a.click();
-    dbg("<a>.click() returned");
-    a.remove();
-    dbg("Anchor removed");
-  } catch (err) {
-    dbg("Error in openOnAndroid:", err && err.message ? err.message : err);
-    const modal = document.getElementById("mapsFailModal");
-    if (modal) modal.style.display = "flex";
-  }
+  const a = document.createElement("a");
+  a.href = urlWeb;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 }
 
 // ------------------------------------------------------------
-// Open URL on iOS / desktop
+// Generic opener (iOS + desktop)
 // ------------------------------------------------------------
 function openGeneric(url) {
-  dbg("openGeneric() called with URL:", url);
-
   try {
     const win = window.open(url, "_blank", "noopener,noreferrer");
     if (!win) {
-      dbg("window.open returned null/blocked");
       const modal = document.getElementById("mapsFailModal");
       if (modal) modal.style.display = "flex";
     }
-  } catch (err) {
-    dbg("Error in openGeneric:", err && err.message ? err.message : err);
+  } catch {
     const modal = document.getElementById("mapsFailModal");
     if (modal) modal.style.display = "flex";
   }
 }
 
 // ------------------------------------------------------------
-// Public: initialise Maps system
+// initMaps()
 // ------------------------------------------------------------
 export async function initMaps() {
-  dbg("initMaps() starting");
-
-  try {
-    const mapsChk = document.getElementById("useGoogleMaps");
-    let useGoogleMaps = false;
-
-    if (mapsChk) {
-      useGoogleMaps = mapsChk.checked;
-      mapsChk.addEventListener("change", () => {
-        const val = !!mapsChk.checked;
-        localStorage.setItem("useGoogleMaps", String(val));
-        dbg("useGoogleMaps changed:", val);
-      });
-    }
-
-    dbg("initMaps() complete, useGoogleMaps =", useGoogleMaps);
-  } catch (err) {
-    dbg("initMaps() error:", err && err.message ? err.message : err);
+  const mapsChk = document.getElementById("useGoogleMaps");
+  if (mapsChk) {
+    mapsChk.addEventListener("change", () => {
+      localStorage.setItem("useGoogleMaps", String(mapsChk.checked));
+    });
   }
 }
 
 // ------------------------------------------------------------
-// Public: main navigation entry point
-// route = { mode, origin, destination }
+// go(mode, origin, destination)
 // ------------------------------------------------------------
 export async function go(mode, origin, destination) {
-  dbg("go() called:", JSON.stringify({ mode, origin, destination }));
+  dbg("go():", mode, origin, destination);
 
   const platform = (window.platform || "other").toLowerCase();
   const mapsChk = document.getElementById("useGoogleMaps");
@@ -198,88 +153,39 @@ export async function go(mode, origin, destination) {
   destination = destination || "";
   mode = mode || "driving";
 
-  try {
-    const platform = (window.platform || "other").toLowerCase();
-    dbg("Platform =", platform);
+  let finalOrigin = origin;
 
-    const mapsChk = document.getElementById("useGoogleMaps");
-    const useGoogleMaps = mapsChk ? !!mapsChk.checked : false;
-
-    const origin = route.origin || "Current Location";
-    const destination = route.destination || "";
-    const mode = route.mode || "driving";
-
-    const mustUseGPS = origin === "Current Location";
-    dbg("mustUseGPS =", mustUseGPS);
-
-    let finalOrigin = origin;
-
-    // --------------------------------------------------------
-    // GPS path (Current Location)
-    // --------------------------------------------------------
-    if (mustUseGPS) {
-      // Permissions API (non-Android only; Android prompts inline)
+  if (origin === "Current Location") {
+    try {
       if (navigator.permissions && platform !== "android") {
-        try {
-          dbg("Checking geolocation permission via permissions.query");
-          const status = await navigator.permissions.query({ name: "geolocation" });
-          dbg("permissions.query result:", status.state);
-          if (status.state === "denied") {
-            dbg("GPS permission denied");
-            alert("Location permission is blocked. Please enable it in your browser settings.");
-            return;
-          }
-        } catch (errPerm) {
-          dbg("permissions.query error:", errPerm && errPerm.message ? errPerm.message : errPerm);
+        const status = await navigator.permissions.query({ name: "geolocation" });
+        if (status.state === "denied") {
+          alert("Location permission is blocked. Please enable it.");
+          return;
         }
-      } else {
-        dbg("Skipping permissions.query on Android");
       }
 
-      dbg("GPS permission = true");
-
-      try {
-        const pos = await getStableLocation();
-        if (!pos || !pos.coords) {
-          throw new Error("No coordinates returned");
-        }
-
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        dbg("Got GPS:", lat, lon);
-
-        finalOrigin = `${lat},${lon}`;
-      } catch (errLoc) {
-        dbg("Unable to get location:", errLoc && errLoc.message ? errLoc.message : errLoc);
-        alert("Unable to get your location. We'll open the camp in Maps instead.");
-        finalOrigin = ""; // Let Maps infer current location if possible
+      const pos = await getStableLocation();
+      if (pos?.coords) {
+        finalOrigin = `${pos.coords.latitude},${pos.coords.longitude}`;
       }
+    } catch {
+      alert("Unable to get your location. We'll open the camp in Maps instead.");
+      finalOrigin = "";
     }
+  }
 
-    // --------------------------------------------------------
-    // Build final URL
-    // --------------------------------------------------------
-    const url = buildMapURL(
-      finalOrigin || "Current Location",
-      destination,
-      mode,
-      useGoogleMaps
-    );
+  const urlWeb = buildMapURL(finalOrigin || "Current Location", destination, mode, true);
 
-    dbg("Final URL =", url);
+  const urlDeep =
+    `comgooglemaps://?api=1` +
+    `&origin=${encodeURIComponent(finalOrigin || "Current Location")}` +
+    `&destination=${encodeURIComponent(destination)}` +
+    `&travelmode=${mode}`;
 
-    // --------------------------------------------------------
-    // Open based on platform
-    // --------------------------------------------------------
-    if (platform === "android") {
-      openOnAndroid(url);
-    } else {
-      openGeneric(url);
-    }
-
-  } catch (err) {
-    dbg("go() error:", err && err.message ? err.message : err);
-    const modal = document.getElementById("mapsFailModal");
-    if (modal) modal.style.display = "flex";
+  if (platform === "android") {
+    openOnAndroid(urlWeb, urlDeep);
+  } else {
+    openGeneric(urlWeb);
   }
 }
