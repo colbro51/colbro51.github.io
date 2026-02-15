@@ -16,13 +16,13 @@ function wireRouteButton(id, mode, origin, dest) {
     longPressMs: 500,
 
     onClick: () => {
-      // Short tap → Maps
-      go(mode, origin, dest);
+      // Sort tap → viewer
+      enterViewer(id);
     },
 
     onLongPress: () => {
-      // Long press → viewer
-      enterViewer(id);
+      // Long Press → Maps
+      go(mode, origin, dest);
     }
   });
 }
