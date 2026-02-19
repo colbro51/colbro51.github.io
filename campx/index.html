@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Camp Installer</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1976d2">
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-icon-180.png">
+
+  <style>
+/* INSTALLER CSS — INLINE */
+
+/* ============================================================
+   INSTALLER SCREENS — clean, mobile‑first, full‑width layout
+   ============================================================ */
+
+.installer-screen {
+    min-height: 100vh;
+    padding: 32px 24px;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    align-items: stretch;
+    text-align: left;
+
+    background: #fafafa;
+}
+
+.installer-screen h1 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.installer-screen p,
+.installer-screen li {
+    font-size: 22px;
+    line-height: 1.55;
+    margin-bottom: 18px;
+    width: 100%;
+}
+
+.installer-screen .section {
+    margin-bottom: 28px;
+}
+
+.installer-screen .btn,
+.copy-link-btn {
+    background: #ff9800;
+    color: #000;
+    font-weight: bold;
+    font-size: 22px;
+
+    padding: 18px 20px;
+    border-radius: 14px;
+
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    text-align: center;
+    margin-top: 24px;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+.copy-link-btn:active,
+.installer-screen .btn:active {
+    background: #e68900;
+}
+
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: flex;
+}
+
+@media (max-width: 480px) {
+    .installer-screen p,
+    .installer-screen li {
+        font-size: 23px;
+    }
+}
+  </style>
+</head>
+
+<body>
+
+<script>
+// ------------------------------------------------------------
+// Service worker
+// ------------------------------------------------------------
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js?v=2");
+  });
+}
+
+// ------------------------------------------------------------
+// PLATFORM DETECTION
+// ------------------------------------------------------------
+function isIOS() {
+  return /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+         (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
+function isAndroid() {
+  const ua = navigator.userAgent;
+  return ua.includes("Android") && !ua.includes("Windows");
+}
+
+function isWindows() {
+  const ua = navigator.userAgent.toLowerCase();
+  return ua.includes("windows nt") || ua.includes("win64") || ua.includes("wow64");
+}
+
+// ------------------------------------------------------------
+// BROWSER DETECTION
+// ------------------------------------------------------------
+function isSafariIOS() {
+  if (!isIOS()) return false;
+
+  const ua = navigator.userAgent;
+  return /Safari/i.test(ua) &&
+         !/CriOS|FxiOS|EdgiOS|DuckDuckGo/i.test(ua);
+}
+
+function isEdge() {
+  const ua = navigator.userAgent;
+  return ua.includes("Edg") && ua.includes("Chrome");
+}
+
+function isChrome() {
+  const ua = navigator.userAgent;
+  return ua.includes("Chrome") &&
+         ua.includes("Safari") &&
+         !ua.includes("Firefox") &&
+         !ua.includes("Edg");
+}
+
+// ------------------------------------------------------------
+// STANDALONE DETECTION
+// ------------------------------------------------------------
+function isStandalone() {
+  if (window.matchMedia('(display-mode: standalone)').matches) return true;
+  if ('standalone' in navigator && navigator.standalone === true) return true;
+  return false;
+}
+
+// ------------------------------------------------------------
+// SCREEN SWITCHER
+// ------------------------------------------------------------
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  const el = document.getElementById(id);
+  if (el) el.classList.add("active");
+}
+
+// ------------------------------------------------------------
+// COPY INSTALL LINK
+// ------------------------------------------------------------
+async function copyInstallLink() {
+  const url = new URL(window.location.href);
+  url.searchParams.set("install", "true");
+  const link = url.toString();
+
+  try {
+    await navigator.clipboard.writeText(link);
+    alert("Link copied to clipboard.");
+  } catch {
+    const temp = document.createElement("input");
+    temp.value = link;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand("copy");
+    temp.remove();
+    alert("Link copied to clipboard.");
+  }
+}
+
+// ------------------------------------------------------------
+// MAIN FLOW
+// ------------------------------------------------------------
+window.addEventListener("DOMContentLoaded", () => {
+
+  const url = new URL(window.location.href);
+  const install = url.searchParams.get("install") === "true";
+
+  // PLATFORM
+  let platform = "other";
+  if (isIOS()) platform = "ios";
+  else if (isAndroid()) platform = "android";
+  else if (isWindows()) platform = "windows";
+
+  // BROWSER
+  let browser = "other";
+  if (isSafariIOS()) browser = "safari";
+  else if (isEdge()) browser = "edge";
+  else if (isChrome()) browser = "chrome";
+
+  window.platform = platform; // expose globally for maps.js
+
+  const justInstalled = localStorage.getItem("justInstalled") === "true";
+
+  if (justInstalled) {
+    window.location.href = "app.html?platform=" + platform;
+    return;
+  }
+
+  if (isStandalone()) {
+    window.location.href = "app.html?platform=" + platform;
+    return;
+  }
+
+  localStorage.removeItem("useGoogleMaps");
+  localStorage.removeItem("helpNudgeShown");
+
+  // INSTALL FLOW
+  if (install) {
+    if (platform === "ios" && browser === "safari") {
+      localStorage.setItem("justInstalled", "true");
+      showScreen("install_ios");
+      return;
+    }
+
+    if (platform === "android" && browser === "chrome") {
+      localStorage.setItem("justInstalled", "true");
+      showScreen("install_android");
+      return;
+    }
+
+    if (platform === "windows" && browser === "edge") {
+      localStorage.setItem("justInstalled", "true");
+      showScreen("install_windows");
+      return;
+    }
+  }
+
+  // FALLBACK SCREENS
+  if (platform === "ios") {
+    showScreen("launch_safari");
+    return;
+  }
+
+  if (platform === "android") {
+    showScreen("launch_chrome");
+    return;
+  }
+
+  if (platform === "windows") {
+    showScreen("launch_edge");
+    return;
+  }
+
+  showScreen("not_supported");
+});
+</script>
+
+<!-- =========================================================
+     INSTALL INSTRUCTIONS
+     ========================================================= -->
+
+<div id="install_android" class="screen installer-screen">
+  <h1>Install Camp (Android)</h1>
+  <p>Tap the <strong>⋮ menu</strong> in Chrome.</p>
+  <p>Select <strong>Install App</strong> or <strong>Add to Home Screen</strong>.</p>
+</div>
+
+<div id="install_ios" class="screen installer-screen">
+  <h1>Install Camp (iPhone)</h1>
+  <ol>
+    <li>Tap the <strong>Share</strong> button.</li>
+    <li>Select <strong>Add to Home Screen</strong>.</li>
+    <li>Open Camp from the new icon.</li>
+  </ol>
+</div>
+
+<div id="install_windows" class="screen installer-screen">
+  <h1>Install Camp (Windows)</h1>
+  <p>Click the app install icon in the Edge address bar.</p>
+  <p>It looks like three small squares in an L‑shape with a “+” in the corner.</p>
+</div>
+
+<!-- =========================================================
+     COPY-LINK SCREENS
+     ========================================================= -->
+
+<div id="launch_safari" class="screen installer-screen">
+  <h1>Open in Safari</h1>
+  <p>To install Camp, open this link in Safari.</p>
+  <div class="copy-link-btn" onclick="copyInstallLink()">Copy install link to clipboard</div>
+</div>
+
+<div id="launch_chrome" class="screen installer-screen">
+  <h1>Open in Chrome</h1>
+  <p>To install Camp, open this link in Chrome.</p>
+  <div class="copy-link-btn" onclick="copyInstallLink()">Copy install link to clipboard</div>
+</div>
+
+<div id="launch_edge" class="screen installer-screen">
+  <h1>Open in Edge</h1>
+  <p>To install Camp on Windows, open this link in Edge.</p>
+  <div class="copy-link-btn" onclick="copyInstallLink()">Copy install link to clipboard</div>
+</div>
+
+<div id="not_supported" class="screen installer-screen">
+  <h1>Camp Installer</h1>
+  <p>Sorry, your phone is not supported.</p>
+</div>
+
+</body>
+</html>
