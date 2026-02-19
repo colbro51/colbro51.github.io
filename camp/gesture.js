@@ -1,4 +1,4 @@
-// gesrure.js
+// gesture.js
 
 console.log("GESTURE.JS LOADED", Date.now());
 

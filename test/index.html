@@ -1,107 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Location Diagnostic</title>
-
+  <meta charset="UTF-8" />
+  <title>Long Press Event Logger</title>
   <style>
-    body {
-      margin: 0;
-      padding: 1rem;
-      font-family: monospace;
-      background: #111;
-      color: #0f0;
-      white-space: pre-wrap;
+    body { font-family: sans-serif; padding: 20px; }
+    #btn {
+      padding: 20px 40px;
+      font-size: 16px;
+      cursor: pointer;
+      user-select: none;
+      touch-action: none; /* important for touch long-press */
     }
-    #out {
-      font-size: 14px;
-      line-height: 1.4;
+    #log {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      height: 200px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      background: #f9f9f9;
+      font-family: monospace;
+      font-size: 13px;
     }
   </style>
+</head>
+<body>
+  <button id="btn">Press and hold me</button>
+  <div id="log"></div>
 
   <script>
-    const RADARS = {
-      auckland:  { lat: -36.8485, lon: 174.7633 },
-      wellington:{ lat: -41.2865, lon: 174.7762 },
-      christchurch:{ lat: -43.5321, lon: 172.6362 }
-    };
+    const btn = document.getElementById('btn');
+    const logDiv = document.getElementById('log');
 
-    function log(msg) {
-      document.getElementById("out").textContent += msg + "\n";
-    }
+    let t0 = null;          // time of initial pointerdown
+    let activePointerId = null;
 
-    function distanceKm(lat1, lon1, lat2, lon2) {
-      const R = 6371;
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a =
-        Math.sin(dLat/2)**2 +
-        Math.cos(lat1 * Math.PI/180) *
-        Math.cos(lat2 * Math.PI/180) *
-        Math.sin(dLon/2)**2;
-      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    }
-
-    function ts() {
-      return Date.now();
-    }
-
-    function runTest() {
-      log("=== Location Diagnostic Start ===");
-      log("Requesting geolocation…");
-
-      if (!navigator.geolocation) {
-        log("ERROR: Geolocation API not available");
-        return;
+    function log(message, ev) {
+      if (t0 === null) {
+        // If we somehow get an event before pointerdown, just use its own timestamp as baseline
+        t0 = ev.timeStamp;
       }
-
-      navigator.geolocation.getCurrentPosition(
-        pos => {
-          const { latitude, longitude, accuracy } = pos.coords;
-
-          log("Raw coordinates:");
-          log("  lat: " + latitude);
-          log("  lon: " + longitude);
-          log("  accuracy (m): " + accuracy);
-          log("");
-
-          let nearest = null;
-          let nearestDist = Infinity;
-
-          log("Distance calculations:");
-          for (const key in RADARS) {
-            const r = RADARS[key];
-            const d = distanceKm(latitude, longitude, r.lat, r.lon);
-            log(`  ${key}: ${d.toFixed(1)} km`);
-            if (d < nearestDist) {
-              nearestDist = d;
-              nearest = key;
-            }
-          }
-
-          log("");
-          log("Nearest radar: " + nearest);
-          log("Cache-busted URL: nowcast.gif?ts=" + ts());
-          log("");
-          log("=== Diagnostic Complete ===");
-        },
-
-        err => {
-          log("ERROR retrieving location:");
-          log("  code: " + err.code);
-          log("  message: " + err.message);
-        },
-
-        { enableHighAccuracy: false, timeout: 8000, maximumAge: 0 }
-      );
+      const dt = ev.timeStamp - t0; // ms relative to initial pointerdown
+      const line = `${dt.toFixed(1)} ms: ${message}`;
+      logDiv.textContent += line + '\n';
+      logDiv.scrollTop = logDiv.scrollHeight;
     }
 
-    window.onload = runTest;
-  </script>
-</head>
+    btn.addEventListener('pointerdown', (ev) => {
+      // Start a new sequence
+      t0 = ev.timeStamp;
+      activePointerId = ev.pointerId;
+      log('pointerdown', ev);
+      // Capture pointer so we keep getting events even if it moves off the button
+      btn.setPointerCapture(ev.pointerId);
+    });
 
-<body>
-  <div id="out"></div>
+    btn.addEventListener('pointermove', (ev) => {
+      if (ev.pointerId !== activePointerId || t0 === null) return;
+      log('pointermove', ev);
+    });
+
+    btn.addEventListener('pointerup', (ev) => {
+      if (ev.pointerId !== activePointerId || t0 === null) return;
+      log('pointerup', ev);
+      btn.releasePointerCapture(ev.pointerId);
+      activePointerId = null;
+      // Optionally reset t0 here if you want each press to be independent
+      // t0 = null;
+    });
+
+    btn.addEventListener('pointercancel', (ev) => {
+      if (ev.pointerId !== activePointerId || t0 === null) return;
+      log('pointercancel', ev);
+      btn.releasePointerCapture(ev.pointerId);
+      activePointerId = null;
+      // t0 = null;
+    });
+  </script>
 </body>
 </html>
