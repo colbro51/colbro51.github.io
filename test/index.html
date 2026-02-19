@@ -3,27 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <title>Long Press Event Logger</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    #btn {
-      padding: 20px 40px;
-      font-size: 16px;
-      cursor: pointer;
-      user-select: none;
-      touch-action: none; /* important for touch long-press */
-    }
-    #log {
-      margin-top: 20px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      height: 200px;
-      overflow-y: auto;
-      white-space: pre-wrap;
-      background: #f9f9f9;
-      font-family: monospace;
-      font-size: 13px;
-    }
-  </style>
+<style>
+  body {
+    font-family: sans-serif;
+    padding: 16px;
+    font-size: 20px; /* Larger base font for mobile */
+  }
+
+  #btn {
+    padding: 24px 40px;
+    font-size: 22px; /* Big button text */
+    width: 100%;
+    box-sizing: border-box;
+    user-select: none;
+    touch-action: none;
+  }
+
+  #log {
+    margin-top: 20px;
+    padding: 16px;
+    border: 2px solid #ccc;
+    height: 300px;
+    overflow-y: auto;
+    background: #f0f0f0;
+    font-family: monospace;
+    font-size: 22px; /* MUCH larger log text */
+    line-height: 1.4;
+    white-space: pre-wrap;
+  }
+</style>
 </head>
 <body>
   <button id="btn">Press and hold me</button>
