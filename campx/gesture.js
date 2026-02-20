@@ -7,58 +7,50 @@ export function attachPressEngine(element, {
   onLongPress
 }) {
   let downTime = null;
-  let startX = null;
-  let startY = null;
-  let movedTooFar = false;
-  let resolved = false; // prevents double-firing
+  let startX = 0;
+  let startY = 0;
+  let moved = false;
+  let longPressEligible = true;
 
+  // Prevent OS long-press immediately
   element.addEventListener("pointerdown", ev => {
+    ev.preventDefault(); // critical for Samsung A-series
     downTime = ev.timeStamp;
     startX = ev.clientX;
     startY = ev.clientY;
-    movedTooFar = false;
-    resolved = false;
-  });
+    moved = false;
+    longPressEligible = true;
+  }, { passive: false });
 
   element.addEventListener("pointermove", ev => {
-    if (downTime == null) return;
-
+    if (!downTime) return;
     const dx = ev.clientX - startX;
     const dy = ev.clientY - startY;
     if (Math.hypot(dx, dy) > moveThreshold) {
-      movedTooFar = true;
+      moved = true;
+      longPressEligible = false;
     }
   });
 
-  function finishGesture(ev) {
-    if (resolved || downTime == null) return;
+  element.addEventListener("pointerup", ev => {
+    if (!downTime) return;
 
     const duration = ev.timeStamp - downTime;
 
-    if (!movedTooFar && duration >= longPressMs) {
-      resolved = true;
+    if (longPressEligible && duration >= longPressMs) {
       onLongPress?.();
-    } else if (!movedTooFar && duration < longPressMs) {
-      resolved = true;
-      onClick?.();
     }
 
     downTime = null;
-  }
-
-  element.addEventListener("pointerup", finishGesture);
-  element.addEventListener("pointercancel", finishGesture);
-
-  // CLICK FALLBACK
-  element.addEventListener("click", ev => {
-    if (resolved) return; // pointerup already handled it
-    if (downTime == null) return; // no active gesture
-    if (movedTooFar) return; // was a drag/scroll
-
-    resolved = true;
-    onClick?.();
   });
 
-  // Prevent browser long-press menu
-  element.addEventListener("contextmenu", evt => evt.preventDefault());
+  // CLICK = primary tap detection (A06-friendly)
+  element.addEventListener("click", ev => {
+    if (!moved) {
+      onClick?.();
+    }
+  });
+
+  // Block OS context menu
+  element.addEventListener("contextmenu", ev => ev.preventDefault());
 }
