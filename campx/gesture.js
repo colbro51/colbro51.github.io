@@ -1,59 +1,51 @@
 // gesture.js
 
-console.log("GESTURE.JS LOADED", Date.now());
-
-export function attachSimplePressEngine(element, {
-  longPressMs = 2000,
-  holdoffMs = 3000,     // NEW: ignore all events after long-press
+export function attachPressEngine(element, {
+  longPressMs = 600,
+  moveThreshold = 10, // px
   onClick,
   onLongPress
 }) {
-  let timer = null;
-  let longPressFired = false;
-  let holdoffUntil = 0; // timestamp until which all events are ignored
+  let downTime = null;
+  let startX = null;
+  let startY = null;
+  let movedTooFar = false;
 
-  function inHoldoff() {
-    return Date.now() < holdoffUntil;
+  element.addEventListener("pointerdown", ev => {
+    downTime = ev.timeStamp;
+    startX = ev.clientX;
+    startY = ev.clientY;
+    movedTooFar = false;
+  });
+
+  element.addEventListener("pointermove", ev => {
+    if (downTime == null) return;
+
+    const dx = ev.clientX - startX;
+    const dy = ev.clientY - startY;
+    const dist = Math.hypot(dx, dy);
+
+    if (dist > moveThreshold) {
+      movedTooFar = true;
+    }
+  });
+
+  function finishGesture(ev) {
+    if (downTime == null) return;
+
+    const duration = ev.timeStamp - downTime;
+
+    if (!movedTooFar && duration >= longPressMs) {
+      onLongPress?.();
+    } else if (!movedTooFar && duration < longPressMs) {
+      onClick?.();
+    }
+
+    downTime = null;
   }
 
-  element.addEventListener("pointerdown", () => {
-    if (inHoldoff()) {
-      console.log("[GESTURE] pointerdown ignored (holdoff active)", element.id);
-      return;
-    }
-
-    console.log("[GESTURE] pointerdown on", element.id);
-    longPressFired = false;
-
-    timer = setTimeout(() => {
-      longPressFired = true;
-      console.log("[GESTURE] longPress FIRE on", element.id);
-
-      // Start holdoff window
-      holdoffUntil = Date.now() + holdoffMs;
-
-      if (onLongPress) onLongPress();
-    }, longPressMs);
-  });
-
-  element.addEventListener("click", () => {
-    if (inHoldoff()) {
-      console.log("[GESTURE] click ignored (holdoff active)", element.id);
-      return;
-    }
-
-    console.log("[GESTURE] click on", element.id, "longPressFired =", longPressFired);
-
-    if (longPressFired) {
-      console.log("[GESTURE] click suppressed because long-press already fired");
-      return;
-    }
-
-    clearTimeout(timer);
-    timer = null;
-
-    if (onClick) onClick();
-  });
+  element.addEventListener("pointerup", finishGesture);
+  element.addEventListener("pointercancel", finishGesture);
 
   element.addEventListener("contextmenu", evt => evt.preventDefault());
 }
