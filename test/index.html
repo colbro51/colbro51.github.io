@@ -3,7 +3,11 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  body { font-family: sans-serif; padding: 20px; font-size: 20px; }
+  body {
+    font-family: sans-serif;
+    padding: 20px;
+    font-size: 20px;
+  }
   #btn {
     padding: 20px;
     font-size: 20px;
@@ -21,85 +25,56 @@
     font-family: monospace;
     font-size: 20px;
     white-space: pre-wrap;
-    line-height: 1.4;
-  }
-  #maps {
-    display: none;
-    padding: 20px;
-    background: #cfe3ff;
-    font-size: 20px;
-    text-align: center;
+    line-height: 1.2;
   }
 </style>
 </head>
 <body>
 
-<button id="btn">LONG‑PRESS ME</button>
-<div id="maps">Maps screen… returning in 1s</div>
+<button id="btn">TEST BUTTON</button>
 <div id="log"></div>
 
 <script>
 const btn = document.getElementById('btn');
-const maps = document.getElementById('maps');
 const logDiv = document.getElementById('log');
 
 let t0 = null;
-let longPressTimer = null;
-let activePointer = null;
+let timer = null;
+let longPressFired = false;
+const longPressMs = 1200; // change if you want
 
 function log(msg, ev) {
-  if (t0 === null) t0 = ev.timeStamp;
-  const dt = (ev.timeStamp - t0).toFixed(1);
+  const now = ev ? ev.timeStamp : performance.now();
+  if (t0 === null) t0 = now;
+  const dt = (now - t0).toFixed(1);
   logDiv.textContent += `${dt} ms: ${msg}\n`;
   logDiv.scrollTop = logDiv.scrollHeight;
 }
 
-btn.addEventListener('pointerdown', ev => {
+btn.addEventListener("pointerdown", ev => {
   t0 = ev.timeStamp;
-  activePointer = ev.pointerId;
+  longPressFired = false;
   log("pointerdown", ev);
 
-  btn.setPointerCapture(ev.pointerId);
-
-  longPressTimer = setTimeout(() => {
-    log("LONG PRESS TRIGGERED", ev);
-    showMapsScreen();
-  }, 600);
+  timer = setTimeout(() => {
+    longPressFired = true;
+    log("LONG PRESS TRIGGERED", { timeStamp: performance.now() });
+  }, longPressMs);
 });
 
-btn.addEventListener('pointerup', ev => {
-  if (ev.pointerId !== activePointer) return;
+btn.addEventListener("pointerup", ev => {
   log("pointerup", ev);
-  clearTimeout(longPressTimer);
-  btn.releasePointerCapture(ev.pointerId);
+  clearTimeout(timer);
 });
 
-btn.addEventListener('pointercancel', ev => {
-  if (ev.pointerId !== activePointer) return;
+btn.addEventListener("pointercancel", ev => {
   log("pointercancel", ev);
-  clearTimeout(longPressTimer);
-  btn.releasePointerCapture(ev.pointerId);
+  clearTimeout(timer);
 });
 
-btn.addEventListener('pointermove', ev => {
-  if (ev.pointerId !== activePointer) return;
-  log("pointermove", ev);
-});
-
-btn.addEventListener('click', ev => {
+btn.addEventListener("click", ev => {
   log("CLICK", ev);
 });
-
-function showMapsScreen() {
-  btn.style.display = "none";
-  maps.style.display = "block";
-
-  setTimeout(() => {
-    maps.style.display = "none";
-    btn.style.display = "block";
-    log("RETURNED FROM MAPS", { timeStamp: performance.now() });
-  }, 5000);
-}
 </script>
 
 </body>
