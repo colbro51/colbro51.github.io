@@ -58,7 +58,7 @@ btn.addEventListener("pointerdown", ev => {
 
   timer = setTimeout(() => {
     longPressFired = true;
-    log("LONG PRESS TRIGGERED", { timeStamp: performance.now() });
+    log("LONG PRESS TRIGGERED", { timeStamp: t0 + longPressMs });
   }, longPressMs);
 });
 
