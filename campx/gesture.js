@@ -1,56 +1,36 @@
 // gesture.js
 
-export function attachPressEngine(element, {
-  longPressMs = 600,
-  moveThreshold = 10,
+console.log("GESTURE.JS LOADED", Date.now());
+
+export function attachSimplePressEngine(element, {
+  longPressMs = 2000,
   onClick,
   onLongPress
 }) {
-  let downTime = null;
-  let startX = 0;
-  let startY = 0;
-  let moved = false;
-  let longPressEligible = true;
+  let timer = null;
+  let longPressFired = false;
 
-  // Prevent OS long-press immediately
-  element.addEventListener("pointerdown", ev => {
-    ev.preventDefault(); // critical for Samsung A-series
-    downTime = ev.timeStamp;
-    startX = ev.clientX;
-    startY = ev.clientY;
-    moved = false;
-    longPressEligible = true;
-  }, { passive: false });
+  element.addEventListener("pointerdown", () => {
+    console.log("[GESTURE] pointerdown on", element.id);
+    longPressFired = false;
 
-  element.addEventListener("pointermove", ev => {
-    if (!downTime) return;
-    const dx = ev.clientX - startX;
-    const dy = ev.clientY - startY;
-    if (Math.hypot(dx, dy) > moveThreshold) {
-      moved = true;
-      longPressEligible = false;
-    }
+    timer = setTimeout(() => {
+      longPressFired = true;
+      console.log("[GESTURE] longPress FIRE on", element.id);
+      if (onLongPress) onLongPress();
+    }, longPressMs);
   });
 
-  element.addEventListener("pointerup", ev => {
-    if (!downTime) return;
+  element.addEventListener("click", () => {
+    console.log("[GESTURE] click on", element.id, "longPressFired =", longPressFired);
 
-    const duration = ev.timeStamp - downTime;
+    if (longPressFired) return;
 
-    if (longPressEligible && duration >= longPressMs) {
-      onLongPress?.();
-    }
+    clearTimeout(timer);
+    timer = null;
 
-    downTime = null;
+    if (onClick) onClick();
   });
 
-  // CLICK = primary tap detection (A06-friendly)
-  element.addEventListener("click", ev => {
-    if (!moved) {
-      onClick?.();
-    }
-  });
-
-  // Block OS context menu
-  element.addEventListener("contextmenu", ev => ev.preventDefault());
+  element.addEventListener("contextmenu", evt => evt.preventDefault());
 }

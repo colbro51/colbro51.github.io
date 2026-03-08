@@ -32,35 +32,35 @@ export const days = {
     easy: {
       name: "Waihohonu Historic Hut\nTongariro National Park (eastern)\nEASY/MED [$9/$28]",
       mode: "driving",
-      dest: "-42.527129,172.831639"
+      dest: "-39.226842,175.734876"
     },
     med: {
       name: "Waihohonu Historic Hut & Ohinepango Springs\nTongariro National Park (eastern)\nMEDIUM [$9/$28]",
       mode: "driving",
-      dest: "-42.488176,172.826614"
+      dest: "-39.226842,175.734876"
     },
     fit: {
       name: "Waihohonu, Ohinepango Springs, Historic Hut -> Oturere Hut\nTongariro National Park (eastern)\nFIT [$9/$28]",
       mode: "driving",
-      dest: "-42.488176,172.826614"
+      dest: "-39.226842,175.734876"
     }
   },
 
   wed: {
     easy: {
-      name: "Workin Bee\n[$3/$10]",
+      name: "Working Bee\nEASY, MEDIUM, FIT [$3/$10]",
       mode: "driving",
       dest: "-38.913342,175.899195"
     },
     med: {
-      name: "Workin Bee\n[$3/$10]",
+      name: "Afternoon option\nRotopounamu Track\n[$3/$10]",
       mode: "driving",
-      dest: "-38.913342,175.899195"
+      dest: "-39.016742,175.732029"
     },
     fit: {
-      name: "Workin Bee\n[$3/$10]",
+      name: "Afternoon option\nTokaanu Thermal Pools\n[$2/$5]",
       mode: "driving",
-      dest: "-38.913342,175.899195"
+      dest: "-38.967157,175.764838"
     }
   },
 
@@ -68,17 +68,17 @@ export const days = {
     easy: {
       name: "Pillars of Hercules, Tree Trunk Gorge (part)\nand Kaimanawa Forest Loop\nEASY/EASY MED [$6/$17]",
       mode: "driving",
-      dest: "-42.373681,172.377900"
+      dest: "-39.137072,175.826227"
     },
     med: {
       name: "Tree Trunk Gorge,  Pillars of Hercules\nKaimanawa Forest Park + optional loop\nMEDIUM [$6/$17]",
       mode: "driving",
-      dest: "-42.373681,172.377900"
+      dest: "-39.137072,175.826227"
     },
     fit: {
       name: "Urchin Tops, Kaimanawa Forest Park\nFIT [$6/$17]",
       mode: "driving",
-      dest: "-42.373681,172.377900"
+      dest: "-39.137072,175.826227"
     }
   },
 
@@ -106,26 +106,37 @@ export const days = {
 // ===========================================================
 
 export const more = [
-  {
-    name: "Scoria Flat [Monday Fit]",
-    mode: "driving",
-    dest: "-39.230715,175.548709"
-  },
   { name: "[Sun] Turangi Bridge Bar/Restaurant 6:45",
     mode: "walking",
     dest: "-38.986765,175.817857"
   },
   { name: "[Tue] Riverside Restaurant & Bar 6:45pm",
     mode: "walking",
-    dest: "-38.992267,175.810113"
+    dest: "-38.99220150,175.81051783"
   },
-  { name: "Rotopounamu Track",
+  { name: "Meads Wall, Whakapapa Skifield",
     mode: "driving",
-    dest: "-39.016742,175.732029"
+    dest: "-39.236363,175.555634"
   },
-  { name: "Tokaanu Thermal Pools",
+  { name: "Silica Rapids Walk Lower Exit",
     mode: "driving",
-    dest: "-38.967157,175.764838"
+    dest: "-39.203554,175.540324"
+  },
+  { name: "Silicon Rapids Walk Upper Entry",
+    mode: "driving",
+    dest: "-39.214174,175.542560"
+  },
+  { name: "Scoria Flat [Monday Fit]",
+    mode: "driving",
+    dest: "-39.23109,175.541548"
+  },
+  { name: "Treetrunk Gorge Track\n[$7/$20]",
+    mode: "driving",
+    dest: "-39.172907,175.805952"
+  },
+  { name: "Waihaha Hut Walking Track\n[$15/$44]",
+    mode: "driving",
+    dest: "-38.700408,175.682094"
   },
   { name: "Pihanga Medical Centre, Turangi",
     mode: "driving",
@@ -133,9 +144,6 @@ export const more = [
   },
   { name: "Taupo Hospital",
     mode: "driving",
-    dest: "-38.698788,176.097192"
-  },
-  { name: "", mode: "", dest: "" },
-  { name: "", mode: "", dest: "" },
-  { name: "", mode: "", dest: "" }
+    dest: "-38.698803,176.097125"
+  }
 ];
