@@ -9,24 +9,24 @@ import { attachSimplePressEngine } from "./gesture.js";
 // Helper: wire a single route button (tap → Maps, long press → viewer)
 // ------------------------------------------------------------
 function wireRouteButton(id, mode, origin, dest) {
-  const btn = document.getElementById(id);
-  if (!btn) return;
+  const outer = document.getElementById(id);
+  if (!outer) return;
 
-  attachSimplePressEngine(btn, {
+  const inner = outer.querySelector(".btn-inner");
+  if (!inner) return;
+
+  attachSimplePressEngine(inner, {
     longPressMs: 500,
 
     onClick: () => {
-      // Short tap → Maps
       go(mode, origin, dest);
     },
 
     onLongPress: () => {
-      // Long press → viewer
       enterViewer(id);
     }
   });
 }
-
 
 // ------------------------------------------------------------
 // Wire everything AFTER initMaps() has completed
@@ -42,7 +42,7 @@ export function wireRoutes() {
       const el = document.getElementById(id);
 
       if (el) {
-        el.innerText = route.name;
+        el.querySelector(".btn-inner").innerText = route.name;
         wireRouteButton(id, route.mode, camp_location, route.dest);
       }
     });
@@ -99,7 +99,7 @@ export function wireRoutes() {
       return;
     }
 
-    el.innerText = item.name;
+    el.querySelector(".btn-inner").innerText = item.name;
     wireRouteButton(id, item.mode, camp_location, item.dest);
   });
 }
