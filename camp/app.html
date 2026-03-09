@@ -40,14 +40,14 @@ if ("serviceWorker" in navigator) {
     <label><input type="checkbox" id="helpToggle"> Help</label>
   </div>
 
-  <div class="btn mainbtn" id="btn_camp">Camp Location</div>
+  <div class="btn mainbtn" id="btn_camp"><div class="btn-inner">Camp Location</div></div>
 
-  <div class="btn mainbtn" id="btn_mon">Monday</div>
-  <div class="btn mainbtn" id="btn_tue">Tuesday</div>
-  <div class="btn mainbtn" id="btn_wed">Wednesday</div>
-  <div class="btn mainbtn" id="btn_thu">Thursday</div>
-  <div class="btn mainbtn" id="btn_fri">Friday</div>
-  <div class="btn mainbtn" id="btn_more">Meals & More</div>
+  <div class="btn mainbtn" id="btn_mon"><div class="btn-inner">Monday</div></div>
+  <div class="btn mainbtn" id="btn_tue"><div class="btn-inner">Tuesday</div></div>
+  <div class="btn mainbtn" id="btn_wed"><div class="btn-inner">Wednesday</div></div>
+  <div class="btn mainbtn" id="btn_thu"><div class="btn-inner">Thursday</div></div>
+  <div class="btn mainbtn" id="btn_fri"><div class="btn-inner">Friday</div></div>
+  <div class="btn mainbtn" id="btn_more"><div class="btn-inner">Meals & More</div></div>
 </div>
 
 <!-- ============================================================
@@ -57,10 +57,11 @@ if ("serviceWorker" in navigator) {
 <div id="helpPanel" class="screen">
   <h1>F&B Camp Help</h1>
 
-  <p>Tap a route for details.</p>
-  <p>Single tap → open Maps</p>
-  <p>Long press → trip sheet</p>
-  <p>Cost return pp/car → [$x/$y]</p>
+  <p><b>Tap a route for details.</b></p>
+  <p><b>Buttons: centre active allowing side scrolling</b></p>
+  <p><b>Single tap → open Maps</b></p>
+  <p><b>Long press → trip details</b></p>
+  <p><b>Cost return pp/car → [$x/$y]</b></p>
 
   <div style="margin-top:20px; text-align:left; font-size:17px; line-height:1.4;">
     <strong>Using Maps with the Camp App</strong><br>
@@ -97,41 +98,41 @@ if ("serviceWorker" in navigator) {
 
 <div id="mon" class="screen">
   <h1>Monday</h1>
-  <div class="btn subbtn" id="mon_easy"></div>
-  <div class="btn subbtn" id="mon_med"></div>
-  <div class="btn subbtn" id="mon_fit"></div>
+  <div class="btn subbtn" id="mon_easy"><div class="btn-inner"></div></div>
+  <div class="btn subbtn" id="mon_med"><div class="btn-inner"></div></div>
+  <div class="btn subbtn" id="mon_fit"><div class="btn-inner"></div></div>
   <div class="backonly" id="back_mon">⬅ Go Back</div>
 </div>
 
 <div id="tue" class="screen">
   <h1>Tuesday</h1>
-  <div class="btn subbtn" id="tue_easy"></div>
-  <div class="btn subbtn" id="tue_med"></div>
-  <div class="btn subbtn" id="tue_fit"></div>
+  <div class="btn subbtn" id="tue_easy"><div class="btn-inner"></div></div>
+  <div class="btn subbtn" id="tue_med"><div class="btn-inner"></div></div>
+  <div class="btn subbtn" id="tue_fit"><div class="btn-inner"></div></div>
   <div class="backonly" id="back_tue">⬅ Go Back</div>
 </div>
 
 <div id="wed" class="screen">
   <h1>Wednesday</h1>
-  <div class="btn subbtn" id="wed_easy"></div>
-  <div class="btn subbtn" id="wed_med"></div>
-  <div class="btn subbtn" id="wed_fit"></div>
+  <div class="btn subbtn" id="wed_easy"><div class="btn-inner"></div></div>
+  <div class="btn subbtn" id="wed_med"><div class="btn-inner"></div></div>
+  <div class="btn subbtn" id="wed_fit"><div class="btn-inner"></div></div>
   <div class="backonly" id="back_wed">⬅ Go Back</div>
 </div>
 
 <div id="thu" class="screen">
   <h1>Thursday</h1>
-  <div class="btn subbtn" id="thu_easy"></div>
-  <div class="btn subbtn" id="thu_med"></div>
-  <div class="btn subbtn" id="thu_fit"></div>
+  <div class="btn subbtn" id="thu_easy"><div class="btn-inner"></div></div>
+  <div class="btn subbtn" id="thu_med"><div class="btn-inner"></div></div>
+  <div class="btn subbtn" id="thu_fit"><div class="btn-inner"></div></div>
   <div class="backonly" id="back_thu">⬅ Go Back</div>
 </div>
 
 <div id="fri" class="screen">
   <h1>Friday</h1>
-  <div class="btn subbtn" id="fri_easy"></div>
-  <div class="btn subbtn" id="fri_med"></div>
-  <div class="btn subbtn" id="fri_fit"></div>
+  <div class="btn subbtn" id="fri_easy"><div class="btn-inner"></div></div>
+  <div class="btn subbtn" id="fri_med"><div class="btn-inner"></div></div>
+  <div class="btn subbtn" id="fri_fit"><div class="btn-inner"></div></div>
   <div class="backonly" id="back_fri">⬅ Go Back</div>
 </div>
 
@@ -142,16 +143,16 @@ if ("serviceWorker" in navigator) {
 <div id="more" class="screen">
   <h1>Meals & More</h1>
 
-  <div class="btn subbtn morebtn" id="more_1"></div>
-  <div class="btn subbtn morebtn" id="more_2"></div>
-  <div class="btn subbtn morebtn" id="more_3"></div>
-  <div class="btn subbtn morebtn" id="more_4"></div>
-  <div class="btn subbtn morebtn" id="more_5"></div>
-  <div class="btn subbtn morebtn" id="more_6"></div>
-  <div class="btn subbtn morebtn" id="more_7"></div>
-  <div class="btn subbtn morebtn" id="more_8"></div>
-  <div class="btn subbtn morebtn" id="more_9"></div>
-  <div class="btn subbtn morebtn" id="more_10"></div>
+  <div class="btn subbtn morebtn" id="more_1"><div class="btn-inner"></div></div>
+  <div class="btn subbtn morebtn" id="more_2"><div class="btn-inner"></div></div>
+  <div class="btn subbtn morebtn" id="more_3"><div class="btn-inner"></div></div>
+  <div class="btn subbtn morebtn" id="more_4"><div class="btn-inner"></div></div>
+  <div class="btn subbtn morebtn" id="more_5"><div class="btn-inner"></div></div>
+  <div class="btn subbtn morebtn" id="more_6"><div class="btn-inner"></div></div>
+  <div class="btn subbtn morebtn" id="more_7"><div class="btn-inner"></div></div>
+  <div class="btn subbtn morebtn" id="more_8"><div class="btn-inner"></div></div>
+  <div class="btn subbtn morebtn" id="more_9"><div class="btn-inner"></div></div>
+  <div class="btn subbtn morebtn" id="more_10"><div class="btn-inner"></div></div>
 
   <div class="backonly" id="back_more">⬅ Go Back</div>
 </div>

@@ -9,15 +9,17 @@ html, body {
     padding-bottom: env(safe-area-inset-bottom);
     font-family: sans-serif;
     text-align: center;
-    touch-action: manipulation;
 }
 
-/* Every screen fills the viewport and is hidden by default */
+/* Every screen fills the viewport and is scrollable */
 .screen {
     display: none;
     padding: 10px;
     min-height: 100%;
     box-sizing: border-box;
+
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .active {
@@ -51,7 +53,7 @@ button {
 }
 
 /* ============================================================
-   BASE BUTTON STYLE (restored old CSS)
+   BASE BUTTON STYLE
    ============================================================ */
 .btn {
     display: flex;
@@ -65,26 +67,38 @@ button {
     font-size: 22px;
     border-radius: 10px;
 
-    padding: 14px;          /* was 18px */
-    margin: 8px 0;          /* was 10px */
-    min-height: 58px;       /* was 70px */
+    padding: 14px;
+    margin: 8px 0;
+    min-height: 58px;
 
     white-space: pre-line;
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
+
+    /* NEW: outer area scrolls, not clickable */
+    pointer-events: none;
 }
 
-.btn:active {
+/* NEW: central half is the only clickable area */
+.btn-inner {
+    pointer-events: auto;
+    width: 50%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Active press */
+.btn:active .btn-inner {
     background: #0d47a1;
 }
 
 /* ============================================================
-   MAIN MENU BUTTONS (tight + clean)
+   MAIN MENU BUTTONS
    ============================================================ */
 .mainbtn {
-    min-height: 48px;       /* was 45px */
-    padding: 10px;          /* unchanged */
+    min-height: 48px;
+    padding: 10px;
 }
 
 /* ============================================================
@@ -92,16 +106,16 @@ button {
    ============================================================ */
 .subbtn {
     font-size: 22px;
-    padding: 18px;          /* was 22px */
-    min-height: 54px;       /* was 55px */
+    padding: 18px;
+    min-height: 54px;
 }
 
 /* ============================================================
    MORE SCREEN BUTTONS
    ============================================================ */
 .morebtn {
-    min-height: 48px;       /* match mainbtn */
-    padding: 10px;          /* match mainbtn */
+    min-height: 48px;
+    padding: 10px;
 }
 
 /* ============================================================
@@ -118,14 +132,15 @@ button {
     font-size: 20px;
     line-height: 1.2;
 
-    padding: 12px;          /* was 14px */
-    margin-top: 16px;       /* was 20px */
+    padding: 12px;
+    margin-top: 16px;
     border-radius: 10px;
-    min-height: 50px;       /* was 55px */
+    min-height: 50px;
 
     white-space: nowrap;
 }
 
+/* Disable state */
 .disable-buttons * {
     pointer-events: none;
     opacity: 0.4;
@@ -205,7 +220,6 @@ button {
 
 /* ============================================================
    iOS Google Maps toggle hidden by default
-   (startup.js reveals it on iOS/iPadOS)
    ============================================================ */
 #useGoogleMapsLabel {
     display: none;
