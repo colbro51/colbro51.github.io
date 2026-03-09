@@ -12,10 +12,10 @@ function wireRouteButton(id, mode, origin, dest) {
   const outer = document.getElementById(id);
   if (!outer) return;
 
-  const inner = outer.querySelector(".btn-inner");
-  if (!inner) return;
+  const hit = outer.querySelector(".btn-hit");
+  if (!hit) return;
 
-  attachSimplePressEngine(inner, {
+  attachSimplePressEngine(hit, {
     longPressMs: 500,
 
     onClick: () => {
@@ -27,6 +27,7 @@ function wireRouteButton(id, mode, origin, dest) {
     }
   });
 }
+
 
 // ------------------------------------------------------------
 // Wire everything AFTER initMaps() has completed
@@ -42,7 +43,9 @@ export function wireRoutes() {
       const el = document.getElementById(id);
 
       if (el) {
-        el.querySelector(".btn-inner").innerText = route.name;
+        const label = el.querySelector(".btn-label");
+        if (label) label.innerText = route.name;
+
         wireRouteButton(id, route.mode, camp_location, route.dest);
       }
     });
@@ -52,19 +55,20 @@ export function wireRoutes() {
   // ------------------------------------------------------------
   // 2. Camp button (tap → Maps, long press → viewer)
   // ------------------------------------------------------------
-  attachSimplePressEngine(document.getElementById("btn_camp"), {
-    longPressMs: 500,
+  const campHit = document.querySelector("#btn_camp .btn-hit");
+  if (campHit) {
+    attachSimplePressEngine(campHit, {
+      longPressMs: 500,
 
-    onClick: () => {
-      // Short tap → Maps
-      go("driving", "Current Location", camp_location);
-    },
+      onClick: () => {
+        go("driving", "Current Location", camp_location);
+      },
 
-    onLongPress: () => {
-      // Long press → viewer
-      enterViewer("camp");
-    }
-  });
+      onLongPress: () => {
+        enterViewer("camp");
+      }
+    });
+  }
 
 
   // ------------------------------------------------------------
@@ -72,7 +76,10 @@ export function wireRoutes() {
   // ------------------------------------------------------------
   ["mon", "tue", "wed", "thu", "fri", "more"].forEach(day => {
     const btn = document.getElementById(`btn_${day}`);
-    if (btn) btn.onclick = () => enterDay(day);
+    if (btn) {
+      const hit = btn.querySelector(".btn-hit");
+      if (hit) hit.onclick = () => enterDay(day);
+    }
   });
 
 
@@ -99,7 +106,9 @@ export function wireRoutes() {
       return;
     }
 
-    el.querySelector(".btn-inner").innerText = item.name;
+    const label = el.querySelector(".btn-label");
+    if (label) label.innerText = item.name;
+
     wireRouteButton(id, item.mode, camp_location, item.dest);
   });
 }

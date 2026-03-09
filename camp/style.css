@@ -11,7 +11,7 @@ html, body {
     text-align: center;
 }
 
-/* Every screen fills the viewport and is scrollable */
+/* Every screen fills the viewport and scrolls */
 .screen {
     display: none;
     padding: 10px;
@@ -35,36 +35,16 @@ h1 {
 }
 
 /* ============================================================
-   GLOBAL BUTTON RESET
-   ============================================================ */
-button {
-    all: unset;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-
-    white-space: pre-line;
-    line-height: 1.3;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-
-/* ============================================================
    BASE BUTTON STYLE
    ============================================================ */
 .btn {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
 
     background: #1976d2;
     color: white;
-    text-decoration: none;
-
-    font-size: 22px;
     border-radius: 10px;
 
     padding: 14px;
@@ -73,24 +53,28 @@ button {
 
     white-space: pre-line;
     user-select: none;
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-
-    /* NEW: outer area scrolls, not clickable */
-    pointer-events: none;
 }
 
-/* NEW: central half is the only clickable area */
-.btn-inner {
-    pointer-events: auto;
-    width: 50%;
-    margin: 0 auto;
+/* Full-width centered text */
+.btn-label {
+    width: 100%;
     text-align: center;
+    pointer-events: none; /* text does NOT block scroll */
 }
 
-/* Active press */
-.btn:active .btn-inner {
-    background: #0d47a1;
+/* Central 50% tap zone */
+.btn-hit {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 25%;
+    width: 50%;
+    pointer-events: auto; /* only this area is clickable */
+}
+
+/* Press feedback */
+.btn-hit:active {
+    background: rgba(0,0,0,0.15);
 }
 
 /* ============================================================
