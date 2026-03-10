@@ -85,6 +85,12 @@ h1 {
     padding: 10px;
 }
 
+/* Reduce vertical padding only on main screen buttons */
+.mainbtn {
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
 /* ============================================================
    DAY ROUTE BUTTONS
    ============================================================ */
