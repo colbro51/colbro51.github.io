@@ -19,7 +19,12 @@ function wireRouteButton(id, mode, origin, dest) {
     longPressMs: 500,
 
     onClick: () => {
-      go(mode, origin, dest);
+      const startFromCampChk = document.getElementById("startFromCamp");
+      const startFromCamp = startFromCampChk ? startFromCampChk.checked : true;
+
+      const effectiveOrigin = startFromCamp ? origin : "Current Location";
+
+      go(mode, effectiveOrigin, dest);
     },
 
     onLongPress: () => {
@@ -27,7 +32,6 @@ function wireRouteButton(id, mode, origin, dest) {
     }
   });
 }
-
 
 // ------------------------------------------------------------
 // Wire everything AFTER initMaps() has completed
