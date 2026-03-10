@@ -43,7 +43,7 @@ h1 {
     justify-content: center;
     align-items: center;
 
-    background: #1976d2;
+    background: #1976d2; /* default blue, overridden below */
     color: white;
     border-radius: 10px;
 
@@ -108,23 +108,29 @@ h1 {
     padding: 10px;
 }
 
-/* Navigation buttons (main menu + back) */
-.mainbtn,
+/* ============================================================
+   COLOR THEMING
+   ============================================================ */
+
+/* Navigation buttons (blue): main menu EXCEPT Camp, plus back buttons */
+.mainbtn:not(#btn_camp),
 .backonly {
-    background: #1976d2;
+    background: #1976d2; /* Blue 700 */
 }
 
-.mainbtn .btn-hit:active,
+.mainbtn:not(#btn_camp) .btn-hit:active,
 .backonly:active {
-    background: #0d47a1;
+    background: #0d47a1; /* Blue 900 */
 }
 
-/* Route buttons (Mon–Fri + More) */
+/* Route-type buttons (green): Camp + all route buttons */
+#btn_camp,
 .subbtn,
 .morebtn {
     background: #2e7d32; /* Green 800 */
 }
 
+#btn_camp .btn-hit:active,
 .subbtn .btn-hit:active,
 .morebtn .btn-hit:active {
     background: #1b5e20; /* Green 900 */
@@ -138,7 +144,6 @@ h1 {
     justify-content: center;
     align-items: center;
 
-    background: #1976d2;
     color: white;
 
     font-size: 20px;
