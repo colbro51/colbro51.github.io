@@ -108,6 +108,28 @@ h1 {
     padding: 10px;
 }
 
+/* Navigation buttons (main menu + back) */
+.mainbtn,
+.backonly {
+    background: #1976d2;
+}
+
+.mainbtn .btn-hit:active,
+.backonly:active {
+    background: #0d47a1;
+}
+
+/* Route buttons (Mon–Fri + More) */
+.subbtn,
+.morebtn {
+    background: #2e7d32; /* Green 800 */
+}
+
+.subbtn .btn-hit:active,
+.morebtn .btn-hit:active {
+    background: #1b5e20; /* Green 900 */
+}
+
 /* ============================================================
    BACK BUTTONS
    ============================================================ */
