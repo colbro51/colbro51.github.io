@@ -149,6 +149,10 @@ export async function go(mode, origin, destination) {
   const mapsChk = document.getElementById("useGoogleMaps");
   const useGoogleMaps = mapsChk ? !!mapsChk.checked : false;
 
+  // FIX: checkbox override
+  const startFromCampChk = document.getElementById("startFromCamp");
+  const startFromCamp = startFromCampChk ? startFromCampChk.checked : true;
+
   origin = origin || "Current Location";
   destination = destination || "";
   mode = mode || "driving";
