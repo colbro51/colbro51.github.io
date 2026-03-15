@@ -122,7 +122,7 @@ export const more = [
     mode: "driving",
     dest: "-39.203554,175.540324"
   },
-  { name: "Silicon Rapids Walk Upper Entry",
+  { name: "Silica Rapids Walk Upper Entry",
     mode: "driving",
     dest: "-39.214174,175.542560"
   },
@@ -130,7 +130,7 @@ export const more = [
     mode: "driving",
     dest: "-39.23109,175.541548"
   },
-  { name: "Treetrunk Gorge Track\n[$7/$20]",
+  { name: "Southern Entrance to\nTreetrunk Gorge Track\n[$7/$20]",
     mode: "driving",
     dest: "-39.172907,175.805952"
   },
