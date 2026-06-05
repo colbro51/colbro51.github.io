@@ -26,24 +26,42 @@
     });
   }
 
+  function simulateUserGesture(iframe) {
+    const rect = iframe.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+
+    const evt = new MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      clientX: x,
+      clientY: y,
+      view: window
+    });
+
+    iframe.dispatchEvent(evt);
+  }
+
   function onPlayerReady() {
     const iframe = player.getIframe();
 
-    // Ensure fullscreen permissions
     iframe.setAttribute("allow", "fullscreen");
     iframe.setAttribute("allowfullscreen", "");
 
-    // Chrome requires a slight delay before fullscreen request
+    // Wait for iframe to fully initialize
     setTimeout(() => {
-      try {
-        if (iframe.requestFullscreen) iframe.requestFullscreen();
-        else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
-        else if (iframe.mozRequestFullScreen) iframe.mozRequestFullScreen();
-        else if (iframe.msRequestFullscreen) iframe.msRequestFullscreen();
-      } catch (e) {
-        console.log("Fullscreen request blocked:", e);
-      }
-    }, 500);
+      simulateUserGesture(iframe);  // <-- unlocks fullscreen
+      setTimeout(() => {
+        try {
+          iframe.requestFullscreen?.();
+          iframe.webkitRequestFullscreen?.();
+          iframe.mozRequestFullScreen?.();
+          iframe.msRequestFullscreen?.();
+        } catch (e) {
+          console.log("Fullscreen blocked:", e);
+        }
+      }, 200);
+    }, 800);
   }
 
   function onPlayerStateChange(e) {
