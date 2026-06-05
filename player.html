@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body style="margin:0; background:black; overflow:hidden;">
+<div id="player"></div>
+
+<script>
+  function onYouTubeIframeAPIReady() {
+    const params = new URLSearchParams(window.location.search);
+    const videoId = params.get("v");
+
+    new YT.Player('player', {
+      videoId: videoId,
+      playerVars: {
+        autoplay: 1,
+        controls: 1,
+        modestbranding: 1,
+        rel: 0,
+        fs: 1
+      },
+      events: {
+        onStateChange: function(e) {
+          if (e.data === YT.PlayerState.ENDED) {
+            window.close();
+          }
+        }
+      }
+    });
+  }
+</script>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
