@@ -27,17 +27,19 @@
   }
 
   function onPlayerReady() {
-    // Force fullscreen once the iframe is ready
     const iframe = player.getIframe();
-    if (iframe.requestFullscreen) {
-      iframe.requestFullscreen();
-    } else if (iframe.webkitRequestFullscreen) {
-      iframe.webkitRequestFullscreen();
-    } else if (iframe.mozRequestFullScreen) {
-      iframe.mozRequestFullScreen();
-    } else if (iframe.msRequestFullscreen) {
-      iframe.msRequestFullscreen();
-    }
+
+    // Ensure fullscreen permissions
+    iframe.setAttribute("allow", "fullscreen");
+    iframe.setAttribute("allowfullscreen", "");
+
+    // Force fullscreen on the iframe itself
+    setTimeout(() => {
+      if (iframe.requestFullscreen) iframe.requestFullscreen();
+      else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
+      else if (iframe.mozRequestFullScreen) iframe.mozRequestFullScreen();
+      else if (iframe.msRequestFullscreen) iframe.msRequestFullscreen();
+    }, 300);
   }
 
   function onPlayerStateChange(e) {
@@ -47,8 +49,6 @@
   }
 </script>
 
-<!-- IMPORTANT: allowfullscreen + allow="fullscreen" -->
-<script src="https://www.youtube.com/iframe_api" allowfullscreen allow="fullscreen"></script>
-
+<script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
