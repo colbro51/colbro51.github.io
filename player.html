@@ -4,11 +4,13 @@
 <div id="player"></div>
 
 <script>
+  let player;
+
   function onYouTubeIframeAPIReady() {
     const params = new URLSearchParams(window.location.search);
     const videoId = params.get("v");
 
-    new YT.Player('player', {
+    player = new YT.Player('player', {
       videoId: videoId,
       playerVars: {
         autoplay: 1,
@@ -18,16 +20,35 @@
         fs: 1
       },
       events: {
-        onStateChange: function(e) {
-          if (e.data === YT.PlayerState.ENDED) {
-            window.close();
-          }
-        }
+        onReady: onPlayerReady,
+        onStateChange: onPlayerStateChange
       }
     });
   }
+
+  function onPlayerReady() {
+    // Force fullscreen once the iframe is ready
+    const iframe = player.getIframe();
+    if (iframe.requestFullscreen) {
+      iframe.requestFullscreen();
+    } else if (iframe.webkitRequestFullscreen) {
+      iframe.webkitRequestFullscreen();
+    } else if (iframe.mozRequestFullScreen) {
+      iframe.mozRequestFullScreen();
+    } else if (iframe.msRequestFullscreen) {
+      iframe.msRequestFullscreen();
+    }
+  }
+
+  function onPlayerStateChange(e) {
+    if (e.data === YT.PlayerState.ENDED) {
+      window.close();
+    }
+  }
 </script>
 
-<script src="https://www.youtube.com/iframe_api"></script>
+<!-- IMPORTANT: allowfullscreen + allow="fullscreen" -->
+<script src="https://www.youtube.com/iframe_api" allowfullscreen allow="fullscreen"></script>
+
 </body>
 </html>
