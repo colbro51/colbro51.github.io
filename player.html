@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
 <body style="margin:0; background:black; overflow:hidden;">
-<div id="player"></div>
+
+<!-- Create iframe manually so fullscreen permissions are baked in -->
+<iframe id="ytframe"
+        allow="fullscreen"
+        allowfullscreen
+        style="border:0; width:100vw; height:100vh;">
+</iframe>
 
 <script>
   let player;
@@ -10,7 +16,7 @@
     const params = new URLSearchParams(window.location.search);
     const videoId = params.get("v");
 
-    player = new YT.Player('player', {
+    player = new YT.Player('ytframe', {
       videoId: videoId,
       playerVars: {
         autoplay: 1,
@@ -27,22 +33,14 @@
   }
 
   function onPlayerReady() {
-    const iframe = player.getIframe();
-
-    // These MUST be present for GitHub Pages fullscreen to work
-    iframe.setAttribute("allow", "fullscreen");
-    iframe.setAttribute("allowfullscreen", "");
+    const iframe = document.getElementById("ytframe");
 
     // Request fullscreen on the iframe itself
     setTimeout(() => {
-      try {
-        iframe.requestFullscreen?.();
-        iframe.webkitRequestFullscreen?.();
-        iframe.mozRequestFullScreen?.();
-        iframe.msRequestFullscreen?.();
-      } catch (e) {
-        console.log("Fullscreen blocked:", e);
-      }
+      iframe.requestFullscreen?.();
+      iframe.webkitRequestFullscreen?.();
+      iframe.mozRequestFullScreen?.();
+      iframe.msRequestFullscreen?.();
     }, 300);
   }
 
