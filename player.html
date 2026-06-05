@@ -26,42 +26,24 @@
     });
   }
 
-  function simulateUserGesture(iframe) {
-    const rect = iframe.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
-
-    const evt = new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-      clientX: x,
-      clientY: y,
-      view: window
-    });
-
-    iframe.dispatchEvent(evt);
-  }
-
   function onPlayerReady() {
     const iframe = player.getIframe();
 
+    // These MUST be present for GitHub Pages fullscreen to work
     iframe.setAttribute("allow", "fullscreen");
     iframe.setAttribute("allowfullscreen", "");
 
-    // Wait for iframe to fully initialize
+    // Request fullscreen on the iframe itself
     setTimeout(() => {
-      simulateUserGesture(iframe);  // <-- unlocks fullscreen
-      setTimeout(() => {
-        try {
-          iframe.requestFullscreen?.();
-          iframe.webkitRequestFullscreen?.();
-          iframe.mozRequestFullScreen?.();
-          iframe.msRequestFullscreen?.();
-        } catch (e) {
-          console.log("Fullscreen blocked:", e);
-        }
-      }, 200);
-    }, 800);
+      try {
+        iframe.requestFullscreen?.();
+        iframe.webkitRequestFullscreen?.();
+        iframe.mozRequestFullScreen?.();
+        iframe.msRequestFullscreen?.();
+      } catch (e) {
+        console.log("Fullscreen blocked:", e);
+      }
+    }, 300);
   }
 
   function onPlayerStateChange(e) {
